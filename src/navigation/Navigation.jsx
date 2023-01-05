@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { Home } from '../pages/Home';
 import { MapPage } from '../pages/MapPage';
 import { Permission } from '../pages/Permission';
+import { PermissionContext } from '../context/PermissionContext';
+import { Loading } from '../components/Loading';
 
 const Stack = createNativeStackNavigator();
 
@@ -15,14 +17,25 @@ const style = {
 }
 
 export const Navigation = () => {
+
+    const { permissions, checkLocationPermission } = useContext(PermissionContext);
+    checkLocationPermission();
+    if (permissions.locationStatus === 'unavailable'){
+        return <Loading/>;
+    }
+
   return (
       <Stack.Navigator
-            initialRouteName='Permission'
             screenOptions={style} 
        >
-          <Stack.Screen name="Home" component={Home} />
+
+        {
+            (permissions.locationStatus === 'granted')
+             ? <Stack.Screen name='Home' component={Home} />
+             : <Stack.Screen name="Permission" component={Permission} />
+        }
+
           <Stack.Screen name="MapPage" component={MapPage} />
-          <Stack.Screen name="Permission" component={Permission} />
       </Stack.Navigator>
   )
 }
