@@ -1,7 +1,7 @@
 import { format } from 'date-fns/esm';
 import React, { useEffect, useState } from 'react'
 import { View, Text, Button } from 'react-native'
-import Geolocation, { stopObserving } from 'react-native-geolocation-service';
+import Geolocation from 'react-native-geolocation-service';
 
 
 export const Home = () => {
@@ -9,6 +9,7 @@ export const Home = () => {
     const [time, setTime] = useState(format(new Date(), 'yyyy-MM-dd HH:mm:ss'))
     const [data, setData] = useState([])
     const [position, setPosition] = useState()
+    const [watchId, setWatchId] = useState()
 
 
     const getLocation = () => {
@@ -52,10 +53,20 @@ export const Home = () => {
                 // distanceFilter: 25,
                 // timeout: 15000,
                 // maximumAge: 10000
-                interval: 5000,
+                // interval: 5000,
             }
         )
 
+        setWatchId(observation);
+
+    }
+
+    const stopLocationObserving = () => {
+
+        console.log('Deterner Observing', watchId);
+
+         Geolocation.clearWatch(watchId);
+        // await Geolocation.stopObserving();
     }
 
 
@@ -74,11 +85,12 @@ export const Home = () => {
                     title='Observar'
                     onPress={getLocationObservation}
                 />
+                
+                <Button
+                    title='Detener'
+                    onPress={stopLocationObserving}
+                />
 
-
-                <Text>
-                    {JSON.stringify(position, null, 5)}
-                </Text>
         </View>
     )
 }

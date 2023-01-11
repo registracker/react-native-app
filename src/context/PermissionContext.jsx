@@ -32,7 +32,7 @@ export const PermissionsProvider = ({ children }) => {
         return () => {
             subscription.remove();
         };
-    }, []);
+    }, [appStateVisible]);
 
     const askLocationPermissions = async () => {
         let permissionsStatus = null;
