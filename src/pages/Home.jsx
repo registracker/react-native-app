@@ -15,6 +15,22 @@ export const Home = () => {
     const [primerPunto, setPrimerPunto] = useState({})
     const [ultimoPunto, setUltimoPunto] = useState({})
 
+    useEffect(() => {
+        if (position) {
+            setData([...data, position])
+            setPuntos(
+                [...puntos, 
+                    {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude
+                    }
+                ]
+            )
+
+        }
+    }, [position])
+
+
 
     const getLocation = () => {
         Geolocation.getCurrentPosition(
@@ -65,7 +81,7 @@ export const Home = () => {
     const stopLocationObserving = () => {
 
         console.log('Detener Observing', watchId);
-        console.log("🚀 ~ file: Home.jsx:127 ~ handleGetDirections ~ data", data[0].coords.latitude)
+        // console.log("🚀 ~ file: Home.jsx:127 ~ handleGetDirections ~ data", data[0].coords.latitude, data[0].coords.longitude)
 
         const comienzo = {
             latitude: data[0].coords.latitude,
@@ -75,51 +91,29 @@ export const Home = () => {
             latitude: data[data.length - 1].coords.latitude,
             longitude: data[data.length - 1].coords.longitude
         }
+        console.log("🚀 ~ file: Home.jsx:74 ~ stopLocationObserving ~ comienzo", comienzo)
+        console.log("🚀 ~ file: Home.jsx:79 ~ stopLocationObserving ~ final", final)
         setPrimerPunto(comienzo)
         setUltimoPunto(final)
         setData([])
 
-        // setUltimoPunto(data[data.length - 1 ])
         Geolocation.clearWatch(watchId);
-        // await Geolocation.stopObserving();
-        
-        // console.log("🚀 ~ file: Home.jsx:16 ~ Home ~ primerPunto", primerPunto)
-        // console.log("🚀 ~ file: Home.jsx:18 ~ Home ~ ultimoPunto", ultimoPunto)
-
     }
 
 
     const handleGetDirections = async () => {
 
-
+        console.log(primerPunto);
+        console.log(ultimoPunto);
+        console.log(puntos);
 
         const travel = {
             source: primerPunto,
             destination: ultimoPunto,
             params: [
-                {
-                    key: "travelmode",
-                    value: "driving"        // may be "walking", "bicycling" or "transit" as well
-                },
-                {
-                    key: "dir_action",
-                    value: "navigate"       // this instantly initializes navigation using the given travel mode
-                }
+
             ],
-            waypoints: [
-                {
-                    latitude: -33.8600025,
-                    longitude: 18.697452
-                },
-                {
-                    latitude: -33.8600026,
-                    longitude: 18.697453
-                },
-                {
-                    latitude: -33.8600036,
-                    longitude: 18.697493
-                }
-            ]
+            waypoints: puntos
         }
 
         await getDirections(travel)
