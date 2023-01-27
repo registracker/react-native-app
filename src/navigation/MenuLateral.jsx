@@ -1,6 +1,6 @@
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { Home } from '../pages/Home';
-import { MapPage } from '../pages/MapPage';
+import { MapPage } from '../views/MapPage';
+import { ListadoRecorridos } from '../views/ListadoRecorridos';
 import { Navigation } from './Navigation';
 
 const Drawer = createDrawerNavigator();
@@ -10,6 +10,7 @@ export const MenuLateral = () => {
         <Drawer.Navigator>
             <Drawer.Screen name="StackNavigation" component={Navigation} />
             <Drawer.Screen name="MapPage" component={MapPage} />
+            <Drawer.Screen name="ListadoRecorrido" component={ListadoRecorridos} />
         </Drawer.Navigator>
     );
 }

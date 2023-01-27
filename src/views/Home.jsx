@@ -1,13 +1,11 @@
 import React from 'react'
 import { Text, View } from 'react-native'
-import { Toolbar } from '../navigation/Toolbar'
-import { MapPage } from './MapPage'
+import { styles } from '../styles/layout'
 
 export const Home = () => {
     return (
            <View>
-            <Toolbar></Toolbar>
-            <MapPage></MapPage>
+            <Text>Home</Text>
            </View>
     )
 }
