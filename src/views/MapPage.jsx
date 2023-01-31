@@ -1,8 +1,8 @@
 import { format } from 'date-fns/esm';
-import React, { useCallback, useEffect, useState } from 'react'
-import { View, Text, Button, Linking, Alert } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { View, Text, Button } from 'react-native'
 import Geolocation from 'react-native-geolocation-service';
-import getDirections from 'react-native-google-maps-directions';
+import { addItem } from '../config/database';
 
 export const MapPage = () => {
 
@@ -35,6 +35,13 @@ export const MapPage = () => {
             (position) => {
                 setPosition(position)
                 console.log(format(new Date(position.timestamp), 'yyyy-MM-dd HH:mm:ss'), position.coords.latitude, position.coords.longitude);
+
+                point = {
+                    longitud: position.coords.longitude,
+                    latitud: position.coords.latitude,
+                }
+
+                addItem('tbl_recorrido', null, point )
             },
             (error) => {
                 // See error code charts below.
@@ -65,10 +72,6 @@ export const MapPage = () => {
             },
             {
                 enableHighAccuracy: true,
-                // distanceFilter: 25,
-                // timeout: 15000,
-                // maximumAge: 10000
-                // interval: 5000,
             }
         )
 
@@ -77,9 +80,6 @@ export const MapPage = () => {
     }
 
     const stopLocationObserving = () => {
-
-        console.log('Detener Observing', watchId);
-        // console.log("🚀 ~ file: Home.jsx:127 ~ handleGetDirections ~ data", data[0].coords.latitude, data[0].coords.longitude)
 
         const comienzo = {
             latitude: data[0].coords.latitude,
@@ -109,8 +109,7 @@ export const MapPage = () => {
             ],
             waypoints: puntos
         }
-        console.log(JSON.stringify(travel, null, 2));
-        // await getDirections(travel)
+        console.log(JSON.stringify(travel, null, 3));
     }
 
     return (

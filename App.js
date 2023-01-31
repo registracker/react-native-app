@@ -2,9 +2,10 @@
 import 'react-native-gesture-handler';
 import React, {useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import {PermissionsProvider} from './src/context/PermissionContext';
+import {PermissionsProvider} from './src/context/Permission/PermissionContext';
 import {MenuLateral} from './src/navigation/MenuLateral';
 import {createTable} from './src/config/database';
+import {RecorridosProvider} from './src/context/Recorrido/RecorridosContext';
 
 const AppState = ({children}) => {
   return <PermissionsProvider>{children}</PermissionsProvider>;
@@ -12,14 +13,16 @@ const AppState = ({children}) => {
 
 function App() {
   useEffect(() => {
-    createTable;
+    createTable('tbl_recorrido');
   }, []);
 
   return (
     <NavigationContainer>
       <AppState>
-        {/* <Navigation /> */}
-        <MenuLateral />
+        <RecorridosProvider>
+          {/* <Navigation /> */}
+          <MenuLateral />
+        </RecorridosProvider>
       </AppState>
     </NavigationContainer>
   );

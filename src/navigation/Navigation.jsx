@@ -4,7 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Home } from '../views/Home';
 import { MapPage } from '../views/MapPage';
 import { Permission } from '../views/Permission';
-import { PermissionContext } from '../context/PermissionContext';
+import { PermissionContext } from '../context/Permission/PermissionContext';
 import { Loading } from '../components/Loading';
 
 const Stack = createNativeStackNavigator();
