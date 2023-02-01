@@ -26,23 +26,24 @@ const options = {
 
 export const Navigation = () => {
 
-    const { permissions, checkLocationPermission } = useContext(PermissionContext);
-    checkLocationPermission();
-    if (permissions.locationStatus === 'unavailable'){
-        return <Loading/>;
-    }
+    // const { permissions, checkLocationPermission } = useContext(PermissionContext);
+    // checkLocationPermission();
+    // if (permissions.locationStatus === 'unavailable'){
+    //     return <Loading/>;
+    // }
 
   return (
       <Stack.Navigator
           screenOptions={options}
        >
 
-        {
+        {/* {
             (permissions.locationStatus === 'granted')
              ? <Stack.Screen name='Home' component={Home} />
              : <Stack.Screen name="Permission" component={Permission} />
-        }
+        } */}
 
+          <Stack.Screen name='Home' component={Home} />
           <Stack.Screen name="MapPage" component={MapPage} />
       </Stack.Navigator>
   )
