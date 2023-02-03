@@ -1,44 +1,57 @@
 // In App.js in a new project
-import React, { useContext, useEffect } from 'react';
-import { Permission } from './Permission';
+import React, { useContext, useEffect, useState } from 'react';
+import { Permission } from './Permisos';
 import { Loading } from '../components/Loading';
-import { Text, View } from 'react-native';
+import { Button, Image, StyleSheet, Text, View } from 'react-native';
 import { PermissionContext } from '../context/Permission/PermissionContext';
 import { createTable } from '../config/database';
-import {Login} from './Login'
+import { Login } from './Login'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-const Stack = createNativeStackNavigator();
 
-export const Home = () => {
-
-    const { permissions, checkLocationPermission } = useContext(PermissionContext);
+export const Home = ({ navigation }) => {
 
     useEffect(() => {
         createTable('tbl_recorrido');
-        checkLocationPermission();
-        console.log("Use Effect")
     }, []);
 
-    // console.log("🚀 ~ file: Home.jsx:14 ~ Home ~ permissions", permissions)
 
-    if (permissions.locationStatus === 'unavailable') {
-        return <Loading />;
-    }
-    
-    console.log("🚀 ~ file: Home.jsx:31 ~ Home ~ permissions.locationStatus", permissions.locationStatus)
-    return (
-        <Stack.Navigator
-        >
+return (
+    <View>
+        <Text>Bienvenido a MyDesplazamiento</Text>
+        <Text>Espero que te encuentres bien hoy</Text>
+        <Image
+            style={styles.tinyLogo}
+            source={require(`../img/travel/transporte(6).png`)}
+        />
 
-            {
-                (permissions.locationStatus === 'granted')
-                    ? <Stack.Screen name='Home' component={Home} />
-                    : <Stack.Screen name="Permission" component={Permission} />
-            }
+        <Button
+            title='Iniciar sesión'
+            onPress={() => navigation.navigate('Login')}
+            color='#0b1d51'
+        />
+        <Button
+            title='Registrarse'
+            onPress={() => navigation.navigate('Permisos')}
+            color='#d56f3e'
+        />
+    </View>
 
-        </Stack.Navigator>
-    );
+);
 }
 
+
+const styles = StyleSheet.create({
+    container: {
+        paddingTop: 50,
+    },
+    tinyLogo: {
+        width: 400,
+        height: 400,
+    },
+    logo: {
+        width: 66,
+        height: 58,
+    },
+});
 
