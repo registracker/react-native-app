@@ -6,16 +6,12 @@ import {NavigationContainer} from '@react-navigation/native';
 import {PermissionsProvider} from './src/context/Permission/PermissionContext';
 import {Navigation} from './src/navigation/Navigation';
 
-const AppState = ({children}) => {
-  return <PermissionsProvider>{children}</PermissionsProvider>;
-};
-
 function App() {
   return (
     <NavigationContainer>
-      <AppState>
+      <PermissionsProvider>
         <Navigation />
-      </AppState>
+      </PermissionsProvider>
     </NavigationContainer>
   );
 }

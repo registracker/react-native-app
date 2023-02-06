@@ -2,8 +2,11 @@ import React, { useContext, useEffect } from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { Home } from '../views/Home';
+import { MapPage } from '../views/MapPage';
+import { Permission } from '../views/Permission';
+import { PermissionContext } from '../context/Permission/PermissionContext';
+import { Loading } from '../components/Loading';
 import { Permisos } from '../views/Permisos';
-import { PermissionsAndroid, check } from 'react-native';
 
 const Stack = createNativeStackNavigator();
 
@@ -18,37 +21,34 @@ const options = {
     headerBackAccessibilityLabel: 'Atrás',
     headerBackTitle: 'Atrás',
     headerBackTitleVisible: false,
-    
-            //   cardOverlayEnabled: true
+
+    //   cardOverlayEnabled: true
 }
 
-const requestCameraPermission = async () => {
-    try {
-        const granted = await PermissionsAndroid.requestMultiple(
-            [
-                PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-                PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
-                PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION,
-            ]
-        );
-        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-            console.log('You can use the camera');
-        } else {
-            console.log('Camera permission denied');
+export const Navigation = () => {
+
+    const { permissions, checkLocationPermission } = useContext(PermissionContext);
+    // checkLocationPermission();
+
+    useEffect(() => {
+        checkLocationPermission()
+        if (permissions.locationStatus === 'unavailable') {
+            console.log("VALIDATE");
         }
-    } catch (err) {
-        console.warn(err);
-    }
-};
+    }, [])
 
-export const Navigation = async () => {        
 
-  return (
-      <Stack.Navigator
-          screenOptions={options}
-       >
-          <Stack.Screen name='Home' component={Home} />
-          <Stack.Screen name="MapPage" component={Permisos} />
-      </Stack.Navigator>
-  )
+    return (
+        <Stack.Navigator
+            screenOptions={options}
+        >
+
+            {
+                (permissions.locationStatus === 'granted')
+                    ? <Stack.Screen name='Home' component={Home} />
+                    : <Stack.Screen name="Permission" component={Permisos} />
+            }
+
+        </Stack.Navigator>
+    )
 }
