@@ -28,13 +28,9 @@ const options = {
 export const Navigation = () => {
 
     const { permissions, checkLocationPermission } = useContext(PermissionContext);
-    // checkLocationPermission();
 
     useEffect(() => {
         checkLocationPermission()
-        if (permissions.locationStatus === 'unavailable') {
-            console.log("VALIDATE");
-        }
     }, [])
 
 

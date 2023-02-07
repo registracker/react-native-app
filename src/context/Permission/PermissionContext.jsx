@@ -20,11 +20,12 @@ export const PermissionsProvider = ({ children }) => {
         try {
             const granted = await PermissionsAndroid.request(
                 PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-                {
-                    'title': 'Example App',
-                    'message': 'Example App access to your location '
-                }
             )
+            // const granted = await PermissionsAndroid.requestMultiple([
+            //     PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+            //     PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+            //     PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION,
+            // ])
             console.log("🚀 ~ file: PermissionContext.jsx:29 ~ askLocationPermissions ~ granted", granted)
             if (granted === PermissionsAndroid.RESULTS.GRANTED) {
                 setPermissions({
