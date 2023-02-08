@@ -10,7 +10,12 @@ export const http_axios = async (url, params, method) => {
     },
   });
 
-  const response = await instance.get(url, params);
-
-  return response;
+  return new Promise((resolve, reject) => {
+    instance
+      .post(url, params)
+      .then(response => {
+        resolve(response.data);
+      })
+      .catch(err => reject(err));
+  });
 };

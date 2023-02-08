@@ -6,7 +6,8 @@ import { MapPage } from '../views/MapPage';
 import { Permission } from '../views/Permission';
 import { PermissionContext } from '../context/Permission/PermissionContext';
 import { Loading } from '../components/Loading';
-import { Permisos } from '../views/Permisos';
+import { Permisos } from '../views/Permisos';  
+import { Login } from '../views/Login';  
 
 const Stack = createNativeStackNavigator();
 
@@ -44,7 +45,7 @@ export const Navigation = () => {
                     ? <Stack.Screen name='Home' component={Home} />
                     : <Stack.Screen name="Permission" component={Permisos} />
             }
-
+            <Stack.Screen name='Login' component={Login} />
         </Stack.Navigator>
     )
 }

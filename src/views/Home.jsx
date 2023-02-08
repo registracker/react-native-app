@@ -3,7 +3,7 @@ import { Image, Text, View } from 'react-native'
 import { styles } from '../styles/style'
 import { Button } from '@rneui/themed';
 
-export const Home = () => {
+export const Home = ({navigation}) => {
     return (
         <View style={styles.container}>
             <View style={{
@@ -29,6 +29,7 @@ export const Home = () => {
                         marginHorizontal: 50,
                         marginVertical: 10,
                     }}
+                    onPress={ () => navigation.navigate('Login')}
                 />
                 <Button
                     title="Registrarse"
