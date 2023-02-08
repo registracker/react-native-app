@@ -1,29 +1,31 @@
 import { Button } from '@rneui/base'
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import {Image, Text, TextInput, View } from 'react-native'
 import { http_axios } from '../config/axios'
 import { styles } from '../styles/style'
+import { AuthContext } from '../context/Auth/AuthContext'
 
 export const Login = () => {
 
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('developer@gmail.com')
+  const [password, setPassword] = useState('password');
+  const { signIn, authState } = useContext(AuthContext)
 
   const iniciarSesion = async() => {
-
     try {
       const params = {
         email,
         password
       }
-      const response = await http_axios('/api/sanctum/token', params)
-      console.log("🚀 ~ file: Login.jsx:20 ~ iniciarSesion ~ response", response)
-      
+      await signIn(params);
+      console.log("-------------------------------------");
+      console.log("AUTHSTATE", authState);
+      console.log("-------------------------------------");
     } catch (error) {
         console.log("🚀 ~ file: Login.jsx:24 ~ iniciarSesion ~ error", error)
-        
     }
   }
+  
 
 
   return (

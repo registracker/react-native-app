@@ -5,12 +5,15 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {PermissionsProvider} from './src/context/Permission/PermissionContext';
 import {Navigation} from './src/navigation/Navigation';
+import {AuthProvider} from './src/context/Auth/AuthContext';
 
 function App() {
   return (
     <NavigationContainer>
       <PermissionsProvider>
-        <Navigation />
+        <AuthProvider>
+          <Navigation />
+        </AuthProvider>
       </PermissionsProvider>
     </NavigationContainer>
   );

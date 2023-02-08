@@ -39,6 +39,8 @@ export const Navigation = () => {
         <Stack.Navigator
             screenOptions={options}
         >
+                    {/* ? <Stack.Screen name='Menu' component={MenuLateral} /> */}
+                    {/* ? <Stack.Screen name='Menu' component={MapPage} /> */}
 
             {
                 (permissions.locationStatus === 'granted')
@@ -46,6 +48,7 @@ export const Navigation = () => {
                     : <Stack.Screen name="Permission" component={Permisos} />
             }
             <Stack.Screen name='Login' component={Login} />
+            {/* <Stack.Screen name='Login' component={Login} /> */}
         </Stack.Navigator>
     )
 }
