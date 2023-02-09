@@ -6,8 +6,9 @@ import { MapPage } from '../views/MapPage';
 import { Permission } from '../views/Permission';
 import { PermissionContext } from '../context/Permission/PermissionContext';
 import { Loading } from '../components/Loading';
-import { Permisos } from '../views/Permisos';  
-import { Login } from '../views/Login';  
+import { Permisos } from '../views/Permisos';
+import { Login } from '../views/Login';
+import { AuthContext } from '../context/Auth/AuthContext';
 
 const Stack = createNativeStackNavigator();
 
@@ -29,6 +30,8 @@ const options = {
 export const Navigation = () => {
 
     const { permissions, checkLocationPermission } = useContext(PermissionContext);
+    const { autenticado } = useContext(AuthContext);
+    console.log("🚀 ~ file: Navigation.jsx:34 ~ Navigation ~ authState", autenticado)
 
     useEffect(() => {
         checkLocationPermission()
@@ -39,16 +42,24 @@ export const Navigation = () => {
         <Stack.Navigator
             screenOptions={options}
         >
-                    {/* ? <Stack.Screen name='Menu' component={MenuLateral} /> */}
-                    {/* ? <Stack.Screen name='Menu' component={MapPage} /> */}
 
             {
                 (permissions.locationStatus === 'granted')
-                    ? <Stack.Screen name='Home' component={Home} />
+                    ? <Stack.Group >
+                        {
+                            (autenticado === 'autenticado')
+                                ? <Stack.Screen name='MapPage' component={MapPage} />
+                                : <Stack.Group >
+                                    <Stack.Screen name='Home' component={Home} />
+                                    <Stack.Screen name='Login' component={Login} />
+                                </Stack.Group>
+                        }
+
+                    </Stack.Group>
+
+
                     : <Stack.Screen name="Permission" component={Permisos} />
             }
-            <Stack.Screen name='Login' component={Login} />
-            {/* <Stack.Screen name='Login' component={Login} /> */}
         </Stack.Navigator>
     )
 }

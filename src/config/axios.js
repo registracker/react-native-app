@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {API_URL} from '@env';
 
-export const http_axios = async (url, params, method = 'get') => {
+export const http_axios = (url, params, method = 'get') => {
   const baseURL = API_URL;
   const instance = axios.create({
     baseURL,
@@ -18,7 +18,7 @@ export const http_axios = async (url, params, method = 'get') => {
         resolve(response.data);
       })
       .catch(err => {
-        reject(err);
+        reject(err.response);
       });
   });
 };

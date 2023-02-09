@@ -26,7 +26,6 @@ export const PermissionsProvider = ({ children }) => {
             //     PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
             //     PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION,
             // ])
-            console.log("🚀 ~ file: PermissionContext.jsx:29 ~ askLocationPermissions ~ granted", granted)
             if (granted === PermissionsAndroid.RESULTS.GRANTED) {
                 setPermissions({
                     ...permissions,
@@ -53,7 +52,6 @@ export const PermissionsProvider = ({ children }) => {
 
     const checkLocationPermission = async () => {
         const granted = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
-        console.log("🚀 ~ file: PermissionContext.jsx:51 ~ checkLocationPermission ~ granted", granted)
 
         if (granted) {
             setPermissions({
@@ -78,7 +76,6 @@ export const PermissionsProvider = ({ children }) => {
         const subscription = AppState.addEventListener("change", state => {
             appState.current = state;
             setAppStateVisible(appState.current);
-            console.log("🚀 ~ file: PermissionContext.jsx:66 ~ subscription ~ appState", appState)
             if (appStateVisible === 'active') return;
             checkLocationPermission();
         });

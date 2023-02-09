@@ -1,18 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
 import { PermissionContext } from '../context/Permission/PermissionContext';
-import { Card, Icon, Button } from '@rneui/themed';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import { Button } from '@rneui/base'
 import { Loading } from '../components/Loading';
-import { color } from 'react-native-reanimated';
+import { styles } from '../styles/style';
 
 export const Permisos = ({ navigation }) => {
   const { permissions, askLocationPermissions } = useContext(PermissionContext)
   const [blocked, setBlocked] = useState(false)
-
-  useEffect(() => {
-
-  }, [])
 
   if (permissions.locationStatus === 'unavailable') {
     return <Loading />;
@@ -22,12 +17,12 @@ export const Permisos = ({ navigation }) => {
 
 
   return (
-    <View style={{ flex: 1, alignItems: 'center' }}>
-      <View style={{ flex: 6, alignItems: 'center', justifyContent: 'center' }}>
+    <View style={styles.container}>
+      <View style={{...styles.body, flex: 4}}>
 
         <Image
           source={require('../img/permiso/map-pointer.png')}
-          style={styleText.image}
+          style={{ ...styles.image, width: '80%', height: '80%' }}
         />
         <Text style={styleText.titleText}>
           Habilitar Geolocalización
@@ -36,15 +31,17 @@ export const Permisos = ({ navigation }) => {
           Permitiendo la geolocalización podras registrar tu recorrido, seleccionar tu medio de desplazamiento y otras funcionalidades.
         </Text>
       </View>
-      <View style={{ flex: 1, }} >
+      <View style={{...styles.foobar, alignItems:'center', justifyContent:'center'}} >
 
 
         {
           !blocked
             ? <Button
-              
               title='Permitir geolocalización'
               onPress={askLocationPermissions}
+              buttonStyle={styles.buttonPrimary}
+              containerStyle={styles.buttonContainer}
+              radius="lg"
             />
             : <Button
               title='GPS bloqueado'

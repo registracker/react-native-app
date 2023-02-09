@@ -1,42 +1,37 @@
 /* eslint-disable prettier/prettier */
-/* eslint-disable no-fallthrough */
-import { http_axios } from '../../config/axios';
-
-// generaEstado
-export const authReducer = async (state, action) => {
+export const authReducer = (state, action) => {
   switch (action.type) {
     case 'signIn':
-
-      const response = await loginAction(action.payload);
-
       return {
         ...state,
-        isLoggedIn: true,
-        username: 'USERNAME',
-        token: response,
-        // username: 'no-username-yet',,
+        autenticado: 'autenticado',
+        token: action.payload.token,
+        mensajeError: '',
       };
 
     case 'logout':
       return {
         ...state,
-        isLoggedIn: false,
-        username: undefined,
+        autenticado: 'no-autenticado',
+        usuario: undefined,
         token: undefined,
+        mensajeError: '',
+      };
+
+    case 'error':
+      return {
+        ...state,
+        autenticado: false,
+        token: null,
+        mensajeError: action.payload.mensaje,
+      };
+    case 'cleanError':
+    return {
+        ...state,
+        mensajeError: '',
       };
 
     default:
       return state;
   }
 };
-
-const loginAction = async (params) => {
-  try {
-
-    const response = await http_axios('/api/sanctum/token', params, 'post');
-    return response?.token;
-
-  } catch (error) {
-    console.log('--------Errror', error);
-  }
-}

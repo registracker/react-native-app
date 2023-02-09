@@ -1,32 +1,56 @@
-import { Button } from '@rneui/base'
 import React, { useContext, useEffect, useState } from 'react'
-import {Image, Text, TextInput, View } from 'react-native'
-import { http_axios } from '../config/axios'
+import { ActivityIndicator, Alert, Image, Text, TextInput, ToastAndroid, View } from 'react-native'
 import { styles } from '../styles/style'
+import { Button } from '@rneui/base'
 import { AuthContext } from '../context/Auth/AuthContext'
 
 export const Login = () => {
 
   const [email, setEmail] = useState('developer@gmail.com')
   const [password, setPassword] = useState('password');
-  const { signIn, authState } = useContext(AuthContext)
+  const [cargando, setCargando] = useState(false)
+  const { signIn, mensajeError, cleanError, autenticado } = useContext(AuthContext)
 
-  const iniciarSesion = async() => {
+  if (autenticado === 'verificar') {
+    return <Loading />;
+  }
+
+  const iniciarSesion = () => {
     try {
-      const params = {
-        email,
-        password
-      }
-      await signIn(params);
-      console.log("-------------------------------------");
-      console.log("AUTHSTATE", authState);
-      console.log("-------------------------------------");
+      setCargando(true)
+      signIn({ email, password });
     } catch (error) {
-        console.log("🚀 ~ file: Login.jsx:24 ~ iniciarSesion ~ error", error)
+      console.log("🚀 ~ file: Login.jsx:24 ~ iniciarSesion ~ error", error)
+      ToastAndroid.showWithGravity(
+        'Ha ocurrido un error interno',
+        ToastAndroid.SHORT,
+        ToastAndroid.CENTER,
+      );
     }
   }
-  
 
+  const cleanForm = () => {
+    setEmail(null);
+    setPassword(null);
+  }
+
+  useEffect(() => {
+    if (mensajeError.length === 0) return;
+    Alert.alert(
+      'Inicio de sesión incorrecto',
+      mensajeError,
+      [
+        {
+          text: 'Ok',
+          onPress: () => {
+            cleanError();
+            cleanForm();
+            setCargando(false);
+          },
+        }
+      ]
+    )
+  }, [mensajeError])
 
   return (
     <View style={styles.container}>
@@ -59,20 +83,15 @@ export const Login = () => {
           secureTextEntry
           enablesReturnKeyAutomatically
         />
-
         <Button
           title="Iniciar sesión"
           onPress={iniciarSesion}
-          buttonStyle={{
-            backgroundColor: 'rgb(100, 33, 92)',
-            borderRadius: 3,
-          }}
+          buttonStyle={styles.buttonPrimary}
+          disabledStyle={styles.buttonPrimaryDisabled}
+          loading={cargando}
+          disabled={cargando}
           radius="lg"
-          containerStyle={{
-            width: '80%',
-            marginHorizontal: 50,
-            marginVertical: 10,
-          }}
+          containerStyle={styles.buttonContainer}
         />
       </View>
     </View>

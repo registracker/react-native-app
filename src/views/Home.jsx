@@ -19,10 +19,7 @@ export const Home = ({navigation}) => {
             }>
                 <Button
                     title="Iniciar sesión"
-                    buttonStyle={{
-                        backgroundColor: 'rgb(115, 102, 255)',
-                        borderRadius: 3,
-                    }}
+                    buttonStyle={styles.buttonPrimary}
                     radius="lg"
                     containerStyle={{
                         width: '80%',
@@ -33,10 +30,7 @@ export const Home = ({navigation}) => {
                 />
                 <Button
                     title="Registrarse"
-                    buttonStyle={{
-                        backgroundColor: 'rgb(100, 33, 92)',
-                        borderRadius: 3,
-                    }}
+                    buttonStyle={styles.buttonSecondary}
                     radius="lg"
                     containerStyle={{
                         width: '80%',

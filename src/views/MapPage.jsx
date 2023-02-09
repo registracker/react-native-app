@@ -34,7 +34,7 @@ export const MapPage = () => {
         Geolocation.getCurrentPosition(
             (position) => {
                 setPosition(position)
-                console.log(format(new Date(position.timestamp), 'yyyy-MM-dd HH:mm:ss'), position.coords.latitude, position.coords.longitude);
+                // console.log(format(new Date(position.timestamp), 'yyyy-MM-dd HH:mm:ss'), position.coords.latitude, position.coords.longitude);
 
                 point = {
                     longitud: position.coords.longitude,
@@ -64,7 +64,7 @@ export const MapPage = () => {
             (position) => {
                 setPosition(position)
                 setData([...data, position])
-                console.log('WATCH', format(new Date(position.timestamp), 'yyyy-MM-dd HH:mm:ss'), position.coords.latitude, position.coords.longitude);
+                // console.log('WATCH', format(new Date(position.timestamp), 'yyyy-MM-dd HH:mm:ss'), position.coords.latitude, position.coords.longitude);
             },
             (error) => {
                 // See error code charts below.
@@ -89,8 +89,8 @@ export const MapPage = () => {
             latitude: data[data.length - 1].coords.latitude,
             longitude: data[data.length - 1].coords.longitude
         }
-        console.log("🚀 ~ file: Home.jsx:74 ~ stopLocationObserving ~ comienzo", comienzo)
-        console.log("🚀 ~ file: Home.jsx:79 ~ stopLocationObserving ~ final", final)
+        // console.log("🚀 ~ file: Home.jsx:74 ~ stopLocationObserving ~ comienzo", comienzo)
+        // console.log("🚀 ~ file: Home.jsx:79 ~ stopLocationObserving ~ final", final)
         setPrimerPunto(comienzo)
         setUltimoPunto(final)
         setData([])
@@ -109,7 +109,7 @@ export const MapPage = () => {
             ],
             waypoints: puntos
         }
-        console.log(JSON.stringify(travel, null, 3));
+        // console.log(JSON.stringify(travel, null, 3));
     }
 
     return (
