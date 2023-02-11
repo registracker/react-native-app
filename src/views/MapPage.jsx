@@ -72,6 +72,8 @@ export const MapPage = () => {
             },
             {
                 enableHighAccuracy: true,
+                interval: 3000,
+                distanceFilter: 10,
             }
         )
 
@@ -109,7 +111,11 @@ export const MapPage = () => {
             ],
             waypoints: puntos
         }
-        // console.log(JSON.stringify(travel, null, 3));
+        console.log(JSON.stringify(travel, null, 3));
+    }
+
+    const getMarcadoresList = () => {
+
     }
 
     return (
