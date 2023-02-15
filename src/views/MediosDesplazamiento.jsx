@@ -31,7 +31,7 @@ export const MediosDesplazamiento = ({navigation}) => {
                     mediosDesplazamientos.map( medio => {
                         return (
                             <Pressable
-                                onPress={() => navigation.navigate('MapPage', { id:medio.id, nombre: medio.nombre, icono: medio.icono})}
+                                onPress={() => navigation.navigate('Desplazamiento', { id:medio.id, nombre: medio.nombre, icono: medio.icono})}
                                 key={medio.id}
                                 style={{
                                     ...styles.buttonPrimary,

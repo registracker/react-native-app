@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { Home } from '../views/Home';
-import { MapPage } from '../views/MapPage';
+import { Desplazamiento } from '../views/Desplazamiento';
 import { Permission } from '../views/Permission';
 import { PermissionContext } from '../context/Permission/PermissionContext';
 import { Loading } from '../components/Loading';
@@ -52,7 +52,7 @@ export const Navigation = () => {
                             (autenticado === 'autenticado')
                                 ? <Stack.Group >
                                     <Stack.Screen name='PanelPrincipal' component={PanelPrincipal} />
-                                    <Stack.Screen name='MapPage' component={MapPage} />
+                                    <Stack.Screen name='Desplazamiento' component={Desplazamiento} />
                                     <Stack.Screen name='MediosDesplazamiento' component={MediosDesplazamiento} />
                                 </Stack.Group>
                                 : <Stack.Group >

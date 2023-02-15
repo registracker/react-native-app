@@ -7,7 +7,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { addItem } from '../config/database';
 import { styles } from '../styles/style';
 
-export const MapPage = ({ route, navigation }) => {
+export const Desplazamiento = ({ route, navigation }) => {
 
     const { id: medio_id, nombre, icono } = route.params;
     const [data, setData] = useState([])
@@ -17,6 +17,7 @@ export const MapPage = ({ route, navigation }) => {
     const [primerPunto, setPrimerPunto] = useState({})
     const [ultimoPunto, setUltimoPunto] = useState({})
     const [viajeIniciado, setViajeIniciado] = useState(false)
+    
 
     useEffect(() => {
         if (position) {

@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const http_axios = async (url, params, method = 'get') => {
   const baseURL = API_URL;
+  console.log("🚀 ~ file: axios.js:8 ~ consthttp_axios= ~ baseURL", baseURL)
 
   const token = await AsyncStorage.getItem('token')
 
