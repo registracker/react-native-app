@@ -2,18 +2,19 @@ import axios from 'axios';
 import {API_URL} from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const http_axios = (url, params, method = 'get') => {
+
+export const http_axios = async (url, params, method = 'get') => {
   const baseURL = API_URL;
-  let token = null;
-  getToken().then(response => {
-    token = response;
-  });
+
+  const token = await AsyncStorage.getItem('token')
+
+
   const instance = axios.create({
     baseURL,
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
-      Authorization: token,
+      Authorization: `Bearer ${token}`,
     },
   });
 
@@ -61,7 +62,7 @@ export const http_axios = (url, params, method = 'get') => {
 
       case 'patch':
         return instance
-          .post(url, data, params)
+          .post(url, params)
           .then(response => {
             resolve(response.data);
           })
@@ -73,10 +74,4 @@ export const http_axios = (url, params, method = 'get') => {
         break;
     }
   });
-};
-
-export const getToken = async () => {
-  const token = await AsyncStorage.getItem('token');
-  console.log('🚀 ~ file: axios.js:58 ~ getToken ~ token', token);
-  return token;
 };

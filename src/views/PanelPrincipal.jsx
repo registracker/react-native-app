@@ -3,35 +3,53 @@ import React from 'react'
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { Icon } from '@rneui/themed';
+import { styles } from '../styles/style'
+import { useEffect } from 'react';
+import { createTable } from '../config/database';
 
-export const PanelPrincipal = ({navigation}) => {
 
-    const onPress = () => {
-        console.log("ON PRESS");
-    };
-    const pantallas = [
-        "Recorrido",
-    ]
+export const PanelPrincipal = ({ navigation }) => {
+
+    useEffect(() => {
+      
+        createTable('tbl_recorrido');
+    }, [])
+    
 
     return (
-        <View>
+        <View style={styles.container}>
             <Pressable
-                onPress={() => navigation.navigate('MapPage')}
-                style={styles.menu}
+                onPress={() => navigation.navigate('MediosDesplazamiento')}
+                style={{
+                    ...styles.buttonPrimary, 
+                    flexDirection: 'row',
+                    margin: 50,
+                    justifyContent: 'space-evenly',
+                    borderColor: 'white',
+                    borderWidth: 4,
+                    padding: 40,
+                    alignItems: 'center',
+                    borderRadius: 8
+                }}
             >
                 <Icon
-                    name='map-marker' 
+                    name='map-marker'
                     type='material-community'
                     size={50}
-                    />
+                    color= 'white'
+                />
 
-                    <Text>I'm pressable!</Text>
+                <Text style={{
+                    color: 'white',
+                    fontSize: 20,
+
+                }}>Iniciar recorrido</Text>
             </Pressable>
         </View>
     )
 }
 
-const styles = StyleSheet.create({
+const stylesPanel = StyleSheet.create({
     button: {
         alignItems: 'center',
         backgroundColor: '#DDDDDD',

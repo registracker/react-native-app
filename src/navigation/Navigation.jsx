@@ -10,6 +10,7 @@ import { Permisos } from '../views/Permisos';
 import { Login } from '../views/Login';
 import { AuthContext } from '../context/Auth/AuthContext';
 import { PanelPrincipal } from '../views/PanelPrincipal';
+import { MediosDesplazamiento } from '../views/MediosDesplazamiento';
 
 const Stack = createNativeStackNavigator();
 
@@ -52,6 +53,7 @@ export const Navigation = () => {
                                 ? <Stack.Group >
                                     <Stack.Screen name='PanelPrincipal' component={PanelPrincipal} />
                                     <Stack.Screen name='MapPage' component={MapPage} />
+                                    <Stack.Screen name='MediosDesplazamiento' component={MediosDesplazamiento} />
                                 </Stack.Group>
                                 : <Stack.Group >
                                     <Stack.Screen name='Home' component={Home} />
