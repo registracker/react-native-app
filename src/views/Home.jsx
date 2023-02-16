@@ -30,6 +30,7 @@ export const Home = ({navigation}) => {
                 />
                 <Button
                     title="Registrarse"
+                    onPress={() => navigation.navigate('Registrarse')}
                     buttonStyle={styles.buttonSecondary}
                     radius="lg"
                     containerStyle={{

@@ -11,6 +11,7 @@ import { Login } from '../views/Login';
 import { AuthContext } from '../context/Auth/AuthContext';
 import { PanelPrincipal } from '../views/PanelPrincipal';
 import { MediosDesplazamiento } from '../views/MediosDesplazamiento';
+import { Registrarse } from '../views/Registrarse';
 
 const Stack = createNativeStackNavigator();
 
@@ -58,6 +59,7 @@ export const Navigation = () => {
                                 : <Stack.Group >
                                     <Stack.Screen name='Home' component={Home} />
                                     <Stack.Screen name='Login' component={Login} />
+                                    <Stack.Screen name='Registrarse' component={Registrarse} />
                                 </Stack.Group>
                         }
 
