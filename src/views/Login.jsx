@@ -3,6 +3,7 @@ import { ActivityIndicator, Alert, Image, Text, TextInput, ToastAndroid, View } 
 import { styles } from '../styles/style'
 import { Button } from '@rneui/base'
 import { AuthContext } from '../context/Auth/AuthContext'
+import { Input } from '@rneui/themed'
 
 export const Login = () => {
 
@@ -62,7 +63,7 @@ export const Login = () => {
       </View>
       <View style={{ ...styles.foobar, flex: 2 }} >
 
-        <TextInput
+        <Input
           onChangeText={setEmail}
           value={email}
           placeholder="Correo electrónico"
@@ -70,18 +71,25 @@ export const Login = () => {
           inputMode="email"
           textAlign='center'
           style={styles.input}
+          label="Correo electrónico"
+          labelStyle={{ marginLeft: 15 }}
+          inputContainerStyle={{ borderBottomWidth: 0 }}
         />
-        <TextInput
+        <Input
           onChangeText={setPassword}
           value={password}
           style={styles.input}
           textAlign='center'
-          placeholder="Contraseña"
+          placeholder="******"
           autoCapitalize="none"
           autoCorrect={false}
           textContentType="newPassword"
           secureTextEntry
           enablesReturnKeyAutomatically
+          label="Contraseña"
+          labelStyle={{ marginLeft: 15 }}
+          inputContainerStyle={{ borderBottomWidth: 0 }}
+
         />
         <Button
           title="Iniciar sesión"

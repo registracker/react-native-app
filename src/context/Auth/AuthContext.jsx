@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
                 ToastAndroid.CENTER,
             );
         } catch (error) {
-            // console.log(JSON.stringify(error,null, 2));
+            console.log(JSON.stringify(error,null, 2));
             dispatch({
                 type: 'error', payload: {
                     mensaje: error.data?.message || 'Credenciales incorrectas'

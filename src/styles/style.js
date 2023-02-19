@@ -53,9 +53,9 @@ export const styles = StyleSheet.create({
     padding: 10,
     height: 40,
     width: '80%',
-    margin: 12,
     borderRadius: 15,
     borderColor: 'rgb(100, 33, 92)',
+    paddingBottom:0,
   },
   buttonPrimary: {
     backgroundColor: 'rgb(100, 33, 92)',
@@ -77,5 +77,7 @@ export const styles = StyleSheet.create({
     width: '80%',
     marginHorizontal: 50,
     marginVertical: 10,
-  }
+  },
+  primary: 'rgb(100, 33, 92)',
+  secondary:'rgb(115, 102, 255)'
 });

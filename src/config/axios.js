@@ -3,12 +3,9 @@ import {API_URL} from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-export const http_axios = async (url, params, method = 'get') => {
+export const http_axios = async (url, params, method = 'get', data) => {
   const baseURL = API_URL;
-  console.log("🚀 ~ file: axios.js:8 ~ consthttp_axios= ~ baseURL", baseURL)
-
   const token = await AsyncStorage.getItem('token')
-
 
   const instance = axios.create({
     baseURL,
@@ -33,7 +30,7 @@ export const http_axios = async (url, params, method = 'get') => {
 
       case 'post':
         return instance
-          .post(url, params)
+          .post(url, params, data)
           .then(response => {
             resolve(response.data);
           })
@@ -43,7 +40,7 @@ export const http_axios = async (url, params, method = 'get') => {
 
       case 'put':
         return instance
-          .post(url, params)
+          .post(url, params, data)
           .then(response => {
             resolve(response.data);
           })
