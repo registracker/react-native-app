@@ -2,18 +2,20 @@
 import { StatusBar, StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
+  primary: 'rgb(100, 33, 92)',
+  secondary: 'rgb(115, 102, 255)',
   container: {
     flex: 1,
     backgroundColor: '#e5e5e5',
   },
   toolbar: {
     flexDirection: 'row',
-    borderWidth: 3,
+    borderWidth: 2,
     justifyContent: 'space-between',
   },
   body: {
     alignItems: 'center',
-    flex: 6,
+    flex: 4,
     padding: 20,
     paddingTop: StatusBar.currentHeight,
   },
@@ -78,6 +80,24 @@ export const styles = StyleSheet.create({
     marginHorizontal: 50,
     marginVertical: 10,
   },
-  primary: 'rgb(100, 33, 92)',
-  secondary:'rgb(115, 102, 255)'
+  roundButtonDesplazamiento: {
+    width: 60,
+    height: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+    borderRadius: 100,
+    backgroundColor: 'white',
+  },
+  roundButtonDesplazamientoSelected: {
+    width: 60,
+    height: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+    borderRadius: 100,
+    backgroundColor: 'white',
+    borderColor:'rgb(100, 33, 92)',
+    borderWidth: 4,
+  },
 });

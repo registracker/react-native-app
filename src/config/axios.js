@@ -40,7 +40,7 @@ export const http_axios = async (url, params, method = 'get', data) => {
 
       case 'put':
         return instance
-          .post(url, params, data)
+          .put(url, params, data)
           .then(response => {
             resolve(response.data);
           })
@@ -50,7 +50,7 @@ export const http_axios = async (url, params, method = 'get', data) => {
 
       case 'delete':
         return instance
-          .post(url, params)
+          .delete(url, params)
           .then(response => {
             resolve(response.data);
           })
@@ -60,7 +60,7 @@ export const http_axios = async (url, params, method = 'get', data) => {
 
       case 'patch':
         return instance
-          .post(url, params)
+          .patch(url, params)
           .then(response => {
             resolve(response.data);
           })

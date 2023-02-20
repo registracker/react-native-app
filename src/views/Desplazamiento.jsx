@@ -1,4 +1,4 @@
-import { Button } from '@rneui/base';
+import { Button, FAB, SpeedDial } from '@rneui/base';
 import { format } from 'date-fns';
 import React, { useEffect, useState } from 'react'
 import { View, Text } from 'react-native'
@@ -6,6 +6,7 @@ import Geolocation from 'react-native-geolocation-service';
 import { ScrollView } from 'react-native-gesture-handler';
 import { addItem } from '../config/database';
 import { styles } from '../styles/style';
+import { MediosDesplazamientosComponentes } from '../components/MediosDesplazamientosComponentes';
 
 export const Desplazamiento = ({ route, navigation }) => {
 
@@ -17,7 +18,14 @@ export const Desplazamiento = ({ route, navigation }) => {
     const [primerPunto, setPrimerPunto] = useState({})
     const [ultimoPunto, setUltimoPunto] = useState({})
     const [viajeIniciado, setViajeIniciado] = useState(false)
-    
+    const [open, setOpen] = React.useState(false);
+    const [medio, setMedio] = useState({
+        id: medio_id,
+        nombre,
+        icono,
+    })
+
+
 
     useEffect(() => {
         if (position) {
@@ -127,59 +135,98 @@ export const Desplazamiento = ({ route, navigation }) => {
 
     return (
         <View style={styles.container}>
-            <ScrollView>
-                <Text style={{ ...styles.titleText, justifyContent: 'center' }} >{icono} {nombre} </Text>
 
-                <View style={styles.body}>
-                    <Text>
-                        {JSON.stringify(position, null, 5)}
-                    </Text>
-                </View>
-                <View style={styles.foobar}>
+            <View style={styles.body}>
+                <Text style={{ ...styles.titleText, justifyContent: 'center' }} >{medio.icono} {medio.nombre} </Text>
+                <Text>
+                    {JSON.stringify(position, null, 5)}
+                </Text>
+
+                <MediosDesplazamientosComponentes
+                    selected={medio}
+                    cambiarMedio={setMedio}
+                />
+            </View>
+
+            <View style={styles.foobar}>
+                <Button
+                    title="Obtener Ubicación"
+                    onPress={getLocation}
+                    buttonStyle={styles.buttonPrimary}
+                    disabledStyle={styles.buttonPrimaryDisabled}
+                    radius="lg"
+                    containerStyle={styles.buttonContainer}
+                />
+                {
+                    !viajeIniciado &&
                     <Button
-                        title="Obtener Ubicación"
-                        onPress={getLocation}
+                        title="Comenzar viaje"
+                        onPress={getLocationObservation}
                         buttonStyle={styles.buttonPrimary}
                         disabledStyle={styles.buttonPrimaryDisabled}
                         radius="lg"
                         containerStyle={styles.buttonContainer}
                     />
-                    {
-                        !viajeIniciado &&
+                }
+                {
+                    viajeIniciado && <>
                         <Button
-                            title="Comenzar viaje"
-                            onPress={getLocationObservation}
-                            buttonStyle={styles.buttonPrimary}
-                            disabledStyle={styles.buttonPrimaryDisabled}
+                            title="Detener viaje"
+                            onPress={stopLocationObserving}
+                            buttonStyle={styles.buttonSecondary}
+                            disabledStyle={styles.buttonSecondaryDisabled}
                             radius="lg"
                             containerStyle={styles.buttonContainer}
                         />
-                    }
-                    {
-                        viajeIniciado && <>
-                            <Button
-                                title="Detener viaje"
-                                onPress={stopLocationObserving}
-                                buttonStyle={styles.buttonSecondary}
-                                disabledStyle={styles.buttonSecondaryDisabled}
-                                radius="lg"
-                                containerStyle={styles.buttonContainer}
-                            />
-                            <Button
-                                title="Obtener puntos"
-                                onPress={handleGetDirections}
-                                buttonStyle={styles.buttonSecondary}
-                                disabledStyle={styles.buttonSecondaryDisabled}
-                                radius="lg"
-                                containerStyle={styles.buttonContainer}
-                            />
-                        </>
-                    }
+                        <Button
+                            title="Obtener puntos"
+                            onPress={handleGetDirections}
+                            buttonStyle={styles.buttonSecondary}
+                            disabledStyle={styles.buttonSecondaryDisabled}
+                            radius="lg"
+                            containerStyle={styles.buttonContainer}
+                        />
+                    </>
+                }
 
 
-
-                </View>
-            </ScrollView>
+            </View>
+            <FAB
+                visible={!viajeIniciado}
+                onPress={getLocationObservation}
+                title="Comenzar el viaje"
+                placement='left'
+                upperCase
+                icon={{ name: 'map-marker-distance', color: 'white', type:'material-community' }}
+                style={{ marginBottom: 20 }}
+            />
+            <FAB
+                visible={viajeIniciado}
+                onPress={stopLocationObserving}
+                title="Detener viaje"
+                placement='left'
+                upperCase
+                icon={{ name: 'stop-circle-outline', color: 'white', type:'material-community' }}
+                style={{ marginBottom: 20 }}
+            />
+            <SpeedDial
+                isOpen={open}
+                icon={{ name: 'map-marker-radius', color: '#fff', type: 'material-community' }}
+                openIcon={{ name: 'close', color: '#fff' }}
+                onOpen={() => setOpen(!open)}
+                onClose={() => setOpen(!open)}
+            >
+                <SpeedDial.Action
+                    icon={{ name: 'add', color: '#fff' }}
+                    title="Add"
+                    onPress={() => console.log('Add Something')}
+                />
+                <SpeedDial.Action
+                    icon={{ name: 'delete', color: '#fff' }}
+                    title="Delete"
+                    onPress={() => console.log('Delete Something')}
+                />
+            </SpeedDial>
 
         </View>
     )

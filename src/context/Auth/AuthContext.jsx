@@ -42,8 +42,21 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
-    const logout = () => {
-        dispatch({ type: 'logout' });
+    const logout = async() => {
+        try {
+            await http_axios('api/tokens', null, 'delete', null)
+            await AsyncStorage.multiRemove(['email', 'username', 'token'])
+            dispatch({ type: 'logout' });
+        } catch (error) {
+            console.log("🚀 ~ file: AuthContext.jsx:51 ~ logout ~ error", error)
+            ToastAndroid.showWithGravity(
+                'Lo sentimos, algo salio mal.',
+                ToastAndroid.LONG,
+                ToastAndroid.CENTER,
+            );
+        }
+
+
     }
 
     const cleanError = () => {
