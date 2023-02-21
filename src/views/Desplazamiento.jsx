@@ -7,6 +7,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { addItem } from '../config/database';
 import { styles } from '../styles/style';
 import { MediosDesplazamientosComponentes } from '../components/MediosDesplazamientosComponentes';
+import uuid from 'react-native-uuid';
 
 export const Desplazamiento = ({ route, navigation }) => {
 
@@ -19,6 +20,7 @@ export const Desplazamiento = ({ route, navigation }) => {
     const [ultimoPunto, setUltimoPunto] = useState({})
     const [viajeIniciado, setViajeIniciado] = useState(false)
     const [open, setOpen] = React.useState(false);
+    const [uuidDesplazamiento, setUuidDesplazamiento] = useState()
     const [medio, setMedio] = useState({
         id: medio_id,
         nombre,
@@ -33,8 +35,11 @@ export const Desplazamiento = ({ route, navigation }) => {
             setPuntos(
                 [...puntos,
                 {
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude
+                    latitud: position.coords.latitude,
+                    longitud: position.coords.longitude,
+                    fecha_registro: position.timestamp,
+                    velocidad: position.coords.speed,
+                    id_medio_desplazamiento: medio.id,
                 }
                 ]
             )
@@ -74,7 +79,8 @@ export const Desplazamiento = ({ route, navigation }) => {
 
     const getLocationObservation = async () => {
 
-        setViajeIniciado(true)
+        setViajeIniciado(true) 
+        setUuidDesplazamiento(uuid.v4());
 
         const observation = await Geolocation.watchPosition(
             (position) => {
@@ -88,8 +94,8 @@ export const Desplazamiento = ({ route, navigation }) => {
             },
             {
                 enableHighAccuracy: true,
-                interval: 3000,
-                distanceFilter: 10,
+                interval: 5000,
+                distanceFilter: 0
             }
         )
 
@@ -101,20 +107,25 @@ export const Desplazamiento = ({ route, navigation }) => {
 
         setViajeIniciado(false);
 
-        const comienzo = {
-            latitude: data[0].coords.latitude,
-            longitude: data[0].coords.longitude
+        if (data) {
+            const comienzo = {
+                latitude: data[0].coords.latitude,
+                longitude: data[0].coords.longitude
+            }
+            const final = {
+                latitude: data[data.length - 1].coords.latitude,
+                longitude: data[data.length - 1].coords.longitude
+            }
+            setPrimerPunto(comienzo)
+            setUltimoPunto(final)
         }
-        const final = {
-            latitude: data[data.length - 1].coords.latitude,
-            longitude: data[data.length - 1].coords.longitude
-        }
+
+
+
         // console.log("🚀 ~ file: Home.jsx:74 ~ stopLocationObserving ~ comienzo", comienzo)
         // console.log("🚀 ~ file: Home.jsx:79 ~ stopLocationObserving ~ final", final)
-        setPrimerPunto(comienzo)
-        setUltimoPunto(final)
-        setData([])
 
+        setData([])
         Geolocation.clearWatch(watchId);
     }
 
@@ -136,7 +147,7 @@ export const Desplazamiento = ({ route, navigation }) => {
     return (
         <View style={styles.container}>
 
-            <View style={styles.body}>
+            <View style={{ ...styles.body, justifyContent: 'space-between' }}>
                 <Text style={{ ...styles.titleText, justifyContent: 'center' }} >{medio.icono} {medio.nombre} </Text>
                 <Text>
                     {JSON.stringify(position, null, 5)}
@@ -150,6 +161,14 @@ export const Desplazamiento = ({ route, navigation }) => {
 
             <View style={styles.foobar}>
                 <Button
+                    title="Obtener puntos"
+                    onPress={handleGetDirections}
+                    buttonStyle={styles.buttonSecondary}
+                    disabledStyle={styles.buttonSecondaryDisabled}
+                    radius="lg"
+                    containerStyle={styles.buttonContainer}
+                />
+                <Button
                     title="Obtener Ubicación"
                     onPress={getLocation}
                     buttonStyle={styles.buttonPrimary}
@@ -157,8 +176,6 @@ export const Desplazamiento = ({ route, navigation }) => {
                     radius="lg"
                     containerStyle={styles.buttonContainer}
                 />
-                {
-                    !viajeIniciado &&
                     <Button
                         title="Comenzar viaje"
                         onPress={getLocationObservation}
@@ -167,9 +184,6 @@ export const Desplazamiento = ({ route, navigation }) => {
                         radius="lg"
                         containerStyle={styles.buttonContainer}
                     />
-                }
-                {
-                    viajeIniciado && <>
                         <Button
                             title="Detener viaje"
                             onPress={stopLocationObserving}
@@ -178,52 +192,58 @@ export const Desplazamiento = ({ route, navigation }) => {
                             radius="lg"
                             containerStyle={styles.buttonContainer}
                         />
-                        <Button
-                            title="Obtener puntos"
-                            onPress={handleGetDirections}
-                            buttonStyle={styles.buttonSecondary}
-                            disabledStyle={styles.buttonSecondaryDisabled}
-                            radius="lg"
-                            containerStyle={styles.buttonContainer}
-                        />
-                    </>
-                }
+
 
 
             </View>
-            <FAB
-                visible={!viajeIniciado}
-                onPress={getLocationObservation}
-                title="Comenzar el viaje"
-                placement='left'
-                upperCase
-                icon={{ name: 'map-marker-distance', color: 'white', type:'material-community' }}
-                style={{ marginBottom: 20 }}
-            />
-            <FAB
-                visible={viajeIniciado}
-                onPress={stopLocationObserving}
-                title="Detener viaje"
-                placement='left'
-                upperCase
-                icon={{ name: 'stop-circle-outline', color: 'white', type:'material-community' }}
-                style={{ marginBottom: 20 }}
-            />
+            {
+                viajeIniciado
+                    ? (
+                        <FAB
+                            visible={viajeIniciado}
+                            onPress={stopLocationObserving}
+                            title="Detener viaje"
+                            placement='left'
+                            upperCase
+                            icon={{ name: 'stop-circle-outline', color: 'white', type: 'material-community' }}
+                            style={{ marginBottom: 20 }}
+                            color={styles.primary}
+                        />
+                    ) : (
+                        <FAB
+                            visible
+                            onPress={getLocationObservation}
+                            title="Comenzar el viaje"
+                            placement='left'
+                            upperCase
+                            icon={{ name: 'map-marker-distance', color: 'white', type: 'material-community' }}
+                            style={{ marginBottom: 20 }}
+                            color={styles.primary}
+                        />
+                    )
+            }
+
+
+
             <SpeedDial
                 isOpen={open}
                 icon={{ name: 'map-marker-radius', color: '#fff', type: 'material-community' }}
                 openIcon={{ name: 'close', color: '#fff' }}
                 onOpen={() => setOpen(!open)}
                 onClose={() => setOpen(!open)}
+                // style={{ }}
+                color={styles.primary}
             >
                 <SpeedDial.Action
-                    icon={{ name: 'add', color: '#fff' }}
-                    title="Add"
+                    icon={{ name: 'marker-check', color: '#fff', type:'material-community' }}
+                    title="Marcador"
+                    color={styles.primary}
                     onPress={() => console.log('Add Something')}
                 />
                 <SpeedDial.Action
-                    icon={{ name: 'delete', color: '#fff' }}
-                    title="Delete"
+                    icon={{ name: 'bullhorn', color: '#fff', type: 'material-community' }}
+                    title="Incidente"
+                    color={styles.primary}
                     onPress={() => console.log('Delete Something')}
                 />
             </SpeedDial>

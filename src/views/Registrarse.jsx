@@ -38,10 +38,10 @@ export const Registrarse = ({navigation}) => {
                 flexDirection: 'row',
                 justifyContent: 'center',
                 alignContent: 'center',
-                marginTop: 100
+                marginTop: 100,
             }}>
                 <Text style={styles.titleText}>
-                    ¿Que tipo de usuario deseas ser?
+                    Elige el tipo de usuario configurar
                 </Text>
                 <TooltipComponent
                     text={infoGeneral}
@@ -49,7 +49,7 @@ export const Registrarse = ({navigation}) => {
                         name: 'information',
                         type: 'material-community',
                         color: 'black',
-                        size: 35,
+                        size: 25,
                         style: {
                             marginTop: 12
                         }
@@ -62,6 +62,7 @@ export const Registrarse = ({navigation}) => {
                     }}
                 />
             </View>
+
             <TouchableHighlight style={{
                 ...styles.body,
                 flex: 2,
@@ -151,8 +152,7 @@ export const Registrarse = ({navigation}) => {
             >
                 <View style={{
                     flex: 1,
-                    width: '100%'
-
+                    width: '100%',
                 }}>
                     <View style={{
                         flex: 1,
@@ -186,7 +186,7 @@ export const Registrarse = ({navigation}) => {
                                 name: 'information',
                                 type: 'material-community',
                                 color: 'white',
-                                size: 35,
+                                size: 25,
                                 style: {
                                     marginTop: 5,
                                     marginRight: 5,
@@ -205,6 +205,7 @@ export const Registrarse = ({navigation}) => {
 
 
             </TouchableHighlight>
+
         </View >
     )
 }

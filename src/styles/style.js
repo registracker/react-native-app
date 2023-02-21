@@ -1,23 +1,28 @@
 /* eslint-disable prettier/prettier */
 import { StatusBar, StyleSheet } from 'react-native';
 
+const primary = '#8f0c1e'
+const primaryDisabled = '#840b1b'
+const secondary = '#331b4b'
+const secondaryDisabled = '#b896d9'
+
 export const styles = StyleSheet.create({
-  primary: 'rgb(100, 33, 92)',
-  secondary: 'rgb(115, 102, 255)',
+  primary,
+  secondary,
   container: {
     flex: 1,
     backgroundColor: '#e5e5e5',
+  },
+  body: {
+    alignItems: 'center',
+    flex: 10,
+    padding: 20,
+    paddingTop: StatusBar.currentHeight,
   },
   toolbar: {
     flexDirection: 'row',
     borderWidth: 2,
     justifyContent: 'space-between',
-  },
-  body: {
-    alignItems: 'center',
-    flex: 4,
-    padding: 20,
-    paddingTop: StatusBar.currentHeight,
   },
   foobar: {
     flex: 2,
@@ -55,20 +60,20 @@ export const styles = StyleSheet.create({
     padding: 10,
     height: 40,
     width: '80%',
-    borderRadius: 15,
-    borderColor: 'rgb(100, 33, 92)',
+    borderRadius: 5,
+    borderColor: primary,
     paddingBottom:0,
   },
   buttonPrimary: {
-    backgroundColor: 'rgb(100, 33, 92)',
+    backgroundColor: primary,
     borderRadius: 3,
   },
   buttonPrimaryDisabled: {
-    backgroundColor: 'rgb(176, 58, 162)',
+    backgroundColor: primaryDisabled,
     borderRadius: 3,
   },
   buttonSecondary: {
-    backgroundColor: 'rgb(115, 102, 255)',
+    backgroundColor: secondary,
     borderRadius: 3,
   },
   buttonSecondaryDisabled: {
@@ -97,7 +102,7 @@ export const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 100,
     backgroundColor: 'white',
-    borderColor:'rgb(100, 33, 92)',
+    borderColor:primary,
     borderWidth: 4,
   },
 });

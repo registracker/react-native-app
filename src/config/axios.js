@@ -30,7 +30,7 @@ export const http_axios = async (url, params, method = 'get', data) => {
 
       case 'post':
         return instance
-          .post(url, params, data)
+          .post(url, params)
           .then(response => {
             resolve(response.data);
           })
