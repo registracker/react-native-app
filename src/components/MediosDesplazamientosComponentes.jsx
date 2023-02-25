@@ -19,7 +19,6 @@ export const MediosDesplazamientosComponentes = ({ selected, cambiarMedio }) => 
 
     const created = async () => {
         const { data } = await getMediosDesplazamientos();
-        console.log("🚀 ~ file: MediosDesplazamientosComponentes.jsx:23 ~ created ~ data:", data)
         setMediosDesplazamientos(data)
     }
 

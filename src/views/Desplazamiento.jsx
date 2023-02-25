@@ -1,12 +1,11 @@
-import { Button, FAB, SpeedDial } from '@rneui/base';
+import { FAB, SpeedDial } from '@rneui/base';
 import { format } from 'date-fns';
 import React, { useEffect, useState } from 'react'
 import { View, Text } from 'react-native'
 import Geolocation from 'react-native-geolocation-service';
-import { ScrollView } from 'react-native-gesture-handler';
-import { addItem } from '../config/database';
 import { styles } from '../styles/style';
 import { MediosDesplazamientosComponentes } from '../components/MediosDesplazamientosComponentes';
+import { addItemDesplazamiento, createTableDesplazamiento } from '../database/TblDesplazamientos';
 import uuid from 'react-native-uuid';
 
 export const Desplazamiento = ({ route, navigation }) => {
@@ -22,10 +21,14 @@ export const Desplazamiento = ({ route, navigation }) => {
     const [uuidDesplazamiento, setUuidDesplazamiento] = useState()
     const [medio, setMedio] = useState({ id: 1, nombre: 'Caminando', icono: '🚶'})
 
-
+    useEffect(() => {
+        createTableDesplazamiento()
+    }, [])
+    
 
     useEffect(() => {
         if (position) {
+            console.log("New POINT");
             setData([...data, position])
             setPuntos(
                 [...puntos,
@@ -101,18 +104,35 @@ export const Desplazamiento = ({ route, navigation }) => {
     const stopLocationObserving = () => {
 
         setViajeIniciado(false);
+        
+
 
         if (data.length > 0) {
-            const comienzo = {
-                latitude: data[0].coords.latitude,
-                longitude: data[0].coords.longitude
+            // const comienzo = {
+            //     latitude: data[0].coords.latitude,
+            //     longitude: data[0].coords.longitude
+            // }
+            // const final = {
+            //     latitude: data[data.length - 1].coords.latitude,
+            //     longitude: data[data.length - 1].coords.longitude
+            // }
+            // setPrimerPunto(comienzo)
+            // setUltimoPunto(final)
+
+            // const desplazamiento = puntos.map(a => `(${Object.values(a).join(", ")})`)
+            //     .join(", ")
+
+
+            const data = {
+                uuid: uuidDesplazamiento,
+                desplazamiento: JSON.stringify(puntos),
+                fecha_registro: format(new Date(), 'dd-MM-yyyy HH:mm:ss')
             }
-            const final = {
-                latitude: data[data.length - 1].coords.latitude,
-                longitude: data[data.length - 1].coords.longitude
-            }
-            setPrimerPunto(comienzo)
-            setUltimoPunto(final)
+            addItemDesplazamiento(data)
+
+
+
+
         }
 
         // console.log("🚀 ~ file: Home.jsx:74 ~ stopLocationObserving ~ comienzo", comienzo)
@@ -121,7 +141,6 @@ export const Desplazamiento = ({ route, navigation }) => {
         setData([])
         Geolocation.clearWatch(watchId);
     }
-
 
     const handleGetDirections = async () => {
 

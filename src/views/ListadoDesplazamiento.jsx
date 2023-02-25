@@ -1,29 +1,29 @@
 import React, { useState } from 'react'
+import { useEffect } from 'react'
 import { FlatList, Text, View } from 'react-native'
-import { getItems } from '../config/database'
+import { getDesplazamientos } from '../database/TblDesplazamientos'
 
 export const ListadoDesplazamiento = () => {
 
   const [listado, setListado] = useState()
-  const items = async() => {
-    const data =  await getItems('tbl_recorrido', null)
+  const items = () => {
+    const data = getDesplazamientos();
+    console.log("🚀 ~ file: ListadoDesplazamiento.jsx:10 ~ items ~ data:", data)
     setListado(data);
   }
-  items()
+  
+  useEffect(() => {
+    
+    items()
+  
+  }, [])
+  
 
-  const renderData = ({item}) => (
-    <View>
-      <Text>ID:{item.id} | Longitud: {item.longitud || "--"}, Latitud: {item.latitud || "--"}</Text>
-      <Text></Text>
-    </View>
-  )
 
   return (
     <View>
-      <Text>ListadoDesplazamiento</Text>
-      {/* {listado} */}
-      
-      <FlatList data={listado} renderItem={renderData} />
+      <Text>ListadoDesplazamiento {JSON.stringify(listado)}</Text>
+
     </View>
   )
 }
