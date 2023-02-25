@@ -2,10 +2,9 @@ import axios from 'axios';
 import {API_URL} from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
 export const http_axios = async (url, params, method = 'get', data) => {
   const baseURL = API_URL;
-  const token = await AsyncStorage.getItem('token')
+  const token = await AsyncStorage.getItem('token');
 
   const instance = axios.create({
     baseURL,
@@ -30,7 +29,7 @@ export const http_axios = async (url, params, method = 'get', data) => {
 
       case 'post':
         return instance
-          .post(url, params)
+          .post(url, {...params, ...data})
           .then(response => {
             resolve(response.data);
           })
@@ -40,7 +39,7 @@ export const http_axios = async (url, params, method = 'get', data) => {
 
       case 'put':
         return instance
-          .put(url, params, data)
+          .put(url, {...params, ...data})
           .then(response => {
             resolve(response.data);
           })
@@ -50,7 +49,7 @@ export const http_axios = async (url, params, method = 'get', data) => {
 
       case 'delete':
         return instance
-          .delete(url, params)
+          .delete(url, {...params, ...data})
           .then(response => {
             resolve(response.data);
           })
@@ -60,7 +59,7 @@ export const http_axios = async (url, params, method = 'get', data) => {
 
       case 'patch':
         return instance
-          .patch(url, params)
+          .patch(url, {...params, ...data})
           .then(response => {
             resolve(response.data);
           })

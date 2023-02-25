@@ -5,7 +5,6 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import { Loading } from './Loading';
 
 import { getMediosDesplazamientos } from '../services/mediosDesplazamientoServices'
-import { ScrollView } from 'react-native-gesture-handler';
 import { styles } from '../styles/style';
 
 
@@ -20,6 +19,7 @@ export const MediosDesplazamientosComponentes = ({ selected, cambiarMedio }) => 
 
     const created = async () => {
         const { data } = await getMediosDesplazamientos();
+        console.log("🚀 ~ file: MediosDesplazamientosComponentes.jsx:23 ~ created ~ data:", data)
         setMediosDesplazamientos(data)
     }
 
@@ -29,10 +29,11 @@ export const MediosDesplazamientosComponentes = ({ selected, cambiarMedio }) => 
     return (
         <View style={{
             flexDirection: 'row',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            paddingHorizontal:'10%'
+
         }}>
-            <ScrollView
-                horizontal
-            >
                 {
                     mediosDesplazamientos.map(medio => {
                         return (
@@ -56,7 +57,6 @@ export const MediosDesplazamientosComponentes = ({ selected, cambiarMedio }) => 
                         )
                     })
                 }
-            </ScrollView>
         </View>
     )
 }

@@ -11,7 +11,6 @@ import uuid from 'react-native-uuid';
 
 export const Desplazamiento = ({ route, navigation }) => {
 
-    const { id: medio_id, nombre, icono } = route.params;
     const [data, setData] = useState([])
     const [puntos, setPuntos] = useState([])
     const [position, setPosition] = useState()
@@ -21,11 +20,7 @@ export const Desplazamiento = ({ route, navigation }) => {
     const [viajeIniciado, setViajeIniciado] = useState(false)
     const [open, setOpen] = React.useState(false);
     const [uuidDesplazamiento, setUuidDesplazamiento] = useState()
-    const [medio, setMedio] = useState({
-        id: medio_id,
-        nombre,
-        icono,
-    })
+    const [medio, setMedio] = useState({ id: 1, nombre: 'Caminando', icono: '🚶'})
 
 
 
@@ -79,7 +74,7 @@ export const Desplazamiento = ({ route, navigation }) => {
 
     const getLocationObservation = async () => {
 
-        setViajeIniciado(true) 
+        setViajeIniciado(true)
         setUuidDesplazamiento(uuid.v4());
 
         const observation = await Geolocation.watchPosition(
@@ -107,7 +102,7 @@ export const Desplazamiento = ({ route, navigation }) => {
 
         setViajeIniciado(false);
 
-        if (data) {
+        if (data.length > 0) {
             const comienzo = {
                 latitude: data[0].coords.latitude,
                 longitude: data[0].coords.longitude
@@ -119,8 +114,6 @@ export const Desplazamiento = ({ route, navigation }) => {
             setPrimerPunto(comienzo)
             setUltimoPunto(final)
         }
-
-
 
         // console.log("🚀 ~ file: Home.jsx:74 ~ stopLocationObserving ~ comienzo", comienzo)
         // console.log("🚀 ~ file: Home.jsx:79 ~ stopLocationObserving ~ final", final)
@@ -160,7 +153,7 @@ export const Desplazamiento = ({ route, navigation }) => {
             </View>
 
             <View style={styles.foobar}>
-                <Button
+                {/* <Button
                     title="Obtener puntos"
                     onPress={handleGetDirections}
                     buttonStyle={styles.buttonSecondary}
@@ -176,22 +169,22 @@ export const Desplazamiento = ({ route, navigation }) => {
                     radius="lg"
                     containerStyle={styles.buttonContainer}
                 />
-                    <Button
-                        title="Comenzar viaje"
-                        onPress={getLocationObservation}
-                        buttonStyle={styles.buttonPrimary}
-                        disabledStyle={styles.buttonPrimaryDisabled}
-                        radius="lg"
-                        containerStyle={styles.buttonContainer}
-                    />
-                        <Button
-                            title="Detener viaje"
-                            onPress={stopLocationObserving}
-                            buttonStyle={styles.buttonSecondary}
-                            disabledStyle={styles.buttonSecondaryDisabled}
-                            radius="lg"
-                            containerStyle={styles.buttonContainer}
-                        />
+                <Button
+                    title="Comenzar viaje"
+                    onPress={getLocationObservation}
+                    buttonStyle={styles.buttonPrimary}
+                    disabledStyle={styles.buttonPrimaryDisabled}
+                    radius="lg"
+                    containerStyle={styles.buttonContainer}
+                />
+                <Button
+                    title="Detener viaje"
+                    onPress={stopLocationObserving}
+                    buttonStyle={styles.buttonSecondary}
+                    disabledStyle={styles.buttonSecondaryDisabled}
+                    radius="lg"
+                    containerStyle={styles.buttonContainer}
+                /> */}
 
 
 
@@ -235,7 +228,7 @@ export const Desplazamiento = ({ route, navigation }) => {
                 color={styles.primary}
             >
                 <SpeedDial.Action
-                    icon={{ name: 'marker-check', color: '#fff', type:'material-community' }}
+                    icon={{ name: 'marker-check', color: '#fff', type: 'material-community' }}
                     title="Marcador"
                     color={styles.primary}
                     onPress={() => console.log('Add Something')}

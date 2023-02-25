@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { FlatList, Text, View } from 'react-native'
 import { getItems } from '../config/database'
 
-export const ListadoRecorridos = () => {
+export const ListadoDesplazamiento = () => {
 
   const [listado, setListado] = useState()
   const items = async() => {
@@ -20,7 +20,7 @@ export const ListadoRecorridos = () => {
 
   return (
     <View>
-      <Text>ListadoRecorridos</Text>
+      <Text>ListadoDesplazamiento</Text>
       {/* {listado} */}
       
       <FlatList data={listado} renderItem={renderData} />

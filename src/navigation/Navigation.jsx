@@ -13,6 +13,7 @@ import { PanelPrincipal } from '../views/PanelPrincipal';
 import { MediosDesplazamiento } from '../views/MediosDesplazamiento';
 import { Registrarse } from '../views/Registrarse';
 import { FormularioRegistro } from '../views/FormularioRegistro';
+import { TabNavegacion } from './TabNavegacion';
 
 const Stack = createNativeStackNavigator();
 
@@ -53,9 +54,7 @@ export const Navigation = () => {
                         {
                             (autenticado === 'autenticado')
                                 ? <Stack.Group >
-                                    <Stack.Screen name='PanelPrincipal' component={PanelPrincipal} />
-                                    <Stack.Screen name='Desplazamiento' component={Desplazamiento} />
-                                    <Stack.Screen name='MediosDesplazamiento' component={MediosDesplazamiento} />
+                                    <Stack.Screen name='TabNavegacion' component={TabNavegacion} />
                                 </Stack.Group>
                                 : <Stack.Group >
                                     <Stack.Screen name='Home' component={Home} />
