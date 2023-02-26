@@ -125,7 +125,7 @@ export const Desplazamiento = ({ route, navigation }) => {
 
             const data = {
                 uuid: uuidDesplazamiento,
-                desplazamiento: JSON.stringify(puntos),
+                desplazamiento: JSON.stringify(puntos, null),
                 fecha_registro: format(new Date(), 'dd-MM-yyyy HH:mm:ss')
             }
             addItemDesplazamiento(data)

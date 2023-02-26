@@ -40,6 +40,7 @@ export const addItemDesplazamiento = (data) => {
 };
 
 export const getDesplazamientos = () => {
+  return new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
         `SELECT * FROM tbl_desplazamiento ORDER BY fecha_registro DESC;`,
@@ -51,13 +52,52 @@ export const getDesplazamientos = () => {
           if (len > 0) {
             result = res.rows.raw();
           }
-          console.log(result);
-          // resolve(result);
+          resolve(result);
         },
         () => {
           reject(false);
-          console.log('Error: database.js:78');
         },
       );
     });
+  });
+};
+
+
+export const removeDesplazamiento = (uuid) => {
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        `DELETE FROM tbl_desplazamiento WHERE uuid = ?;`,
+        [uuid],
+        (transaction, res) => {
+          console.log("🚀 ~ file: TblDesplazamientos.jsx:81 ~ returnnewPromise ~ res:", res)
+          resolve(res);
+        },
+        () => {
+          reject(false);
+        },
+      );
+    });
+  });
+};
+
+
+export const sendDesplazamiento = (uuid) => {
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        `UPDATE tbl_desplazamiento
+         SET enviado = 1
+         WHERE uuid = ?;`,
+        [uuid],
+        (transaction, res) => {
+          console.log("🚀 ~ file: TblDesplazamientos.jsx:81 ~ returnnewPromise ~ res:", res)
+          resolve(res);
+        },
+        () => {
+          reject(false);
+        },
+      );
+    });
+  });
 };

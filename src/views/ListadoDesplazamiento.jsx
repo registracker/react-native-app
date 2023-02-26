@@ -1,29 +1,99 @@
+import { Button, Icon, ListItem } from '@rneui/base'
 import React, { useState } from 'react'
 import { useEffect } from 'react'
 import { FlatList, Text, View } from 'react-native'
-import { getDesplazamientos } from '../database/TblDesplazamientos'
+import { ScrollView } from 'react-native-gesture-handler'
+import { Loading } from '../components/Loading'
+import { getDesplazamientos, removeDesplazamiento, sendDesplazamiento } from '../database/TblDesplazamientos'
+import { postDesplazamiento } from '../services/desplazamientoServices'
 
 export const ListadoDesplazamiento = () => {
 
   const [listado, setListado] = useState()
-  const items = () => {
-    const data = getDesplazamientos();
-    console.log("🚀 ~ file: ListadoDesplazamiento.jsx:10 ~ items ~ data:", data)
-    setListado(data);
+  const [cargando, setCargando] = useState(false)
+  
+  const items = async () => {
+    const data = await getDesplazamientos();
+    setListado(data)
   }
-  
-  useEffect(() => {
-    
-    items()
-  
-  }, [])
-  
 
+  const deleteDesplazamiento = async (uuid, reset) => {
+    try {
+      await removeDesplazamiento(uuid)
+      items();
+      reset()
+    } catch (error) {
+      console.error(error)
+      reset()
+      
+    }
+  }
+
+  const enviarDesplazamiento = async (item, reset) => {
+    try {
+      setCargando(true)
+      const data = {
+        uuid: item.uuid,
+        desplazamiento: JSON.parse(item.desplazamiento)
+      }
+      console.log(JSON.stringify(data, null, 3));
+      await postDesplazamiento(data)
+      await sendDesplazamiento(item.uuid, reset)
+      items();
+      reset()
+    } catch (error) {
+      console.error(error);
+      reset()
+    } finally {
+      setCargando(false)
+    }
+  }
+
+  useEffect(() => {
+    items();
+  }, [])
+
+
+  if (!listado) return <Loading />
 
   return (
     <View>
-      <Text>ListadoDesplazamiento {JSON.stringify(listado)}</Text>
+      <FlatList
+        data={listado}
+        renderItem={({ item }) => (
+          <ListItem.Swipeable
+            leftContent={(reset) => (
+              <Button
+                title="Eliminar"
+                onPress={() => deleteDesplazamiento(item.uuid, reset)}
+                icon={{ name: 'delete', color: 'white' }}
+                buttonStyle={{ minHeight: '100%', backgroundColor: 'red' }}
+              />
+            )}
+            rightContent={(reset) => (
+              <Button
+                title="Enviar"
+                onPress={() => enviarDesplazamiento(item, reset)}
+                icon={{ name: 'send', color: 'white' }}
+                buttonStyle={{ minHeight: '100%', backgroundColor: 'green' }}
+                loading={cargando}
+              />
+            )}
+          >
+            <Icon name="run" type='material-community' />
+            <ListItem.Content>
+              <ListItem.Title>{item.uuid}</ListItem.Title>
+              <ListItem.Subtitle>{item.fecha_registro}</ListItem.Subtitle>
+            </ListItem.Content>
 
+            <Icon 
+            type="material-community" 
+            name={item.enviado == 1 ? 'check-circle-outline': 'cloud-upload' } 
+            color={item.enviado == 1 ? 'green': 'grey' } 
+            />
+          </ListItem.Swipeable>
+        )}
+      />
     </View>
   )
 }
