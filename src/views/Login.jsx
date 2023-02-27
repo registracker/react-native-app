@@ -72,7 +72,7 @@ export const Login = () => {
             textAlign='center'
             style={styles.input}
             label="Correo electrónico"
-            labelStyle={{ marginLeft: 15, color: 'white' }}
+            labelStyle={{ color: 'white' }}
             inputContainerStyle={{ borderBottomWidth: 0 }}
           />
           <Input
@@ -87,7 +87,7 @@ export const Login = () => {
             secureTextEntry
             enablesReturnKeyAutomatically
             label="Contraseña"
-            labelStyle={{ marginLeft: 15, color: 'white' }}
+            labelStyle={{ color: 'white' }}
             inputContainerStyle={{ borderBottomWidth: 0 }}
 
           />

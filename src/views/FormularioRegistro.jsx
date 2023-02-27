@@ -253,7 +253,7 @@ export const FormularioRegistro = ({ route, navigation }) => {
                     </View>
                     <View style={{ alignItems: 'center' }}>
                         {
-                            selectionRol && <Text style={{ color: 'red', fontSize: 12 }}>Debe seleccionar un rol</Text>
+                            selectionRol && <Text style={{ color: 'white', fontSize: 12 }}>Debe seleccionar un rol</Text>
                         }
                     </View>
                     <View style={{ ...styles.foobar, flex: 3, marginTop: 10 }} >
@@ -271,6 +271,9 @@ export const FormularioRegistro = ({ route, navigation }) => {
                             ref={inputEmail}
                             errorMessage={emailErrorMessage}
                             onBlur={() => isEmail()}
+                            labelStyle={{ marginTop: 10, color: 'white' }}
+                            errorStyle={{ marginLeft: 15, color: 'white' }}
+
 
                         />
                         <Input
@@ -278,7 +281,7 @@ export const FormularioRegistro = ({ route, navigation }) => {
                             value={password}
                             style={styles.input}
                             label="Contraseña"
-                            labelStyle={{ marginTop: 10 }}
+                            labelStyle={{ marginTop: 10, color:'white' }}
                             textAlign='center'
                             placeholder="**********"
                             autoCapitalize="none"
@@ -288,9 +291,10 @@ export const FormularioRegistro = ({ route, navigation }) => {
                             enablesReturnKeyAutomatically
                             inputContainerStyle={{ borderBottomWidth: 0 }}
                             errorMessage={passwordErrorMessage}
-                            errorStyle={{ marginLeft: 15 }}
+                            errorStyle={{ marginLeft: 15, color: 'white' }}
                             ref={inputPassword}
                             onBlur={isPasswordSecure}
+
                         />
 
                         <Input
@@ -298,7 +302,7 @@ export const FormularioRegistro = ({ route, navigation }) => {
                             value={passwordConfirm}
                             style={styles.input}
                             label="Confirmar contraseña"
-                            labelStyle={{ marginTop: 10 }}
+                            labelStyle={{ marginTop: 10, color: 'white' }}
                             textAlign='center'
                             placeholder=" *********"
                             autoCapitalize="none"
@@ -308,8 +312,9 @@ export const FormularioRegistro = ({ route, navigation }) => {
                             enablesReturnKeyAutomatically
                             inputContainerStyle={{ borderBottomWidth: 0 }}
                             errorMessage={passwordConfirmErrorMessage}
-                            errorStyle={{ marginLeft: 15 }}
+                            errorStyle={{ marginLeft: 15, color: 'white'}}
                             ref={inputPasswordConfirm}
+                            
 
                         />
                         <Button
