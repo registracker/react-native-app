@@ -1,11 +1,16 @@
 import React from 'react'
-import { Image, Text, View } from 'react-native'
+import { Image, ImageBackground, Text, View } from 'react-native'
 import { styles } from '../styles/style'
 import { Button } from '@rneui/themed';
 
 export const Home = ({navigation}) => {
     return (
         <View style={styles.container}>
+            <ImageBackground source={require('../img/loginBackground.jpg')} resizeMode="cover" style={{
+                flex: 1,
+                justifyContent: 'center',
+            }}>
+
             <View style={{
                 ...styles.body,
             }}>
@@ -30,7 +35,7 @@ export const Home = ({navigation}) => {
                 />
                 <Button
                     title="Registrarse"
-                    onPress={() => navigation.navigate('Registrarse')}
+                    onPress={() => navigation.navigate('FormularioRegistro')}
                     buttonStyle={styles.buttonSecondary}
                     radius="lg"
                     containerStyle={{
@@ -40,6 +45,7 @@ export const Home = ({navigation}) => {
                     }}
                 />
             </View>
+            </ImageBackground>
         </View>
     )
 }

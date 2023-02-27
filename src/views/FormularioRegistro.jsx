@@ -1,36 +1,39 @@
-import React, { useContext, useEffect, useState, createRef } from 'react'
-import { Alert, Image, Text, ToastAndroid, View } from 'react-native'
+import React, { useEffect, useState, createRef } from 'react'
+import { ImageBackground, ScrollView, Text, ToastAndroid, TouchableHighlight, View } from 'react-native'
 import { styles } from '../styles/style'
-import { Button } from '@rneui/base'
-import { AuthContext } from '../context/Auth/AuthContext'
-import { Divider, Input } from '@rneui/themed';
+import { Button, Icon } from '@rneui/base'
+import { Input } from '@rneui/themed';
 import { register } from '../services/aurtenticacionServices';
 
 export const FormularioRegistro = ({ route, navigation }) => {
 
-    const { perfil } = route.params;
 
-    const [email, setEmail] = useState()
-    const [password, setPassword] = useState();
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("");
     const [passwordConfirm, setPasswordConfirm] = useState();
     const [passwordErrorMessage, setPasswordErrorMessage] = useState()
+    const [passwordConfirmErrorMessage, setPasswordConfirmErrorMessage] = useState()
     const [emailErrorMessage, setEmailErrorMessage] = useState()
     const [formInvalid, setFormInvalid] = useState(true)
     const [cargando, setCargando] = useState(false)
+    const [rol, setRol] = useState()
+    const [selectionRol, setSelectionRol] = useState(false)
 
     const inputPassword = createRef();
     const inputPasswordConfirm = createRef();
     const inputEmail = createRef();
+
+    const investigador = { type: 'investigador', id: 3 }
+    const participante = { type: 'participante', id: 2 }
 
     const registrar = async () => {
 
         const data = {
             email,
             password,
-            rol: perfil.id
+            rol: rol.id
         }
 
-        console.log(JSON.stringify(data, null, 3));
         try {
             setCargando(true)
             if (comparePassword()) {
@@ -42,26 +45,24 @@ export const FormularioRegistro = ({ route, navigation }) => {
                         ToastAndroid.SHORT,
                         ToastAndroid.CENTER,
                     );
-                } else if ( estado_cuenta === 'Activa') {
+                } else if (estado_cuenta === 'Activa') {
                     ToastAndroid.showWithGravity(
                         'Cuenta en creada con exito',
                         ToastAndroid.LONG,
                         ToastAndroid.CENTER,
-                        );
-                    }
+                    );
+                }
                 navigation.navigate('Login')
             } else {
-                setPasswordErrorMessage("La contraseña no coinciden")
                 inputPassword.current.focus();
                 inputPassword.current.clear();
                 inputPasswordConfirm.current.clear();
-                setPassword()
             }
 
         } catch (error) {
-            console.log("🚀 ~ file: Login.jsx:24 ~ registrar ~ error", error)
+            console.log("🚀 ~ file: Login.jsx:24 ~ registrar ~ error", JSON.stringify(error.data.message))
             ToastAndroid.showWithGravity(
-                'Ha ocurrido un error interno',
+                `${error.data.message}`,
                 ToastAndroid.SHORT,
                 ToastAndroid.CENTER,
             );
@@ -84,6 +85,41 @@ export const FormularioRegistro = ({ route, navigation }) => {
         }
     }
 
+    const isEmail = () => {
+        const validRegex = /^[a-zA-Z0-9_]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+        if (!email.match(validRegex)) {
+            setEmailErrorMessage("Ingrese un correo electrónico valido")
+            return false
+        } else {
+            setEmailErrorMessage()
+            return true
+        }
+    }
+
+    const selectRol = () => {
+        if (rol) return true;
+        setSelectionRol(true)
+        return false;
+    }
+
+    /* 
+        ^                         Start anchor
+    (?=.*[A-Z])               Ensure string has one uppercase letters.
+    (?=.*[!@#$&*])            Ensure string has one special case letter.
+    (?=.*[0-9])               Ensure string has one digits.
+    (?=.*[a-z].*[a-z].*[a-z]) Ensure string has three lowercase letters.
+    .{8,}                      Ensure string is of length 8. Para cualquiera que quiera una longitud de al menos
+    $                         End anchor.
+    */
+    const isPasswordSecure = () => {
+        const validRegex = /^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8,}$/;
+        if (!password.match(validRegex)) {
+            setFormInvalid(true);
+            setPasswordErrorMessage("Ingrese un correo electrónico segura")
+        } else {
+            setPasswordErrorMessage()
+        }
+    }
 
     const cleanForm = () => {
         setEmail(null);
@@ -94,97 +130,203 @@ export const FormularioRegistro = ({ route, navigation }) => {
     useEffect(() => {
         if (password !== passwordConfirm && passwordConfirm) {
             setPasswordErrorMessage("Las contraseña no coinciden")
+            setPasswordConfirmErrorMessage("Las contraseña no coinciden")
             setFormInvalid(true);
         }
-        if(!email && password && passwordConfirm){
+        if (password == passwordConfirm && passwordConfirm) {
+            setPasswordErrorMessage("")
+            setPasswordConfirmErrorMessage("")
+            setFormInvalid(true);
+        }
+        if (!email && password && passwordConfirm) {
             setEmailErrorMessage("Ingrese un correo electrónico")
             setFormInvalid(true);
         }
-        if (password === passwordConfirm && email && email && passwordConfirm) {
+        if (email) {
+            if (isEmail()) {
+                setFormInvalid(true);
+            }
+        }
+        if (password === passwordConfirm && email && passwordConfirm && isEmail() && selectRol()) {
             setPasswordErrorMessage()
+            setPasswordConfirmErrorMessage()
             setEmailErrorMessage()
             setFormInvalid(false);
         }
-    }, [passwordConfirm, password, email])
+    }, [passwordConfirm, password, email, rol])
 
+    useEffect(() => {
+        if (rol) setSelectionRol(false)
+    }, [rol])
 
 
     return (
         <View style={styles.container}>
-            <View style={{ ...styles.body, flex: 3 }}>
-                <Image
-                    style={{ ...styles.image, width: '80%', height: '80%' }}
-                    source={require('../img/registro/apps.png')} />
-                <Text style={styles.titleText}>Registro de usuario</Text>
-            </View>
-            <View style={{ ...styles.foobar, flex: 3 }} >
+            <ImageBackground source={require('../img/loginBackground.jpg')} resizeMode="cover" style={{
+                flex: 1,
+                justifyContent: 'center',
+            }}>
+                <ScrollView>
 
-                <Input
-                    onChangeText={setEmail}
-                    value={email}
-                    label="Correo electrónico"
-                    labelStyle={{ marginLeft: 15 }}
-                    placeholder="Correo electrónico"
-                    keyboardType="email-address"
-                    inputMode="email"
-                    textAlign='center'
-                    style={styles.input}
-                    inputContainerStyle={{ borderBottomWidth: 0 }}
-                    ref={inputEmail}
-                    errorMessage={emailErrorMessage}
+                    <Text style={styles.titleText}>Registro de usuario</Text>
+                    <View style={{ ...styles.body, flex: 1, flexDirection: 'row', justifyContent: 'center' }}>
+                        <TouchableHighlight style={{
+                            alignItems: 'center',
+                            padding: 20,
+                            justifyContent: 'center',
+                            borderWidth: 2,
+                            borderRadius: 20,
+                            width: 130,
+                            height: 160,
+                            backgroundColor: '#A31621',
+                            paddingHorizontal: 0,
+                            paddingTop: 0,
+                            marginHorizontal: "5%",
+                            marginBottom: 0,
+                            borderColor: 'green',
+                            borderWidth: rol?.id === 3 ? 5 : 0,
+
+                        }}
+                            onPress={() => setRol(investigador)}
+                        >
+
+                            <View style={{
+                                flex: 1,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}>
+                                <Icon
+                                    name='account-hard-hat'
+                                    type='material-community'
+                                    size={50}
+                                    color='white'
+                                />
+                                <Text style={{
+                                    color: 'white',
+                                    fontSize: 20,
+                                }}>
+                                    Investigador
+                                </Text>
+                            </View>
+
+                        </TouchableHighlight>
+                        <TouchableHighlight style={{
+                            alignItems: 'center',
+                            padding: 20,
+                            justifyContent: 'center',
+                            borderWidth: 2,
+                            borderRadius: 20,
+                            width: 130,
+                            height: 160,
+                            backgroundColor: '#111d4a',
+                            borderColor: 'green',
+                            borderWidth: rol?.id === 2 ? 5 : 0,
+                            paddingTop: 0,
+                            paddingHorizontal: 0,
+                            marginHorizontal: "5%",
+                            marginBottom: 0,
+                        }}
+                            onPress={() => setRol(participante)}
+                        >
+                            <View style={{
+                                flex: 1,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }} >
+                                <Icon
+                                    name='map-marker-distance'
+                                    type='material-community'
+                                    size={50}
+                                    color='white'
+                                />
+
+                                <Text style={{
+                                    color: 'white',
+                                    fontSize: 20,
+                                }}>
+                                    Participante
+                                </Text>
+                            </View>
 
 
-                />
-                <Input
-                    onChangeText={setPassword}
-                    value={password}
-                    style={styles.input}
-                    label="Contraseña"
-                    labelStyle={{ marginLeft: 15, marginTop: 10 }}
-                    textAlign='center'
-                    placeholder="**********"
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    textContentType="newPassword"
-                    secureTextEntry
-                    enablesReturnKeyAutomatically
-                    inputContainerStyle={{ borderBottomWidth: 0 }}
-                    errorMessage={passwordErrorMessage}
-                    errorStyle={{ marginLeft: 15 }}
-                    ref={inputPassword}
-                />
+                        </TouchableHighlight>
+                    </View>
+                    <View style={{ alignItems: 'center' }}>
+                        {
+                            selectionRol && <Text style={{ color: 'red', fontSize: 12 }}>Debe seleccionar un rol</Text>
+                        }
+                    </View>
+                    <View style={{ ...styles.foobar, flex: 3, marginTop: 10 }} >
 
-                <Input
-                    onChangeText={setPasswordConfirm}
-                    value={passwordConfirm}
-                    style={styles.input}
-                    label="Confirmar contraseña"
-                    labelStyle={{ marginLeft: 15, marginTop: 10 }}
-                    textAlign='center'
-                    placeholder=" *********"
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    textContentType="newPassword"
-                    secureTextEntry
-                    enablesReturnKeyAutomatically
-                    inputContainerStyle={{ borderBottomWidth: 0 }}
-                    errorMessage={passwordErrorMessage}
-                    errorStyle={{ marginLeft: 15 }}
-                    ref={inputPasswordConfirm}
+                        <Input
+                            onChangeText={setEmail}
+                            value={email}
+                            label="Correo electrónico"
+                            placeholder="Correo electrónico"
+                            keyboardType="email-address"
+                            inputMode="email"
+                            textAlign='center'
+                            style={styles.input}
+                            inputContainerStyle={{ borderBottomWidth: 0 }}
+                            ref={inputEmail}
+                            errorMessage={emailErrorMessage}
+                            onBlur={() => isEmail()}
 
-                />
-                <Button
-                    title="Registrarse"
-                    onPress={registrar}
-                    buttonStyle={styles.buttonPrimary}
-                    disabledStyle={styles.buttonPrimaryDisabled}
-                    loading={cargando}
-                    disabled={formInvalid}
-                    radius="lg"
-                    containerStyle={styles.buttonContainer}
-                />
+                        />
+                        <Input
+                            onChangeText={setPassword}
+                            value={password}
+                            style={styles.input}
+                            label="Contraseña"
+                            labelStyle={{ marginTop: 10 }}
+                            textAlign='center'
+                            placeholder="**********"
+                            autoCapitalize="none"
+                            autoCorrect={false}
+                            textContentType="newPassword"
+                            secureTextEntry
+                            enablesReturnKeyAutomatically
+                            inputContainerStyle={{ borderBottomWidth: 0 }}
+                            errorMessage={passwordErrorMessage}
+                            errorStyle={{ marginLeft: 15 }}
+                            ref={inputPassword}
+                            onBlur={isPasswordSecure}
+                        />
 
-            </View>
+                        <Input
+                            onChangeText={setPasswordConfirm}
+                            value={passwordConfirm}
+                            style={styles.input}
+                            label="Confirmar contraseña"
+                            labelStyle={{ marginTop: 10 }}
+                            textAlign='center'
+                            placeholder=" *********"
+                            autoCapitalize="none"
+                            autoCorrect={false}
+                            textContentType="newPassword"
+                            secureTextEntry
+                            enablesReturnKeyAutomatically
+                            inputContainerStyle={{ borderBottomWidth: 0 }}
+                            errorMessage={passwordConfirmErrorMessage}
+                            errorStyle={{ marginLeft: 15 }}
+                            ref={inputPasswordConfirm}
+
+                        />
+                        <Button
+                            title="Registrarse"
+                            onPress={registrar}
+                            buttonStyle={styles.buttonPrimary}
+                            disabledStyle={styles.buttonPrimaryDisabled}
+                            loading={cargando}
+                            disabled={formInvalid}
+                            radius="lg"
+                            containerStyle={styles.buttonContainer}
+                        />
+
+                    </View>
+                </ScrollView>
+            </ImageBackground>
+
         </View>
     )
 }

@@ -47,9 +47,9 @@ export const MediosDesplazamientosComponentes = ({ selected, cambiarMedio }) => 
                                     onPress={() => cambiarMedio({id:medio.id, nombre:medio.nombre, icono: medio.icono})}
                                     style={selected.id === medio.id ? styles.roundButtonDesplazamientoSelected : styles.roundButtonDesplazamiento }
                                     >
-                                    <Text style={{fontSize:25}}>{medio.icono}</Text>
+                                    <Text style={{fontSize:25, color:'white'}}>{medio.icono}</Text>
                                 </TouchableOpacity>
-                                <Text style={{ fontSize: 12 }}>
+                                <Text style={{ fontSize: 12, color:'white' }}>
                                     {medio.nombre}
                                 </Text>
                             </View>

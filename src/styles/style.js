@@ -2,16 +2,16 @@
 import { StatusBar, StyleSheet } from 'react-native';
 
 const primary = '#8f0c1e'
-const primaryDisabled = '#840b1b'
-const secondary = '#331b4b'
-const secondaryDisabled = '#b896d9'
+const primaryDisabled = 'grey'
+const secondary = '#7a7a7a'
+const secondaryDisabled = '#adadad'
 
 export const styles = StyleSheet.create({
   primary,
   secondary,
   container: {
     flex: 1,
-    backgroundColor: '#e5e5e5',
+    backgroundColor: '#707070',
   },
   body: {
     alignItems: 'center',
@@ -40,7 +40,7 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
     marginVertical: 10,
     // fontStyle: 'italic',
-    color: 'black',
+    color: 'white',
     // borderWidth: 4,
     // borderColor: '#20232a',
     // borderRadius: 10,
@@ -63,6 +63,7 @@ export const styles = StyleSheet.create({
     borderRadius: 5,
     borderColor: primary,
     paddingBottom:0,
+    color: 'white',
   },
   buttonPrimary: {
     backgroundColor: primary,

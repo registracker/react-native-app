@@ -42,7 +42,7 @@ export const TooltipComponent = ({ icon, tooltip, text, visible = false }) => {
                     <FlatList
                         data={text}
                         renderItem={({ item }) => <Text style={{
-                            fontSize: 20,
+                            fontSize: 15,
                             alignContent: 'center',
                             color: tooltip.colorText,
                         }}>

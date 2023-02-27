@@ -161,7 +161,7 @@ export const Desplazamiento = ({ route, navigation }) => {
 
             <View style={{ ...styles.body, justifyContent: 'space-between' }}>
                 <Text style={{ ...styles.titleText, justifyContent: 'center' }} >{medio.icono} {medio.nombre} </Text>
-                <Text>
+                <Text style={{color:'white'}}>
                     {JSON.stringify(position, null, 5)}
                 </Text>
 

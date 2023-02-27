@@ -36,7 +36,6 @@ export const Navigation = () => {
 
     const { permissions, checkLocationPermission } = useContext(PermissionContext);
     const { autenticado } = useContext(AuthContext);
-    console.log("🚀 ~ file: Navigation.jsx:34 ~ Navigation ~ authState", autenticado)
 
     useEffect(() => {
         checkLocationPermission()
@@ -59,7 +58,6 @@ export const Navigation = () => {
                                 : <Stack.Group >
                                     <Stack.Screen name='Home' component={Home} />
                                     <Stack.Screen name='Login' component={Login} />
-                                    <Stack.Screen name='Registrarse' component={Registrarse} />
                                     <Stack.Screen name='FormularioRegistro' component={FormularioRegistro} />
                                 </Stack.Group>
                         }

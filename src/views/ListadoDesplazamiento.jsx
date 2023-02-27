@@ -2,16 +2,17 @@ import { Button, Icon, ListItem } from '@rneui/base'
 import React, { useState } from 'react'
 import { useEffect } from 'react'
 import { FlatList, Text, View } from 'react-native'
-import { ScrollView } from 'react-native-gesture-handler'
 import { Loading } from '../components/Loading'
 import { getDesplazamientos, removeDesplazamiento, sendDesplazamiento } from '../database/TblDesplazamientos'
 import { postDesplazamiento } from '../services/desplazamientoServices'
+import { styles } from '../styles/style';
+
 
 export const ListadoDesplazamiento = () => {
 
   const [listado, setListado] = useState()
   const [cargando, setCargando] = useState(false)
-  
+
   const items = async () => {
     const data = await getDesplazamientos();
     setListado(data)
@@ -25,7 +26,7 @@ export const ListadoDesplazamiento = () => {
     } catch (error) {
       console.error(error)
       reset()
-      
+
     }
   }
 
@@ -57,10 +58,12 @@ export const ListadoDesplazamiento = () => {
   if (!listado) return <Loading />
 
   return (
-    <View>
+    <View style={styles.container}>
       <FlatList
         data={listado}
+
         renderItem={({ item }) => (
+
           <ListItem.Swipeable
             leftContent={(reset) => (
               <Button
@@ -79,18 +82,22 @@ export const ListadoDesplazamiento = () => {
                 loading={cargando}
               />
             )}
+            containerStyle={{ backgroundColor: "white" }}
+            topDivider={true}
           >
-            <Icon name="run" type='material-community' />
-            <ListItem.Content>
-              <ListItem.Title>{item.uuid}</ListItem.Title>
-              <ListItem.Subtitle>{item.fecha_registro}</ListItem.Subtitle>
-            </ListItem.Content>
 
-            <Icon 
-            type="material-community" 
-            name={item.enviado == 1 ? 'check-circle-outline': 'cloud-upload' } 
-            color={item.enviado == 1 ? 'green': 'grey' } 
-            />
+
+              <Icon name="run" type='material-community' />
+              <ListItem.Content  >
+                <ListItem.Title>{item.uuid}</ListItem.Title>
+                <ListItem.Subtitle>{item.fecha_registro}</ListItem.Subtitle>
+              </ListItem.Content>
+
+              <Icon
+                type="material-community"
+                name={item.enviado == 1 ? 'check-circle-outline' : 'cloud-upload'}
+                color={item.enviado == 1 ? 'green' : 'grey'}
+              />
           </ListItem.Swipeable>
         )}
       />
