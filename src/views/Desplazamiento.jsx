@@ -1,7 +1,7 @@
-import { FAB, SpeedDial } from '@rneui/base';
+import { FAB, Icon, SpeedDial } from '@rneui/base';
 import { format } from 'date-fns';
 import React, { useEffect, useState } from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, ImageBackground } from 'react-native'
 import Geolocation from 'react-native-geolocation-service';
 import { styles } from '../styles/style';
 import { MediosDesplazamientosComponentes } from '../components/MediosDesplazamientosComponentes';
@@ -19,7 +19,7 @@ export const Desplazamiento = ({ route, navigation }) => {
     const [viajeIniciado, setViajeIniciado] = useState(false)
     const [open, setOpen] = React.useState(false);
     const [uuidDesplazamiento, setUuidDesplazamiento] = useState()
-    const [medio, setMedio] = useState({ id: 1, nombre: 'Caminando', icono: '🚶'})
+    const [medio, setMedio] = useState({ id: 1, nombre: 'Caminando', icono: 'run'})
 
     useEffect(() => {
         createTableDesplazamiento()
@@ -158,9 +158,21 @@ export const Desplazamiento = ({ route, navigation }) => {
 
     return (
         <View style={styles.container}>
+            <ImageBackground source={require('../img/background.jpg')} resizeMode="cover" style={{
+                flex: 1,
+                justifyContent: 'center',
+            }}>
 
             <View style={{ ...styles.body, justifyContent: 'space-between' }}>
-                <Text style={{ ...styles.titleText, justifyContent: 'center' }} >{medio.icono} {medio.nombre} </Text>
+            <View style={{flexDirection:'row', justifyContent:'center' , alignItems:'center'}}>
+                <Icon
+                    name={medio.icono}
+                    type='material-community'
+                />
+                    <Text style={{ color: 'white' }}>
+                        {medio.nombre}
+                    </Text>
+            </View>
                 <Text style={{color:'white'}}>
                     {JSON.stringify(position, null, 5)}
                 </Text>
@@ -230,7 +242,7 @@ export const Desplazamiento = ({ route, navigation }) => {
                             upperCase
                             icon={{ name: 'map-marker-distance', color: 'white', type: 'material-community' }}
                             style={{ marginBottom: 20 }}
-                            color={styles.primary}
+                            color='green'
                         />
                     )
             }
@@ -259,6 +271,7 @@ export const Desplazamiento = ({ route, navigation }) => {
                     onPress={() => console.log('Delete Something')}
                 />
             </SpeedDial>
+            </ImageBackground>
 
         </View>
     )

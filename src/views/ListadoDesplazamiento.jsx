@@ -6,6 +6,9 @@ import { Loading } from '../components/Loading'
 import { getDesplazamientos, removeDesplazamiento, sendDesplazamiento } from '../database/TblDesplazamientos'
 import { postDesplazamiento } from '../services/desplazamientoServices'
 import { styles } from '../styles/style';
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react'
+
 
 
 export const ListadoDesplazamiento = () => {
@@ -49,6 +52,12 @@ export const ListadoDesplazamiento = () => {
       setCargando(false)
     }
   }
+
+  useFocusEffect(
+    useCallback(() => {
+      items();
+    }, [])
+  );
 
   useEffect(() => {
     items();

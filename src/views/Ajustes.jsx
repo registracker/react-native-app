@@ -31,7 +31,7 @@ export const Ajustes = () => {
       <View style={styles.foobar}>
         <Button
           title="Cerrar sesión"
-          type="outline"
+          type="clear"
           onPress={() => { setModalVisible(true) }}
           titleStyle={{ color: 'white' }}
           icon={

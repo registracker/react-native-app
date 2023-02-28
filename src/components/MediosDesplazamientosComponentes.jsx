@@ -6,6 +6,7 @@ import { Loading } from './Loading';
 
 import { getMediosDesplazamientos } from '../services/mediosDesplazamientoServices'
 import { styles } from '../styles/style';
+import { Icon } from '@rneui/base';
 
 
 export const MediosDesplazamientosComponentes = ({ selected, cambiarMedio }) => {
@@ -43,12 +44,14 @@ export const MediosDesplazamientosComponentes = ({ selected, cambiarMedio }) => 
                                     justifyContent: 'center',
                                     alignItems: 'center',
                                 }}>
-                                <TouchableOpacity
-                                    onPress={() => cambiarMedio({id:medio.id, nombre:medio.nombre, icono: medio.icono})}
-                                    style={selected.id === medio.id ? styles.roundButtonDesplazamientoSelected : styles.roundButtonDesplazamiento }
-                                    >
-                                    <Text style={{fontSize:25, color:'white'}}>{medio.icono}</Text>
-                                </TouchableOpacity>
+                                <Icon
+                                    onPress={() => cambiarMedio({ id: medio.id, nombre: medio.nombre, icono: medio.icono })}
+                                    style={selected.id === medio.id ? styles.roundButtonDesplazamientoSelected : styles.roundButtonDesplazamiento}
+                                    raised
+                                    name={medio.icono}
+                                    type='material-community'
+                                />
+
                                 <Text style={{ fontSize: 12, color:'white' }}>
                                     {medio.nombre}
                                 </Text>
