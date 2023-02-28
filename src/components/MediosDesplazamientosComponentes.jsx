@@ -10,7 +10,6 @@ export const MediosDesplazamientosComponentes = ({ selected, cambiarMedio, medio
 
     if (!mediosDesplazamientos) return <Loading />
 
-
     return (
         <View style={{
             flexDirection: 'row',
