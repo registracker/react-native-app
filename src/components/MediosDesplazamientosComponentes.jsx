@@ -1,27 +1,12 @@
 import React from 'react'
-import { useEffect } from 'react';
-import { useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { Loading } from './Loading';
 
-import { getMediosDesplazamientos } from '../services/mediosDesplazamientoServices'
 import { styles } from '../styles/style';
 import { Icon } from '@rneui/base';
 
 
-export const MediosDesplazamientosComponentes = ({ selected, cambiarMedio }) => {
-
-
-    const [mediosDesplazamientos, setMediosDesplazamientos] = useState()
-
-    useEffect(() => {
-        created()
-    }, [])
-
-    const created = async () => {
-        const { data } = await getMediosDesplazamientos();
-        setMediosDesplazamientos(data)
-    }
+export const MediosDesplazamientosComponentes = ({ selected, cambiarMedio, mediosDesplazamientos }) => {
 
     if (!mediosDesplazamientos) return <Loading />
 
@@ -45,14 +30,15 @@ export const MediosDesplazamientosComponentes = ({ selected, cambiarMedio }) => 
                                     alignItems: 'center',
                                 }}>
                                 <Icon
-                                    onPress={() => cambiarMedio({ id: medio.id, nombre: medio.nombre, icono: medio.icono })}
+                                    onPress={() => cambiarMedio(medio)}
                                     style={selected.id === medio.id ? styles.roundButtonDesplazamientoSelected : styles.roundButtonDesplazamiento}
                                     raised
                                     name={medio.icono}
                                     type='material-community'
+                                    color={selected.id === medio.id ? styles.primary : 'black'}
                                 />
 
-                                <Text style={{ fontSize: 12, color:'white' }}>
+                                <Text style={{ fontSize: 12, color:'black' }}>
                                     {medio.nombre}
                                 </Text>
                             </View>

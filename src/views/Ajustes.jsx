@@ -33,13 +33,13 @@ export const Ajustes = () => {
           title="Cerrar sesión"
           type="clear"
           onPress={() => { setModalVisible(true) }}
-          titleStyle={{ color: 'white' }}
+          titleStyle={{ color: styles.primary }}
           icon={
             <Icon
               name="logout"
               type="material-community"
               size={15}
-              color="white"
+              color={styles.primary}
             />
           }
           iconRight

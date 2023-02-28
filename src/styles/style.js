@@ -11,7 +11,6 @@ export const styles = StyleSheet.create({
   secondary,
   container: {
     flex: 1,
-    backgroundColor: '#707070',
   },
   body: {
     alignItems: 'center',
@@ -103,7 +102,7 @@ export const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 100,
     backgroundColor: 'white',
-    borderColor:'green',
+    borderColor:primary,
     borderWidth: 5,
   },
 });

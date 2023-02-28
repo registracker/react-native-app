@@ -1,28 +1,11 @@
-import { Icon } from '@rneui/base'
 import React from 'react'
-import { useState } from 'react'
-import { useEffect } from 'react'
-import { Pressable, ScrollView, SectionList, Text, View } from 'react-native'
+import { Pressable, ScrollView, Text, View } from 'react-native'
 import { Loading } from '../components/Loading'
-import { getMediosDesplazamientos } from '../services/mediosDesplazamientoServices'
 import { styles } from '../styles/style'
 
 export const MediosDesplazamiento = ({navigation}) => {
 
-
-    const [mediosDesplazamientos, setMediosDesplazamientos] = useState()
-
-    useEffect(() => {
-        created()
-    }, [])
-
-    const created = async () => {
-        const { data } = await getMediosDesplazamientos();
-        setMediosDesplazamientos(data)
-    }
-
     if (!mediosDesplazamientos) return <Loading/> 
-
 
     return (
         <View>

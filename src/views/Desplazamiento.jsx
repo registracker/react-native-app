@@ -1,34 +1,49 @@
-import { FAB, Icon, SpeedDial } from '@rneui/base';
-import { format } from 'date-fns';
 import React, { useEffect, useState } from 'react'
-import { View, Text, ImageBackground } from 'react-native'
+import { View, Text } from 'react-native'
+import { Chip, FAB, SpeedDial } from '@rneui/base';
+import { format } from 'date-fns';
 import Geolocation from 'react-native-geolocation-service';
-import { styles } from '../styles/style';
-import { MediosDesplazamientosComponentes } from '../components/MediosDesplazamientosComponentes';
-import { addItemDesplazamiento, createTableDesplazamiento } from '../database/TblDesplazamientos';
 import uuid from 'react-native-uuid';
 
-export const Desplazamiento = ({ route, navigation }) => {
+import { MediosDesplazamientosComponentes } from '../components/MediosDesplazamientosComponentes';
+import { addItemDesplazamiento, createTableDesplazamiento } from '../database/TblDesplazamientos';
+import { getMediosDesplazamientos } from '../services/mediosDesplazamientoServices'
+
+import { styles } from '../styles/style';
+import { useFocusEffect } from '@react-navigation/core';
+import { useCallback } from 'react';
+
+export const Desplazamiento = () => {
 
     const [data, setData] = useState([])
     const [puntos, setPuntos] = useState([])
     const [position, setPosition] = useState()
     const [watchId, setWatchId] = useState()
-    const [primerPunto, setPrimerPunto] = useState({})
-    const [ultimoPunto, setUltimoPunto] = useState({})
     const [viajeIniciado, setViajeIniciado] = useState(false)
     const [open, setOpen] = React.useState(false);
     const [uuidDesplazamiento, setUuidDesplazamiento] = useState()
-    const [medio, setMedio] = useState({ id: 1, nombre: 'Caminando', icono: 'run'})
+    const [medio, setMedio] = useState({ id: 1, nombre: 'Caminando', icono: 'run' })
+    const [mediosDesplazamientos, setMediosDesplazamientos] = useState()
+    const [fechaHoraInciado, setFechaHoraInciado] = useState()
 
     useEffect(() => {
         createTableDesplazamiento()
+        getMD();
     }, [])
-    
+
+    useFocusEffect(
+        useCallback(() => {
+            if (!mediosDesplazamientos) getMD()
+        }, [])
+    );
+
+    const getMD = async () => {
+        const { data } = await getMediosDesplazamientos();
+        setMediosDesplazamientos(data)
+    }
 
     useEffect(() => {
         if (position) {
-            console.log("New POINT");
             setData([...data, position])
             setPuntos(
                 [...puntos,
@@ -44,8 +59,6 @@ export const Desplazamiento = ({ route, navigation }) => {
 
         }
     }, [position])
-
-
 
     const getLocation = () => {
         Geolocation.getCurrentPosition(
@@ -79,15 +92,14 @@ export const Desplazamiento = ({ route, navigation }) => {
 
         setViajeIniciado(true)
         setUuidDesplazamiento(uuid.v4());
+        setFechaHoraInciado(new Date());
 
         const observation = await Geolocation.watchPosition(
             (position) => {
                 setPosition(position)
                 setData([...data, position])
-                // console.log('WATCH', format(new Date(position.timestamp), 'yyyy-MM-dd HH:mm:ss'), position.coords.latitude, position.coords.longitude);
             },
             (error) => {
-                // See error code charts below.
                 console.error(error.code, error.message);
             },
             {
@@ -102,153 +114,115 @@ export const Desplazamiento = ({ route, navigation }) => {
     }
 
     const stopLocationObserving = () => {
-
         setViajeIniciado(false);
-        
-
 
         if (data.length > 0) {
-            // const comienzo = {
-            //     latitude: data[0].coords.latitude,
-            //     longitude: data[0].coords.longitude
-            // }
-            // const final = {
-            //     latitude: data[data.length - 1].coords.latitude,
-            //     longitude: data[data.length - 1].coords.longitude
-            // }
-            // setPrimerPunto(comienzo)
-            // setUltimoPunto(final)
-
-            // const desplazamiento = puntos.map(a => `(${Object.values(a).join(", ")})`)
-            //     .join(", ")
-
-
             const data = {
                 uuid: uuidDesplazamiento,
                 desplazamiento: JSON.stringify(puntos, null),
                 fecha_registro: format(new Date(), 'dd-MM-yyyy HH:mm:ss')
             }
             addItemDesplazamiento(data)
-
-
-
-
         }
-
-        // console.log("🚀 ~ file: Home.jsx:74 ~ stopLocationObserving ~ comienzo", comienzo)
-        // console.log("🚀 ~ file: Home.jsx:79 ~ stopLocationObserving ~ final", final)
-
         setData([])
         Geolocation.clearWatch(watchId);
     }
 
-    const handleGetDirections = async () => {
-
-        const travel = {
-            source: primerPunto,
-            destination: ultimoPunto,
-            params: [
-
-            ],
-            waypoints: puntos
-        }
-        console.log(JSON.stringify(travel, null, 3));
-    }
-
-
     return (
         <View style={styles.container}>
-            <ImageBackground source={require('../img/background.jpg')} resizeMode="cover" style={{
-                flex: 1,
-                justifyContent: 'center',
+
+            <View style={{
+                backgroundColor: styles.primary,
+                padding: '2%',
+                margin: '5%',
+                height: 80,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-evenly',
+                borderRadius: 20
             }}>
+                <View>
+                    {
+                        viajeIniciado ? (
+
+                            <>
+
+                                <Text style={{ color: 'white', fontSize: 12 }}>
+                                    Estado del viaje: Inicado
+                                </Text>
+                                <Text style={{ color: 'white', fontSize: 12 }}>
+                                    Fecha: {format(fechaHoraInciado, 'dd-MM-yyyy')}
+                                </Text>
+                                <Text style={{ color: 'white', fontSize: 12 }}>
+                                    Hora iniciado: {format(fechaHoraInciado, 'HH:mm:ss')}
+                                </Text>
+                            </>
+                        ) : (
+                            <>
+                                    <Text style={{ color: 'white', fontSize: 20 }}>
+                                        Comenzar viaje
+                                    </Text>
+                            </>
+                        )
+                    }
+                </View>
+                <Chip
+                    title={medio.nombre}
+                    titleStyle={{ color: styles.primary }}
+                    icon={{
+                        name: medio.icono,
+                        type: 'material-community',
+                        color: styles.primary
+                    }}
+                    color='white'
+                />
+
+            </View>
 
             <View style={{ ...styles.body, justifyContent: 'space-between' }}>
-            <View style={{flexDirection:'row', justifyContent:'center' , alignItems:'center'}}>
-                <Icon
-                    name={medio.icono}
-                    type='material-community'
-                />
-                    <Text style={{ color: 'white' }}>
-                        {medio.nombre}
-                    </Text>
-            </View>
-                <Text style={{color:'white'}}>
+                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                </View>
+                <Text style={{ color: 'black' }}>
                     {JSON.stringify(position, null, 5)}
                 </Text>
 
                 <MediosDesplazamientosComponentes
                     selected={medio}
                     cambiarMedio={setMedio}
+                    mediosDesplazamientos={mediosDesplazamientos}
                 />
             </View>
 
             <View style={styles.foobar}>
-                {/* <Button
-                    title="Obtener puntos"
-                    onPress={handleGetDirections}
-                    buttonStyle={styles.buttonSecondary}
-                    disabledStyle={styles.buttonSecondaryDisabled}
-                    radius="lg"
-                    containerStyle={styles.buttonContainer}
-                />
-                <Button
-                    title="Obtener Ubicación"
-                    onPress={getLocation}
-                    buttonStyle={styles.buttonPrimary}
-                    disabledStyle={styles.buttonPrimaryDisabled}
-                    radius="lg"
-                    containerStyle={styles.buttonContainer}
-                />
-                <Button
-                    title="Comenzar viaje"
-                    onPress={getLocationObservation}
-                    buttonStyle={styles.buttonPrimary}
-                    disabledStyle={styles.buttonPrimaryDisabled}
-                    radius="lg"
-                    containerStyle={styles.buttonContainer}
-                />
-                <Button
-                    title="Detener viaje"
-                    onPress={stopLocationObserving}
-                    buttonStyle={styles.buttonSecondary}
-                    disabledStyle={styles.buttonSecondaryDisabled}
-                    radius="lg"
-                    containerStyle={styles.buttonContainer}
-                /> */}
-
-
-
             </View>
-            {
-                viajeIniciado
-                    ? (
-                        <FAB
-                            visible={viajeIniciado}
-                            onPress={stopLocationObserving}
-                            title="Detener viaje"
-                            placement='left'
-                            upperCase
-                            icon={{ name: 'stop-circle-outline', color: 'white', type: 'material-community' }}
-                            style={{ marginBottom: 20 }}
-                            color={styles.primary}
-                        />
-                    ) : (
-                        <FAB
-                            visible
-                            onPress={getLocationObservation}
-                            title="Comenzar el viaje"
-                            placement='left'
-                            upperCase
-                            icon={{ name: 'map-marker-distance', color: 'white', type: 'material-community' }}
-                            style={{ marginBottom: 20 }}
-                            color='green'
-                        />
-                    )
-            }
-
-
-
+            <>
+                {
+                    viajeIniciado
+                        ? (
+                            <FAB
+                                visible={viajeIniciado}
+                                onPress={stopLocationObserving}
+                                title="Detener viaje"
+                                placement='left'
+                                upperCase
+                                icon={{ name: 'stop-circle-outline', color: 'white', type: 'material-community' }}
+                                style={{ marginBottom: 20 }}
+                                color={styles.primary}
+                            />
+                        ) : (
+                            <FAB
+                                visible
+                                onPress={getLocationObservation}
+                                title="Comenzar el viaje"
+                                placement='left'
+                                upperCase
+                                icon={{ name: 'map-marker-distance', color: 'white', type: 'material-community' }}
+                                style={{ marginBottom: 20 }}
+                                color='green'
+                            />
+                        )
+                }
+            </>
             <SpeedDial
                 isOpen={open}
                 icon={{ name: 'map-marker-radius', color: '#fff', type: 'material-community' }}
@@ -271,8 +245,6 @@ export const Desplazamiento = ({ route, navigation }) => {
                     onPress={() => console.log('Delete Something')}
                 />
             </SpeedDial>
-            </ImageBackground>
-
         </View>
     )
 }

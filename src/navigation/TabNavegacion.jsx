@@ -13,7 +13,7 @@ const options = {
     headerMode: 'float',
     headerTintColor: 'white',
     headerStyle: {
-        backgroundColor: '#444444',
+        backgroundColor: styles.primary,
         elevation: 0,
     },
     headerBackAccessibilityLabel: 'Atrás',
@@ -21,7 +21,7 @@ const options = {
     headerBackTitleVisible: false,
     //   cardOverlayEnabled: true
     tabBarStyle:{
-        backgroundColor: '#444444',
+        backgroundColor: 'white',
     }
 }
 
@@ -33,13 +33,12 @@ export const TabNavegacion = () => {
                 component={Desplazamiento}
                 options={{
                     title: 'Desplazamiento',
-                    tabBarLabelStyle: { fontSize: 14,color: 'white' },
                     tabBarIcon: ({ color, size }) => (
                         <Icon name="map-marker-account" type='material-community' color={color} size={size} />
                     ),
                     tabBarLabelPosition: 'below-icon',
                     // tabBarBadge: ''
-                    tabBarActiveTintColor: 'white'
+                    tabBarActiveTintColor: styles.primary
                 }}
             />
             <Tab.Screen
@@ -47,12 +46,11 @@ export const TabNavegacion = () => {
                 component={ListadoDesplazamiento}
                 options={{
                     title: 'Mis desplazamientos',
-                    tabBarLabelStyle: { fontSize: 14, color: 'white' },
                     tabBarIcon: ({ color, size }) => (
                         <Icon name="map-search-outline" type='material-community' color={color} size={size} />
                     ),
                     tabBarLabelPosition: 'below-icon',
-                    tabBarActiveTintColor: 'white'
+                    tabBarActiveTintColor: styles.primary
                     // tabBarBadge: ''
                 }}
             />
@@ -61,12 +59,11 @@ export const TabNavegacion = () => {
                 component={Ajustes}
                 options={{
                     title: 'Ajustes',
-                    tabBarLabelStyle: { fontSize: 14, color: 'white' },
                     tabBarIcon: ({ color, size }) => (
                         <Icon name="cog-outline" type='material-community' color={color} size={size} />
                     ),
                     tabBarLabelPosition: 'below-icon',
-                    tabBarActiveTintColor: 'white'
+                    tabBarActiveTintColor: styles.primary
 
 
                 }}
