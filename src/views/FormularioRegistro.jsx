@@ -183,8 +183,8 @@ export const FormularioRegistro = ({ route, navigation }) => {
                             paddingTop: 0,
                             marginHorizontal: "5%",
                             marginBottom: 0,
-                            borderColor: 'green',
-                            borderWidth: rol?.id === 3 ? 5 : 0,
+                            borderColor: 'white',
+                            borderWidth: rol?.id === 3 ? 2 : 0,
 
                         }}
                             onPress={() => setRol(investigador)}
@@ -198,12 +198,12 @@ export const FormularioRegistro = ({ route, navigation }) => {
                                 <Icon
                                     name='account-hard-hat'
                                     type='material-community'
-                                    size={50}
+                                    size={36}
                                     color='white'
                                 />
                                 <Text style={{
                                     color: 'white',
-                                    fontSize: 20,
+                                    fontSize: rol?.id === 3 ?20:16,
                                 }}>
                                     Investigador
                                 </Text>
@@ -219,8 +219,8 @@ export const FormularioRegistro = ({ route, navigation }) => {
                             width: 130,
                             height: 160,
                             backgroundColor: '#111d4a',
-                            borderColor: 'green',
-                            borderWidth: rol?.id === 2 ? 5 : 0,
+                            borderColor: 'white',
+                            borderWidth: rol?.id === 2 ? 2 : 0,
                             paddingTop: 0,
                             paddingHorizontal: 0,
                             marginHorizontal: "5%",
@@ -236,13 +236,13 @@ export const FormularioRegistro = ({ route, navigation }) => {
                                 <Icon
                                     name='map-marker-distance'
                                     type='material-community'
-                                    size={50}
+                                    size={36}
                                     color='white'
                                 />
 
                                 <Text style={{
                                     color: 'white',
-                                    fontSize: 20,
+                                    fontSize: rol?.id === 2 ?20:16,
                                 }}>
                                     Participante
                                 </Text>

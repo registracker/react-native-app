@@ -1,34 +1,24 @@
+/* eslint-disable prettier/prettier */
 // generaEstado
 export const recorridosReducer = (state, action) => {
   switch (action.type) {
-    case 'actualizar-recorrido':
+    case 'insertar':
       return {
         ...state,
-        listado: action.recorrido,
+        uuid: action.payload.uuid,
+        desplazamiento: [...state.desplazamiento, action.payload.punto],
+        cantidadPuntos: state.desplazamiento.length + 1,
         ultimaActualizacion: new Date(),
-        // username: 'no-username-yet',,
-      };
-
-    case 'obtener':
+        ultimoPunto: action.payload.punto
+      }
+    case 'restaurar':
       return {
         ...state,
-        isLoggedIn: false,
-        username: undefined,
-        token: undefined,
-      };
-
-    // case 'changeFavIcon':
-    //   return {
-    //     ...state,
-    //     favoriteIcon: action.payload,,
-    //   };;
-
-    // case 'changeUsername':
-    //   return {
-    //     ...state,
-    //     username: action.payload,,
-    //   };;
-
+        desplazamiento: [],
+        cantidadPuntos: 0,
+        ultimoPunto: {},
+        ultimaActualizacion: '',
+      }
     default:
       return state;
   }
