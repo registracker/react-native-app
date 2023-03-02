@@ -14,9 +14,8 @@ export const MediosDesplazamientosComponentes = ({ selected, cambiarMedio, medio
         <View style={{
             flexDirection: 'row',
             flexWrap: 'wrap',
-            justifyContent: 'center',
-            paddingHorizontal:'10%'
-
+            justifyContent: 'space-between',
+            paddingHorizontal:0,
         }}>
                 {
                     mediosDesplazamientos.map(medio => {
@@ -28,14 +27,23 @@ export const MediosDesplazamientosComponentes = ({ selected, cambiarMedio, medio
                                     justifyContent: 'center',
                                     alignItems: 'center',
                                 }}>
-                                <Icon
+                                {/* <Icon
                                     onPress={() => cambiarMedio(medio)}
                                     style={selected.id === medio.id ? styles.roundButtonDesplazamientoSelected : styles.roundButtonDesplazamiento}
-                                    raised
                                     name={medio.icono}
                                     type='material-community'
                                     color={selected.id === medio.id ? styles.primary : 'black'}
-                                />
+                                /> */}
+
+                                <TouchableOpacity
+                                    onPress={() => cambiarMedio({ id: medio.id, nombre: medio.nombre, icono: medio.icono })}
+                                    style={selected.id === medio.id ? styles.roundButtonDesplazamientoSelected : styles.roundButtonDesplazamiento}
+                                >
+                                    <Icon 
+                                        name={medio.icono}
+                                        type='material-community'
+                                    />
+                                </TouchableOpacity>
 
                                 <Text style={{ fontSize: 12, color:'black' }}>
                                     {medio.nombre}

@@ -22,7 +22,6 @@ export const PermissionsProvider = ({ children }) => {
             const granted = await PermissionsAndroid.request(
                 PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
             )
-            console.log("🚀 ~ file: PermissionContext.jsx:24 ~ askLocationPermissions ~ granted:", granted)
             // const granted = await PermissionsAndroid.requestMultiple([
             //     PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
             //     PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,

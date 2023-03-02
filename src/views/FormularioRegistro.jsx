@@ -38,7 +38,6 @@ export const FormularioRegistro = ({ route, navigation }) => {
             setCargando(true)
             if (comparePassword()) {
                 const { usuario, estado_cuenta } = await register(null, data);
-                console.log("🚀 ~ file: FormularioRegistro.jsx:38 ~ registrar ~ estado_cuenta", estado_cuenta)
                 if (estado_cuenta === 'En revisión') {
                     ToastAndroid.showWithGravity(
                         'Cuenta en revisión',
@@ -60,7 +59,7 @@ export const FormularioRegistro = ({ route, navigation }) => {
             }
 
         } catch (error) {
-            console.log("🚀 ~ file: Login.jsx:24 ~ registrar ~ error", JSON.stringify(error.data.message))
+            console.error("🚀 ~ file: Login.jsx:24 ~ registrar ~ error", JSON.stringify(error.data.message))
             ToastAndroid.showWithGravity(
                 `${error.data.message}`,
                 ToastAndroid.SHORT,

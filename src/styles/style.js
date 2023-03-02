@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { StatusBar, StyleSheet } from 'react-native';
 
-const primary = '#8f0c1e'
+export const primary = '#8f0c1e'
 const primaryDisabled = 'grey'
 const secondary = '#7a7a7a'
 const secondaryDisabled = '#adadad'
@@ -86,8 +86,9 @@ export const styles = StyleSheet.create({
     marginVertical: 10,
   },
   roundButtonDesplazamiento: {
-    width: 60,
-    height: 60,
+    width: 80,
+    height: 80,
+    marginHorizontal: '2%',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10,
@@ -95,8 +96,8 @@ export const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   roundButtonDesplazamientoSelected: {
-    width: 60,
-    height: 60,
+    width: 85,
+    height: 85,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10,
@@ -104,5 +105,12 @@ export const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderColor:primary,
     borderWidth: 5,
+  },
+  roundButtonCatalogos: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderColor: 'white',
+    flexDirection: 'row',
+
   },
 });

@@ -1,13 +1,14 @@
 import { Button, Icon, ListItem } from '@rneui/base'
 import React, { useState } from 'react'
 import { useEffect } from 'react'
-import { FlatList, Text, View } from 'react-native'
+import { FlatList, RefreshControl, Text, View } from 'react-native'
 import { Loading } from '../components/Loading'
 import { getDesplazamientos, removeDesplazamiento, sendDesplazamiento } from '../database/TblDesplazamientos'
 import { postDesplazamiento } from '../services/desplazamientoServices'
 import { styles } from '../styles/style';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react'
+import { ScrollView } from 'react-native-gesture-handler'
 
 
 
@@ -15,6 +16,8 @@ export const ListadoDesplazamiento = () => {
 
   const [listado, setListado] = useState()
   const [cargando, setCargando] = useState(false)
+  const [refreshing, setRefreshing] = useState(false);
+
 
   const items = async () => {
     const data = await getDesplazamientos();
@@ -64,13 +67,23 @@ export const ListadoDesplazamiento = () => {
   }, [])
 
 
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    items();
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
+
   if (!listado) return <Loading />
+
 
   return (
     <View style={styles.container}>
       <FlatList
         data={listado}
-
+        refreshing={refreshing}
+        onRefresh={onRefresh}
         renderItem={({ item }) => (
 
           <ListItem.Swipeable
@@ -96,20 +109,21 @@ export const ListadoDesplazamiento = () => {
           >
 
 
-              <Icon name="run" type='material-community' />
-              <ListItem.Content  >
-                <ListItem.Title>{item.uuid}</ListItem.Title>
-                <ListItem.Subtitle>{item.fecha_registro}</ListItem.Subtitle>
-              </ListItem.Content>
+            <Icon name="run" type='material-community' />
+            <ListItem.Content  >
+              <ListItem.Title>{item.uuid}</ListItem.Title>
+              <ListItem.Subtitle>{item.fecha_registro}</ListItem.Subtitle>
+            </ListItem.Content>
 
-              <Icon
-                type="material-community"
-                name={item.enviado == 1 ? 'check-circle-outline' : 'cloud-upload'}
-                color={item.enviado == 1 ? 'green' : 'grey'}
-              />
+            <Icon
+              type="material-community"
+              name={item.enviado == 1 ? 'check-circle-outline' : 'cloud-upload'}
+              color={item.enviado == 1 ? 'green' : 'grey'}
+            />
           </ListItem.Swipeable>
         )}
       />
+
     </View>
   )
 }

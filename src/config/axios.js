@@ -5,18 +5,19 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const http_axios = async (url, params, method = 'get', data) => {
   const baseURL = API_URL;
+  console.log("RUTA", baseURL+url)
 
   const headers = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
-    Authorization: ''
   };
 
   const token = await AsyncStorage.getItem('token');
-
+  
   if (token !== null) {
     headers.Authorization = `Bearer ${token}`;
   }
+  console.log("HEADERS:", headers)
 
   const instance = axios.create({
     baseURL,
@@ -32,6 +33,7 @@ export const http_axios = async (url, params, method = 'get', data) => {
             resolve(response.data);
           })
           .catch(err => {
+            console.log("🚀 ~ file: axios.js:37 ~ returnnewPromise ~ err.response:", JSON.stringify(err.response))
             reject(err.response);
           });
 

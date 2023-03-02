@@ -24,15 +24,12 @@ export const AuthProvider = ({ children }) => {
         try {
             const response = await http_axios('/api/sanctum/token', params, 'post');
             const token = response?.token;
-            dispatch({ type: 'signIn', payload: { token } });
-            await AsyncStorage.setItem('token', token)
-            ToastAndroid.showWithGravity(
-                'Inicio de sesión satisfactoriamente',
-                ToastAndroid.LONG,
-                ToastAndroid.CENTER,
-            );
+            if (token){
+                dispatch({ type: 'signIn', payload: { token } });
+                await AsyncStorage.setItem('token', token)
+            }
+
         } catch (error) {
-            console.log(JSON.stringify(error,null, 2));
             dispatch({
                 type: 'error', payload: {
                     mensaje: error.data?.message || 'Credenciales incorrectas'
@@ -44,11 +41,10 @@ export const AuthProvider = ({ children }) => {
 
     const logout = async() => {
         try {
-            await http_axios('api/tokens', null, 'delete', null)
+            await http_axios('api/token', null, 'delete', null)
             await AsyncStorage.multiRemove(['email', 'username', 'token'])
             dispatch({ type: 'logout' });
         } catch (error) {
-            console.log("🚀 ~ file: AuthContext.jsx:51 ~ logout ~ error", error)
             ToastAndroid.showWithGravity(
                 'Lo sentimos, algo salio mal.',
                 ToastAndroid.LONG,
@@ -70,7 +66,7 @@ export const AuthProvider = ({ children }) => {
             dispatch({ type: 'signIn', payload: { token } })
 
         } catch (error) {
-            console.log(error);
+            console.error(error);
             ToastAndroid.showWithGravity(
                 'Sin autenticacion',
                 ToastAndroid.SHORT,

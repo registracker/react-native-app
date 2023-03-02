@@ -29,7 +29,7 @@ export const AccountComponent = () => {
                 setUsername(username)
             }
         } catch (error) {
-            console.log("🚀 ~ file: AccountComponent.jsx:24 ~ created ~ error", error)
+            console.error("🚀 ~ file: AccountComponent.jsx:24 ~ created ~ error", error)
 
         }
     }

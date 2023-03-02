@@ -12,8 +12,6 @@ export const Login = () => {
   const [cargando, setCargando] = useState(false)
   const { signIn, mensajeError, cleanError, autenticado } = useContext(AuthContext)
 
-  const image = { uri: '' };
-
   if (autenticado === 'verificar') {
     return <Loading />;
   }
@@ -23,7 +21,6 @@ export const Login = () => {
       setCargando(true)
       signIn({ email, password });
     } catch (error) {
-      console.log("🚀 ~ file: Login.jsx:24 ~ iniciarSesion ~ error", error)
       ToastAndroid.showWithGravity(
         'Ha ocurrido un error interno',
         ToastAndroid.SHORT,

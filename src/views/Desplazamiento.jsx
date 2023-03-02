@@ -9,11 +9,13 @@ import BackgroundService from 'react-native-background-actions';
 import { MediosDesplazamientosComponentes } from '../components/MediosDesplazamientosComponentes';
 import { addItemDesplazamiento, createTableDesplazamiento } from '../database/TblDesplazamientos';
 import { getMediosDesplazamientos } from '../services/mediosDesplazamientoServices'
+import { getMarcadores } from '../services/marcadorServices'
 
 import { styles } from '../styles/style';
 import { useFocusEffect } from '@react-navigation/core';
 import { useCallback } from 'react';
 import { RecorridosContext } from '../context/Recorrido/RecorridosContext';
+import { ModalComponent } from '../components/ModalComponent';
 
 export const Desplazamiento = () => {
 
@@ -22,11 +24,13 @@ export const Desplazamiento = () => {
     const [position, setPosition] = useState()
     const [watchId, setWatchId] = useState()
     const [viajeIniciado, setViajeIniciado] = useState(false)
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
     const [uuidDesplazamiento, setUuidDesplazamiento] = useState()
     const [medio, setMedio] = useState({ id: 1, nombre: 'Caminando', icono: 'run' })
     const [mediosDesplazamientos, setMediosDesplazamientos] = useState()
     const [fechaHoraInciado, setFechaHoraInciado] = useState()
+    const [modalMarcadores, setModalMarcadores] = useState(false)
+    const [marcadores, setMarcadores] = useState()
 
     const { desplazamientoState, insertarPunto, restaurar } = useContext(RecorridosContext)
 
@@ -45,37 +49,12 @@ export const Desplazamiento = () => {
         },
     };
 
-    useEffect(() => {
-        createTableDesplazamiento()
-        getMD();
-    }, [])
-
-    useFocusEffect(
-        useCallback(() => {
-            if (!mediosDesplazamientos) getMD()
-        }, [])
-    );
-
-    const getMD = async () => {
-        const { data } = await getMediosDesplazamientos();
-        setMediosDesplazamientos(data)
+    const created = async () => {
+        const { data: marcadores } = await getMarcadores();
+        const { data: medios_desplazamientos } = await getMediosDesplazamientos()
+        setMediosDesplazamientos(medios_desplazamientos)
+        setMarcadores(marcadores)
     }
-
-    useEffect(() => {
-        if (position) {
-            const point = {
-                latitud: position.coords.latitude,
-                longitud: position.coords.longitude,
-                fecha_registro: position.timestamp,
-                velocidad: position.coords.speed,
-                id_medio_desplazamiento: medio.id,
-            }
-            setData([...data, position])
-            setPuntos([...puntos, point])
-            insertarPunto({ uuid: uuidDesplazamiento, punto: point })
-
-        }
-    }, [position])
 
     const getLocation = async () => {
         await Geolocation.getCurrentPosition(
@@ -144,7 +123,6 @@ export const Desplazamiento = () => {
             const { delay } = taskDataArguments;
             await new Promise(async (resolve) => {
                 for (let i = 0; BackgroundService.isRunning(); i++) {
-                    console.log(i);
                     await getLocation()
                     await detener(delay);
                 }
@@ -158,7 +136,6 @@ export const Desplazamiento = () => {
 
     const stopLocationObserving = async () => {
         setViajeIniciado(false);
-        console.log(JSON.stringify(desplazamientoState, null, 2));
 
         await BackgroundService.stop();
 
@@ -174,6 +151,39 @@ export const Desplazamiento = () => {
         setData([])
         Geolocation.clearWatch(watchId);
     }
+
+    const openModalMarcadores = async () => {
+        setModalMarcadores(true)
+        setOpen(false)
+    }
+
+    useEffect(() => {
+        createTableDesplazamiento()
+        created();
+    }, [])
+
+    // useFocusEffect(
+    //     useCallback(() => {
+    //         if (!mediosDesplazamientos) getCatalogos()
+    //     }, [])
+    // );
+
+    useEffect(() => {
+        if (position) {
+            const point = {
+                latitud: position.coords.latitude,
+                longitud: position.coords.longitude,
+                fecha_registro: position.timestamp,
+                velocidad: position.coords.speed,
+                id_medio_desplazamiento: medio.id,
+            }
+            setData([...data, position])
+            setPuntos([...puntos, point])
+            insertarPunto({ uuid: uuidDesplazamiento, punto: point })
+
+        }
+    }, [position])
+
 
     return (
         <View style={styles.container}>
@@ -193,7 +203,6 @@ export const Desplazamiento = () => {
                         viajeIniciado ? (
 
                             <>
-
                                 <Text style={{ color: 'white', fontSize: 12 }}>
                                     Estado del viaje: Inicado
                                 </Text>
@@ -271,6 +280,13 @@ export const Desplazamiento = () => {
                         )
                 }
             </>
+            <ModalComponent
+                modalVisible={modalMarcadores}
+                setModalVisible={setModalMarcadores}
+                setItem={setMarcadores}
+                data={marcadores}
+                setOpen={setOpen}
+            />
             <SpeedDial
                 isOpen={open}
                 icon={{ name: 'map-marker-radius', color: '#fff', type: 'material-community' }}
@@ -284,14 +300,14 @@ export const Desplazamiento = () => {
                     icon={{ name: 'marker-check', color: '#fff', type: 'material-community' }}
                     title="Marcador"
                     color={styles.primary}
-                    onPress={() => IniciarDesplazamiento}
+                    onPress={openModalMarcadores}
                 />
-                <SpeedDial.Action
+                {/* <SpeedDial.Action
                     icon={{ name: 'bullhorn', color: '#fff', type: 'material-community' }}
                     title="Incidente"
                     color={styles.primary}
                     onPress={() => console.log('Delete Something')}
-                />
+                /> */}
             </SpeedDial>
         </View>
     )
