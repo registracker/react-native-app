@@ -8,8 +8,6 @@ import { Icon } from '@rneui/base';
 
 export const MediosDesplazamientosComponentes = ({ selected, cambiarMedio, mediosDesplazamientos }) => {
 
-    if (!mediosDesplazamientos) return <Loading />
-
     return (
         <View style={{
             flexDirection: 'row',

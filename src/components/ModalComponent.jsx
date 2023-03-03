@@ -6,8 +6,6 @@ import { primary, styles } from '../styles/style';
 import { Loading } from './Loading';
 
 export const ModalComponent = ({ modalVisible, setModalVisible, data, setItem }) => {
-
-    if (!data) return <Loading />
     
     const renderItem = ({ item }) => {
         return (

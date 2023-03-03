@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, ToastAndroid } from 'react-native'
 import { Chip, FAB, SpeedDial } from '@rneui/base';
 import { format } from 'date-fns';
 import Geolocation from 'react-native-geolocation-service';
@@ -17,7 +17,8 @@ import { RecorridosContext } from '../context/Recorrido/RecorridosContext';
 import { ModalComponent } from '../components/ModalComponent';
 import { createTableMediosDesplazamiento } from '../database/TblMediosDesplazamientos';
 import { createTableMarcadores } from '../database/TblMarcadores';
-import { createTableIncidentes } from '../database/TblIncidentes';
+import { createTableIncidentes, createTableReporteIncidentes, storeReporteIncidente } from '../database/TblIncidentes';
+import { Loading } from '../components/Loading';
 
 export const Desplazamiento = () => {
 
@@ -192,6 +193,7 @@ export const Desplazamiento = () => {
         createTableMediosDesplazamiento()
         createTableMarcadores()
         createTableIncidentes()
+        createTableReporteIncidentes()
         created();
     }, [])
 
@@ -215,33 +217,13 @@ export const Desplazamiento = () => {
 
 
     useEffect(() => {
-
-        if (viajeIniciado) {
-            setContadorMedio(contadorMedio + 1)
-        }
-
+        if (viajeIniciado) setContadorMedio(contadorMedio + 1)
     }, [medio])
-
-
-    //Detectar cambios de seleccion de un marcador
-    // useEffect(() => {
-    //     console.log(marcadorSelected);
-    //     // if (marcadorSelected) {
-    //     //     const data = {
-    //     //         id_marcador: marcadorSelected,                
-    //     //     }
-    //     //     const ubicacion = getUbicacionActual()
-    //     //     console.log("🚀 ~ file: Desplazamiento.jsx:201 ~ useEffect ~ ubicacion:", ubicacion)
-
-    //     // }
-
-    // }, [marcadorSelected])
 
     useEffect(() => {
         console.log(incidenteSelected);
         if (incidenteSelected) {
-            // 'desplazamiento_id', 'id_incidente', 'fecha_reporte', 'latitud', 'longitud', 'altitud'
-            enviarIncidente(incidenteSelected.id, uuidDesplazamiento)
+            enviarIncidente(incidenteSelected, uuidDesplazamiento)
         }
 
 
@@ -249,21 +231,38 @@ export const Desplazamiento = () => {
     }, [incidenteSelected])
 
 
-    const enviarIncidente = async (idIncidente, uuid = null) => {
+    const enviarIncidente = async (incidente, uuid = null) => {
         const position = await getUbicacionActual()
 
         const data = {
             desplazamiento_id: uuid,
-            id_incidente: idIncidente,
+            id_incidente: incidente.id,
+            icono: incidente.icono,
+            nombre: incidente.nombre,
             longitud: position.coords.longitude,
             latitud: position.coords.latitude,
             altitud: position.coords.altitude,
-            fecha_reporte: new Date()
+            fecha_reporte: format(new Date(), 'dd-MM-yyyy HH:mm:ss'),
         }
-        console.log("🚀 ~ file: Desplazamiento.jsx:263 ~ enviarIncidente ~ data:", data)
-        await postIncidente(data);
+        console.log("🚀 ~ file: Desplazamiento.jsx:246 ~ enviarIncidente ~ data:", typeof(data.fecha_reporte))
+        const response = await storeReporteIncidente(data)
+        if(response.rowsAffected === 1){
+            const mensaje = '!Incidente almacenado!'
+            notificacion(mensaje);
+        }
 
     }
+
+    const notificacion = (mensaje) => {
+        ToastAndroid.showWithGravity(
+            mensaje,
+            ToastAndroid.LONG,
+            ToastAndroid.CENTER,
+        );
+    };
+
+    if (!mediosDesplazamientos || !incidentes) return <Loading />
+
 
     return (
         <View style={styles.container}>
