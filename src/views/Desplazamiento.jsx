@@ -10,12 +10,14 @@ import { MediosDesplazamientosComponentes } from '../components/MediosDesplazami
 import { addItemDesplazamiento, createTableDesplazamiento } from '../database/TblDesplazamientos';
 import { getMediosDesplazamientos } from '../services/mediosDesplazamientoServices'
 import { getMarcadores } from '../services/marcadorServices'
+import { getIncidentes, postIncidente } from '../services/incidenteServices'
 
-import { styles } from '../styles/style';
-import { useFocusEffect } from '@react-navigation/core';
-import { useCallback } from 'react';
+import { primary, styles } from '../styles/style';
 import { RecorridosContext } from '../context/Recorrido/RecorridosContext';
 import { ModalComponent } from '../components/ModalComponent';
+import { createTableMediosDesplazamiento } from '../database/TblMediosDesplazamientos';
+import { createTableMarcadores } from '../database/TblMarcadores';
+import { createTableIncidentes } from '../database/TblIncidentes';
 
 export const Desplazamiento = () => {
 
@@ -26,11 +28,16 @@ export const Desplazamiento = () => {
     const [viajeIniciado, setViajeIniciado] = useState(false)
     const [open, setOpen] = useState(false);
     const [uuidDesplazamiento, setUuidDesplazamiento] = useState()
-    const [medio, setMedio] = useState({ id: 1, nombre: 'Caminando', icono: 'run' })
+    const [medio, setMedio] = useState({ id: 1, nombre: 'Caminando', icono: 'walk' })
     const [mediosDesplazamientos, setMediosDesplazamientos] = useState()
     const [fechaHoraInciado, setFechaHoraInciado] = useState()
     const [modalMarcadores, setModalMarcadores] = useState(false)
     const [marcadores, setMarcadores] = useState()
+    const [marcadorSelected, setMarcadorSelected] = useState()
+    const [incidentes, setIncidentes] = useState()
+    const [modalIncidentes, setModalIncidentes] = useState(false)
+    const [incidenteSelected, setIncidenteSelected] = useState()
+    const [contadorMedio, setContadorMedio] = useState(0)
 
     const { desplazamientoState, insertarPunto, restaurar } = useContext(RecorridosContext)
 
@@ -42,32 +49,32 @@ export const Desplazamiento = () => {
             name: 'ic_launcher',
             type: 'mipmap',
         },
-        color: '#ff00ff',
+        color: primary,
         linkingURI: 'yourSchemeHere://chat/jane', // See Deep Linking for more info
         parameters: {
             delay: 5000,
         },
     };
 
+    //Método para obtener los catalogos principales
     const created = async () => {
-        const { data: marcadores } = await getMarcadores();
-        const { data: medios_desplazamientos } = await getMediosDesplazamientos()
+        //CATALOGO DE MEDIOS DE DESPLAMIENTO
+        const medios_desplazamientos = await getMediosDesplazamientos()
         setMediosDesplazamientos(medios_desplazamientos)
+
+        //CATALOGO DE MARCADORES
+        const marcadores = await getMarcadores();
         setMarcadores(marcadores)
+
+        //CATALOGO DE INCIDENTES
+        const incidentes = await getIncidentes();
+        setIncidentes(incidentes)
+
     }
 
     const getLocation = async () => {
         await Geolocation.getCurrentPosition(
             (position) => {
-                // setPosition(position)
-                // // console.log(format(new Date(position.timestamp), 'yyyy-MM-dd HH:mm:ss'), position.coords.latitude, position.coords.longitude);
-
-                // point = {
-                //     longitud: position.coords.longitude,
-                //     latitud: position.coords.latitude,
-                // }
-
-                // addItem('tbl_recorrido', null, point)
                 setPosition(position)
                 setData([...data, position])
             },
@@ -77,8 +84,7 @@ export const Desplazamiento = () => {
             },
             {
                 enableHighAccuracy: true,
-                distanceFilter: 0,
-                maximumAge: 10000
+                distanceFilter: 0
             }
         )
 
@@ -90,7 +96,6 @@ export const Desplazamiento = () => {
         setViajeIniciado(true)
         setUuidDesplazamiento(uuid.v4());
         setFechaHoraInciado(new Date());
-
 
         const observation = await Geolocation.watchPosition(
             (position) => {
@@ -123,15 +128,15 @@ export const Desplazamiento = () => {
             const { delay } = taskDataArguments;
             await new Promise(async (resolve) => {
                 for (let i = 0; BackgroundService.isRunning(); i++) {
-                    await getLocation()
+                    console.log(i);
+
                     await detener(delay);
                 }
             });
         };
 
         await BackgroundService.start(veryIntensiveTask, options);
-        await BackgroundService.updateNotification({ taskDesc: 'registrando desplazamiento' }); // Only Android, iOS will ignore this call
-
+        await BackgroundService.updateNotification({ taskDesc: 'registrando desplazamiento' });
     }
 
     const stopLocationObserving = async () => {
@@ -149,6 +154,8 @@ export const Desplazamiento = () => {
         }
         restaurar()
         setData([])
+        setUuidDesplazamiento()
+        setContadorMedio(0)
         Geolocation.clearWatch(watchId);
     }
 
@@ -157,17 +164,38 @@ export const Desplazamiento = () => {
         setOpen(false)
     }
 
+    const openModalIncidentes = async () => {
+        setModalIncidentes(true)
+        setOpen(false)
+    }
+
+
+    const getUbicacionActual = () => {
+        return new Promise((resolve, reject) => {
+            Geolocation.getCurrentPosition(
+                (position) => {
+                    resolve(position)
+                },
+                (error) => {
+                    reject(error)
+                },
+                {
+                    enableHighAccuracy: true,
+                    distanceFilter: 0
+                }
+            )
+        })
+    }
+
     useEffect(() => {
         createTableDesplazamiento()
+        createTableMediosDesplazamiento()
+        createTableMarcadores()
+        createTableIncidentes()
         created();
     }, [])
 
-    // useFocusEffect(
-    //     useCallback(() => {
-    //         if (!mediosDesplazamientos) getCatalogos()
-    //     }, [])
-    // );
-
+    //Detectar cambios de la posicion
     useEffect(() => {
         if (position) {
             const point = {
@@ -176,6 +204,7 @@ export const Desplazamiento = () => {
                 fecha_registro: position.timestamp,
                 velocidad: position.coords.speed,
                 id_medio_desplazamiento: medio.id,
+                agrupacion_medio_desplazamiento: contadorMedio
             }
             setData([...data, position])
             setPuntos([...puntos, point])
@@ -184,6 +213,57 @@ export const Desplazamiento = () => {
         }
     }, [position])
 
+
+    useEffect(() => {
+
+        if (viajeIniciado) {
+            setContadorMedio(contadorMedio + 1)
+        }
+
+    }, [medio])
+
+
+    //Detectar cambios de seleccion de un marcador
+    // useEffect(() => {
+    //     console.log(marcadorSelected);
+    //     // if (marcadorSelected) {
+    //     //     const data = {
+    //     //         id_marcador: marcadorSelected,                
+    //     //     }
+    //     //     const ubicacion = getUbicacionActual()
+    //     //     console.log("🚀 ~ file: Desplazamiento.jsx:201 ~ useEffect ~ ubicacion:", ubicacion)
+
+    //     // }
+
+    // }, [marcadorSelected])
+
+    useEffect(() => {
+        console.log(incidenteSelected);
+        if (incidenteSelected) {
+            // 'desplazamiento_id', 'id_incidente', 'fecha_reporte', 'latitud', 'longitud', 'altitud'
+            enviarIncidente(incidenteSelected.id, uuidDesplazamiento)
+        }
+
+
+
+    }, [incidenteSelected])
+
+
+    const enviarIncidente = async (idIncidente, uuid = null) => {
+        const position = await getUbicacionActual()
+
+        const data = {
+            desplazamiento_id: uuid,
+            id_incidente: idIncidente,
+            longitud: position.coords.longitude,
+            latitud: position.coords.latitude,
+            altitud: position.coords.altitude,
+            fecha_reporte: new Date()
+        }
+        console.log("🚀 ~ file: Desplazamiento.jsx:263 ~ enviarIncidente ~ data:", data)
+        await postIncidente(data);
+
+    }
 
     return (
         <View style={styles.container}>
@@ -239,7 +319,6 @@ export const Desplazamiento = () => {
                 <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                 </View>
                 <Text style={{ color: 'black' }}>
-                    {/* {JSON.stringify(desplazamientoState.ultimoPunto, null, 5)} */}
                     {desplazamientoState.cantidadPuntos}
                 </Text>
 
@@ -269,7 +348,7 @@ export const Desplazamiento = () => {
                         ) : (
                             <FAB
                                 visible
-                                onPress={IniciarDesplazamiento}
+                                onPress={getLocationObservation}
                                 title="Comenzar el viaje"
                                 placement='left'
                                 upperCase
@@ -280,13 +359,19 @@ export const Desplazamiento = () => {
                         )
                 }
             </>
-            <ModalComponent
+            {/* <ModalComponent
                 modalVisible={modalMarcadores}
                 setModalVisible={setModalMarcadores}
-                setItem={setMarcadores}
+                setItem={setMarcadorSelected}
                 data={marcadores}
-                setOpen={setOpen}
+            /> */}
+            <ModalComponent
+                modalVisible={modalIncidentes}
+                setModalVisible={setModalIncidentes}
+                setItem={setIncidenteSelected}
+                data={incidentes}
             />
+
             <SpeedDial
                 isOpen={open}
                 icon={{ name: 'map-marker-radius', color: '#fff', type: 'material-community' }}
@@ -298,16 +383,16 @@ export const Desplazamiento = () => {
             >
                 <SpeedDial.Action
                     icon={{ name: 'marker-check', color: '#fff', type: 'material-community' }}
-                    title="Marcador"
-                    color={styles.primary}
-                    onPress={openModalMarcadores}
-                />
-                {/* <SpeedDial.Action
-                    icon={{ name: 'bullhorn', color: '#fff', type: 'material-community' }}
                     title="Incidente"
                     color={styles.primary}
-                    onPress={() => console.log('Delete Something')}
-                /> */}
+                    onPress={openModalIncidentes}
+                />
+                {/* <SpeedDial.Action
+                            icon={{ name: 'marker-check', color: '#fff', type: 'material-community' }}
+                            title="Marcador"
+                            color={styles.primary}
+                            onPress={openModalMarcadores}
+                        /> */}
             </SpeedDial>
         </View>
     )

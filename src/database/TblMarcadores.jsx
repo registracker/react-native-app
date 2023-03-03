@@ -1,16 +1,16 @@
 import { db } from '../config/database';
 
-export const createTableMediosDesplazamiento = () => {
+export const createTableMarcadores = () => {
     db.transaction(tx => {
         tx.executeSql(
-            `CREATE TABLE IF NOT EXISTS tbl_medios_desplazamiento (
+            `CREATE TABLE IF NOT EXISTS tbl_marcadores (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nombre TEXT, 
             icono TEXT
             );`,
             [],
             (sqlTxn, result) => {
-                console.log('Table created successfully tbl_medios_desplazamiento');
+                console.log('Table created successfully tbl_marcadores');
             },
             error => {
                 console.log('Error creating table ' + JSON.stringify(error));
@@ -19,11 +19,11 @@ export const createTableMediosDesplazamiento = () => {
     });
 };
 
-export const getMediosDesplazamientosDatabase = () => {
+export const getMarcadoresDatabase = () => {
     return new Promise((resolve, reject) => {
         db.transaction(tx => {
             tx.executeSql(
-                `SELECT * FROM tbl_medios_desplazamiento;`,
+                `SELECT * FROM tbl_marcadores;`,
                 [],
                 (transaction, res) => {
                     let len = res.rows.length;
@@ -42,13 +42,13 @@ export const getMediosDesplazamientosDatabase = () => {
     });
 };
 
-export const storeCatalogoMediosDesplazamientos = (medios_desplazamiento) => {
-    const sql = medios_desplazamiento.substring(0, medios_desplazamiento.length - 1)
+export const storeCatalogoMarcadores = (marcadores) => {
+    const sql = marcadores.substring(0, marcadores.length - 1)
 
     return new Promise((resolve, reject) => {
         db.transaction(tx => {
             tx.executeSql(
-                `INSERT INTO tbl_medios_desplazamiento (id, nombre, icono) VALUES ${sql} ;`,
+                `INSERT INTO tbl_marcadores (id, nombre, icono) VALUES ${sql} ;`,
                 [],
                 (sqlTxn, result) => {
                     console.log("🚀 ~ file: TblDesplazamientos.jsx:40 ~ addItemDesplazamiento ~ result:", result)
@@ -60,6 +60,6 @@ export const storeCatalogoMediosDesplazamientos = (medios_desplazamiento) => {
                 },
             );
         });
-        
+
     });
 };

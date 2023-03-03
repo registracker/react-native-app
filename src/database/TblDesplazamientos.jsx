@@ -5,14 +5,14 @@ export const createTableDesplazamiento = () => {
     tx.executeSql(
       `CREATE TABLE IF NOT EXISTS tbl_desplazamiento (
         uuid TEXT PRIMARY KEY,
-        desplazamiento TEXT, 
+        desplazamiento TEXT,
         enviado INTEGER,
         activo INTEGER,
         fecha_registro TEXT
         );`,
       [],
       (sqlTxn, result) => {
-        console.log('Table created successfully');
+        console.log('Table created successfully tbl_desplazamiento');
       },
       error => {
         console.log('Error creating table ' + error[0]);

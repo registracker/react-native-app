@@ -107,10 +107,39 @@ export const styles = StyleSheet.create({
     borderWidth: 5,
   },
   roundButtonCatalogos: {
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  centeredView: {
     justifyContent: 'center',
     alignItems: 'center',
-    borderColor: 'white',
-    flexDirection: 'row',
-
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+  },
+  modalView: {
+    borderRadius: 20,
+    alignItems: 'center',
+    backgroundColor: 'white',
+    shadowColor: '#000',
+    paddingHorizontal: '5%',
+    paddingVertical: '5%',
+    marginVertical: '10%',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    color: 'black',
+    marginBottom: 15,
+    textAlign: 'center',
   },
 });

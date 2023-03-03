@@ -1,15 +1,12 @@
+import React, { useState, useCallback, useEffect } from 'react'
+import { FlatList, ToastAndroid, View } from 'react-native'
 import { Button, Icon, ListItem } from '@rneui/base'
-import React, { useState } from 'react'
-import { useEffect } from 'react'
-import { FlatList, RefreshControl, Text, View } from 'react-native'
-import { Loading } from '../components/Loading'
+import { useFocusEffect } from '@react-navigation/native';
+
 import { getDesplazamientos, removeDesplazamiento, sendDesplazamiento } from '../database/TblDesplazamientos'
 import { postDesplazamiento } from '../services/desplazamientoServices'
+import { Loading } from '../components/Loading'
 import { styles } from '../styles/style';
-import { useFocusEffect } from '@react-navigation/native';
-import { useCallback } from 'react'
-import { ScrollView } from 'react-native-gesture-handler'
-
 
 
 export const ListadoDesplazamiento = () => {
@@ -24,11 +21,22 @@ export const ListadoDesplazamiento = () => {
     setListado(data)
   }
 
+  const mostrarNotificacion = (mensaje) => {
+    ToastAndroid.showWithGravity(
+      mensaje,
+      ToastAndroid.LONG,
+      ToastAndroid.BOTTOM,
+    );
+  };
+
   const deleteDesplazamiento = async (uuid, reset) => {
+    const mensaje = 'Desplazamiento eliminado. ';
     try {
       await removeDesplazamiento(uuid)
       items();
       reset()
+      mostrarNotificacion(mensaje)
+
     } catch (error) {
       console.error(error)
       reset()
@@ -37,6 +45,8 @@ export const ListadoDesplazamiento = () => {
   }
 
   const enviarDesplazamiento = async (item, reset) => {
+    const mensaje = 'Desplazamiento enviado exitosamente.';
+
     try {
       setCargando(true)
       const data = {
@@ -44,10 +54,13 @@ export const ListadoDesplazamiento = () => {
         desplazamiento: JSON.parse(item.desplazamiento)
       }
       console.log(JSON.stringify(data, null, 3));
+      //Enviardo al backend
       await postDesplazamiento(data)
+      //Actualizado en la base de datos local SQLITE
       await sendDesplazamiento(item.uuid, reset)
       items();
       reset()
+      mostrarNotificacion(mensaje)
     } catch (error) {
       console.error(error);
       reset()

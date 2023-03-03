@@ -1,7 +1,35 @@
-import {http_axios} from '../config/axios';
+/* eslint-disable prettier/prettier */
+import { http_axios } from '../config/axios';
+import { getMediosDesplazamientosDatabase, storeCatalogoMediosDesplazamientos } from '../database/TblMediosDesplazamientos';
 
-const getMediosDesplazamientos = async () =>
-  await http_axios('/api/medios-desplazamiento');
+const getMediosDesplazamientos = async () => {
+
+  // GET DATA OF SQLITE
+  const medios = await getMediosDesplazamientosDatabase()
+  if (medios.length > 0) return medios;
+
+  //GET DATA OF BACKEND IF YOU DO NOT FIND DATA FROM SQLITE
+  let data = null
+  do {
+  const response = await http_axios('/api/medios-desplazamiento');
+    data = response.data;
+  if (data) {
+    const inserting_medios = data.map(item => {
+      return `(${item.id}, '${item.nombre}', '${item.icono}'),`
+    });
+
+    const result = await storeCatalogoMediosDesplazamientos(inserting_medios.join(' '))
+    if (result.rowsAffected === 1){
+      console.log('Data Insertada correctamente');
+    }
+
+  }
+  }
+  while (!data);
+
+
+  return data;
+};
 
 module.exports = {
   getMediosDesplazamientos,
