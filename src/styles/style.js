@@ -162,8 +162,8 @@ export const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   iconoSelected: {
-    width: 85,
-    height: 85,
+    width: 80,
+    height: 80,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10,

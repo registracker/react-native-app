@@ -1,55 +1,52 @@
 import React from 'react'
-import { Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { Loading } from './Loading';
 
-import { styles } from '../styles/style';
+import { primary, styles } from '../styles/style';
 import { Icon } from '@rneui/base';
 
 
 export const MediosDesplazamientosComponentes = ({ selected, cambiarMedio, mediosDesplazamientos }) => {
 
+    
+
+    const renderItem = ({ item }) => {
+        return (
+            <View style={{
+                margin: 10,
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}>
+                <TouchableOpacity
+                    onPress={() => cambiarMedio(item)}
+                    style={selected.id === item.id ? styles.iconoSelected : styles.iconos}
+                >
+                    <Icon
+                        name={item.icono}
+                        type='material-community'
+                        color={selected.id === item.id ? primary : 'grey'}
+                        reverseColor={primary}
+                        solid
+                        size={selected.id === item.id ? 50 : 36}
+                    />
+
+                </TouchableOpacity>
+                <Text adjustsFontSizeToFit style={styles.modalText}>
+                    {item.nombre} 
+                </Text>
+            </View>
+        );
+    };
+
+
     return (
-        <View style={{
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            justifyContent: 'space-between',
-            paddingHorizontal:0,
-        }}>
-                {
-                    mediosDesplazamientos.map(medio => {
-                        return (
-                            <View
-                                key={medio.id}
-                                style={{
-                                    margin: 10,
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                }}>
-                                {/* <Icon
-                                    onPress={() => cambiarMedio(medio)}
-                                    style={selected.id === medio.id ? styles.roundButtonDesplazamientoSelected : styles.roundButtonDesplazamiento}
-                                    name={medio.icono}
-                                    type='material-community'
-                                    color={selected.id === medio.id ? styles.primary : 'black'}
-                                /> */}
-
-                                <TouchableOpacity
-                                    onPress={() => cambiarMedio({ id: medio.id, nombre: medio.nombre, icono: medio.icono })}
-                                    style={selected.id === medio.id ? styles.roundButtonDesplazamientoSelected : styles.roundButtonDesplazamiento}
-                                >
-                                    <Icon 
-                                        name={medio.icono}
-                                        type='material-community'
-                                    />
-                                </TouchableOpacity>
-
-                                <Text style={{ fontSize: 12, color:'black' }}>
-                                    {medio.nombre}
-                                </Text>
-                            </View>
-                        )
-                    })
-                }
+        <View style={styles.modalView}>
+            <FlatList
+                data={mediosDesplazamientos}
+                renderItem={renderItem}
+                keyExtractor={item => item.id}
+                numColumns='3'
+            />
         </View>
     )
 }
