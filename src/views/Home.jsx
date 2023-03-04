@@ -6,14 +6,9 @@ import { Button } from '@rneui/themed';
 export const Home = ({navigation}) => {
     return (
         <View style={styles.container}>
-            <ImageBackground source={require('../img/loginBackground.jpg')} resizeMode="cover" style={{
-                flex: 1,
-                justifyContent: 'center',
-            }}>
+            <ImageBackground source={require('../img/loginBackground.jpg')} resizeMode="cover" style={styles.imageBackground}>
 
-            <View style={{
-                ...styles.body,
-            }}>
+            <View style={ styles.body }>
                 <Image
                     style={{...styles.image , width: '80%', height: '80%'}}
                     source={require('../img/travel/transporte(6).png')} />
@@ -26,11 +21,7 @@ export const Home = ({navigation}) => {
                     title="Iniciar sesión"
                     buttonStyle={styles.buttonPrimary}
                     radius="lg"
-                    containerStyle={{
-                        width: '80%',
-                        marginHorizontal: 50,
-                        marginVertical: 10,
-                    }}
+                    containerStyle={styles.buttonContainer}
                     onPress={ () => navigation.navigate('Login')}
                 />
                 <Button
@@ -38,11 +29,7 @@ export const Home = ({navigation}) => {
                     onPress={() => navigation.navigate('FormularioRegistro')}
                     buttonStyle={styles.buttonSecondary}
                     radius="lg"
-                    containerStyle={{
-                        width: '80%',
-                        marginHorizontal: 50,
-                        marginVertical: 10,
-                    }}
+                    containerStyle={styles.buttonContainer}
                 />
             </View>
             </ImageBackground>

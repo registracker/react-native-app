@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { View, Text, ToastAndroid } from 'react-native'
+import { View, Text, ToastAndroid, StyleSheet } from 'react-native'
 import { Chip, FAB, SpeedDial } from '@rneui/base';
 import { format } from 'date-fns';
 import Geolocation from 'react-native-geolocation-service';
@@ -143,7 +143,7 @@ export const Desplazamiento = () => {
     const stopLocationObserving = async () => {
         setViajeIniciado(false);
 
-        await BackgroundService.stop();
+        // await BackgroundService.stop();
 
         if (data.length > 0) {
             const data = {
@@ -244,9 +244,8 @@ export const Desplazamiento = () => {
             altitud: position.coords.altitude,
             fecha_reporte: format(new Date(), 'dd-MM-yyyy HH:mm:ss'),
         }
-        console.log("🚀 ~ file: Desplazamiento.jsx:246 ~ enviarIncidente ~ data:", typeof(data.fecha_reporte))
         const response = await storeReporteIncidente(data)
-        if(response.rowsAffected === 1){
+        if (response.rowsAffected === 1) {
             const mensaje = '!Incidente almacenado!'
             notificacion(mensaje);
         }
@@ -266,59 +265,16 @@ export const Desplazamiento = () => {
 
     return (
         <View style={styles.container}>
+            <ModalComponent
+                modalVisible={modalIncidentes}
+                setModalVisible={setModalIncidentes}
+                setItem={setIncidenteSelected}
+                data={incidentes}
+            />
 
-            <View style={{
-                backgroundColor: styles.primary,
-                padding: '2%',
-                margin: '5%',
-                height: 80,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-evenly',
-                borderRadius: 20
-            }}>
-                <View>
-                    {
-                        viajeIniciado ? (
-
-                            <>
-                                <Text style={{ color: 'white', fontSize: 12 }}>
-                                    Estado del viaje: Inicado
-                                </Text>
-                                <Text style={{ color: 'white', fontSize: 12 }}>
-                                    Fecha: {format(fechaHoraInciado, 'dd-MM-yyyy')}
-                                </Text>
-                                <Text style={{ color: 'white', fontSize: 12 }}>
-                                    Hora iniciado: {format(fechaHoraInciado, 'HH:mm:ss')}
-                                </Text>
-                            </>
-                        ) : (
-                            <>
-                                <Text style={{ color: 'white', fontSize: 20 }}>
-                                    Comenzar viaje
-                                </Text>
-                            </>
-                        )
-                    }
-                </View>
-                <Chip
-                    title={medio.nombre}
-                    titleStyle={{ color: styles.primary }}
-                    icon={{
-                        name: medio.icono,
-                        type: 'material-community',
-                        color: styles.primary
-                    }}
-                    color='white'
-                />
-
-            </View>
-
-            <View style={{ ...styles.body, justifyContent: 'space-between' }}>
-                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                </View>
-                <Text style={{ color: 'black' }}>
-                    {desplazamientoState.cantidadPuntos}
+            <View style={styles.body}>
+                <Text style={styles.subtitleText}>
+                    Elige tu medio de desplazamientos
                 </Text>
 
                 <MediosDesplazamientosComponentes
@@ -329,7 +285,9 @@ export const Desplazamiento = () => {
             </View>
 
             <View style={styles.foobar}>
+                {/* Deja un espacio vació entre los medios de desplazamientos y los botones de FAB */}
             </View>
+
             <>
                 {
                     viajeIniciado
@@ -340,7 +298,7 @@ export const Desplazamiento = () => {
                                 title="Detener viaje"
                                 placement='left'
                                 upperCase
-                                icon={{ name: 'stop-circle-outline', color: 'white', type: 'material-community' }}
+                                icon={stylesDesplazamiento.iconoTerminarViaje}
                                 style={{ marginBottom: 20 }}
                                 color={styles.primary}
                             />
@@ -351,48 +309,50 @@ export const Desplazamiento = () => {
                                 title="Comenzar el viaje"
                                 placement='left'
                                 upperCase
-                                icon={{ name: 'map-marker-distance', color: 'white', type: 'material-community' }}
+                                icon={stylesDesplazamiento.iconoComenzarViaje}
                                 style={{ marginBottom: 20 }}
                                 color='green'
                             />
                         )
                 }
             </>
-            {/* <ModalComponent
-                modalVisible={modalMarcadores}
-                setModalVisible={setModalMarcadores}
-                setItem={setMarcadorSelected}
-                data={marcadores}
-            /> */}
-            <ModalComponent
-                modalVisible={modalIncidentes}
-                setModalVisible={setModalIncidentes}
-                setItem={setIncidenteSelected}
-                data={incidentes}
-            />
-
             <SpeedDial
                 isOpen={open}
-                icon={{ name: 'map-marker-radius', color: '#fff', type: 'material-community' }}
-                openIcon={{ name: 'close', color: '#fff' }}
+                icon={stylesDesplazamiento.iconoFAB}
+                openIcon={stylesDesplazamiento.iconoFABClose}
                 onOpen={() => setOpen(!open)}
                 onClose={() => setOpen(!open)}
-                // style={{ }}
                 color={styles.primary}
             >
                 <SpeedDial.Action
-                    icon={{ name: 'marker-check', color: '#fff', type: 'material-community' }}
                     title="Incidente"
+                    icon={stylesDesplazamiento.iconoIncidente}
                     color={styles.primary}
                     onPress={openModalIncidentes}
                 />
-                {/* <SpeedDial.Action
-                            icon={{ name: 'marker-check', color: '#fff', type: 'material-community' }}
-                            title="Marcador"
-                            color={styles.primary}
-                            onPress={openModalMarcadores}
-                        /> */}
             </SpeedDial>
+
         </View>
     )
 }
+
+const stylesDesplazamiento = StyleSheet.create({
+    panel: {
+        backgroundColor: styles.primary,
+        padding: '2%',
+        margin: '5%',
+        height: 80,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-evenly',
+        borderRadius: 20
+    },
+    textPanel: { color: 'white', fontSize: 12 },
+    textTitlePanel: { color: 'white', fontSize: 20 },
+    iconoFAB: { name: 'map-marker-radius', color: 'white', type: 'material-community' },
+    iconoIncidente: { name: 'marker-check', color: 'white', type: 'material-community' },
+    iconoFABClose: { name: 'close', color: 'white' },
+    iconoComenzarViaje: { name: 'map-marker-distance', color: 'white', type: 'material-community' },
+    iconoTerminarViaje: { name: 'stop-circle-outline', color: 'white', type: 'material-community' },
+
+})

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { ActivityIndicator, Alert, Image, ImageBackground, Text, TextInput, ToastAndroid, View } from 'react-native'
+import { Alert, ImageBackground, Text, ToastAndroid, View } from 'react-native'
 import { styles } from '../styles/style'
 import { Button } from '@rneui/base'
 import { AuthContext } from '../context/Auth/AuthContext'
@@ -54,12 +54,9 @@ export const Login = () => {
 
   return (
     <View style={styles.container}>
-      <ImageBackground source={require('../img/loginBackground.jpg')} resizeMode="cover" style={{
-        flex: 1,
-        justifyContent: 'center',
-      }}>
-        <View style={{ ...styles.body, justifyContent: 'center' }} >
-
+      <ImageBackground source={require('../img/loginBackground.jpg')} resizeMode="cover" style={styles.imageBackground}>
+        <View style={styles.body} >
+            <Text style={styles.titleText}>Iniciar sesión</Text>
           <Input
             onChangeText={setEmail}
             value={email}

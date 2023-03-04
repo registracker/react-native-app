@@ -7,8 +7,8 @@ import { getDesplazamientos, removeDesplazamiento, sendDesplazamiento } from '..
 import { postDesplazamiento } from '../services/desplazamientoServices'
 import { Loading } from '../components/Loading'
 import { styles } from '../styles/style';
-import { getReporteIncidentesDatabase } from '../database/TblIncidentes';
-
+import { deleteReporteIncidente, enviarIncidente, getReporteIncidentesDatabase } from '../database/TblIncidentes';
+import { postIncidente } from '../services/incidenteServices'
 
 export const ListadoDesplazamiento = () => {
 
@@ -92,16 +92,12 @@ export const ListadoDesplazamiento = () => {
 
   const enviarReporteIncidente = async (item, reset) => {
     const mensaje = 'Incidente enviado exitosamente.';
-
+    
     try {
+      console.log("🚀 ~ file: ListadoDesplazamiento.jsx:94 ~ enviarReporteIncidente ~ item:", JSON.stringify(item, null, 3))
       setCargando(true)
-      // const data = {
-      //   uuid: item.uuid,
-      //   desplazamiento: JSON.parse(item.desplazamiento)
-      // }
-      // console.log(JSON.stringify(data, null, 3));
-      // await postDesplazamiento(data)
-      // await sendDesplazamiento(item.uuid, reset)
+      await postIncidente(item)
+      await enviarIncidente(item.id)
       items();
       reset()
       mostrarNotificacion(mensaje)
@@ -132,7 +128,6 @@ export const ListadoDesplazamiento = () => {
     }, 2000);
   }, []);
 
-  const getItemCount = _data => 500;
 
   if (!listadoDesplazamientos) return <Loading />
 
@@ -198,7 +193,7 @@ export const ListadoDesplazamiento = () => {
       <Icon name={item.icono} type='material-community' />
       <ListItem.Content  >
         <ListItem.Title>{item.nombre}</ListItem.Title>
-        <ListItem.Subtitle>{item.fecha_reporte}</ListItem.Subtitle>
+        <ListItem.Subtitle>{item.fecha_reporte}{item.enviado}</ListItem.Subtitle>
       </ListItem.Content>
 
       <Icon

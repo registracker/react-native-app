@@ -1,28 +1,43 @@
 import { Button, Icon } from '@rneui/base';
 import React, { useState } from 'react'
-import { useEffect } from 'react';
-import { FlatList, Modal, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { primary, styles } from '../styles/style';
-import { Loading } from './Loading';
 
 export const ModalComponent = ({ modalVisible, setModalVisible, data, setItem }) => {
-    
+
+    const [selected, setSelected] = useState()
+
+    const reportarIncidente = () => {
+        setItem(selected)
+        setModalVisible(!modalVisible)
+        setSelected()
+    }
+
     const renderItem = ({ item }) => {
         return (
-            <TouchableOpacity
-                onPress={() => setItem(item)}
-                style={styles.roundButtonCatalogos}
-            >
-                <Icon
-                    name={item.icono}
-                    type='material-community'
-                    color={primary}
-                    reverse
-                />
-                <Text style={{ fontSize: 14, color: 'black', marginLeft: 10 }}>
+            <View style={{
+                margin: 10,
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}>
+                <TouchableOpacity
+                    onPress={() => setSelected(item.id)}
+                    style={selected === item.id ? styles.iconoSelected : styles.iconos}
+                >
+                    <Icon
+                        name={item.icono}
+                        type='material-community'
+                        color={selected === item.id ? primary : 'grey'}
+                        reverseColor={primary}
+                        solid
+                        size={selected === item.id ?50: 40}
+                    />
+
+                </TouchableOpacity>
+                <Text adjustsFontSizeToFit style={styles.modalText}>
                     {item.nombre}
                 </Text>
-            </TouchableOpacity>
+            </View>
         );
     };
 
@@ -35,25 +50,37 @@ export const ModalComponent = ({ modalVisible, setModalVisible, data, setItem })
                 onRequestClose={() => {
                     setModalVisible(!modalVisible);
                 }}>
-                <View style={styles.centeredView}>
+                <View style={styles.centeredView} >
+                    <Icon
+                        color="white"
+                        name="close"
+                        reverseColor="black"
+                        type="material-community"
+
+                    />
+
                     <View style={styles.modalView}>
 
-                        <Text style={styles.modalText}>Reportar</Text>
-
-                            <FlatList
-                                data={data}
-                                renderItem={renderItem}
-                                keyExtractor={item => item.id}
-                            />
-                        <Button
-                            title="Cerrar"
-                            onPress={() => setModalVisible(!modalVisible)}
-                            radius="lg"
+                        <Text style={styles.modalTextTitle}>Reportar incidente</Text>
+                        <Text style={styles.modalTextSubtitle}>Los incidentes vehiculares son eventos que involucran vehículos y pueden tener distintas causas, puedes reportarlos en cualquier momento. </Text>
+                    </View>
+                    <View style={styles.modalItems} >
+                        <FlatList
+                            data={data}
+                            renderItem={renderItem}
+                            keyExtractor={item => item.id}
+                            numColumns='3'
                         />
                     </View>
+                    <Button
+                        title="Reportar"
+                        onPress={() => reportarIncidente()}
+                        radius="lg"
+                        buttonStyle={styles.buttonPrimary}
+                        containerStyle={styles.buttonContainer}
+                    />
                 </View>
             </Modal>
         </>
     )
 }
-
