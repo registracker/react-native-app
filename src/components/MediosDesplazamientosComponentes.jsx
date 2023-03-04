@@ -1,6 +1,5 @@
 import React from 'react'
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
-import { Loading } from './Loading';
 
 import { primary, styles } from '../styles/style';
 import { Icon } from '@rneui/base';

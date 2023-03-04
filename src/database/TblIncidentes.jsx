@@ -94,7 +94,7 @@ export const getReporteIncidentesDatabase = () => {
     return new Promise((resolve, reject) => {
         db.transaction(tx => {
             tx.executeSql(
-                `SELECT * FROM tbl_reporte_incidente limit 15;`,
+                `SELECT * FROM tbl_reporte_incidente ORDER BY id DESC limit 15;`,
                 [],
                 (transaction, res) => {
                     let len = res.rows.length;

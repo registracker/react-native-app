@@ -43,7 +43,7 @@ export const getDesplazamientos = () => {
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
-        `SELECT * FROM tbl_desplazamiento ORDER BY fecha_registro DESC;`,
+        `SELECT * FROM tbl_desplazamiento ORDER BY fecha_registro DESC LIMIT 15;`,
         [],
         (transaction, res) => {
           let len = res.rows.length;

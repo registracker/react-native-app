@@ -21,16 +21,16 @@ export const ModalComponent = ({ modalVisible, setModalVisible, data, setItem })
                 alignItems: 'center',
             }}>
                 <TouchableOpacity
-                    onPress={() => setSelected(item.id)}
-                    style={selected === item.id ? styles.iconoSelected : styles.iconos}
+                    onPress={() => setSelected(item)}
+                    style={selected.id === item.id ? styles.iconoSelected : styles.iconos}
                 >
                     <Icon
                         name={item.icono}
                         type='material-community'
-                        color={selected === item.id ? primary : 'grey'}
+                        color={selected.id === item.id ? primary : 'grey'}
                         reverseColor={primary}
                         solid
-                        size={selected === item.id ?50: 40}
+                        size={selected.id === item.id ?50: 40}
                     />
 
                 </TouchableOpacity>

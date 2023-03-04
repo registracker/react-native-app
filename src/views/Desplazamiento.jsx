@@ -19,6 +19,7 @@ import { createTableMediosDesplazamiento } from '../database/TblMediosDesplazami
 import { createTableMarcadores } from '../database/TblMarcadores';
 import { createTableIncidentes, createTableReporteIncidentes, storeReporteIncidente } from '../database/TblIncidentes';
 import { Loading } from '../components/Loading';
+import { Toast } from 'react-native-toast-message/lib/src/Toast';
 
 export const Desplazamiento = () => {
 
@@ -152,6 +153,11 @@ export const Desplazamiento = () => {
                 fecha_registro: format(new Date(), 'dd-MM-yyyy HH:mm:ss')
             }
             addItemDesplazamiento(data)
+
+            const mensaje = 'Desplazamiento finalizado';
+            const subtitulo = `Registrado en la fecha ${data.fecha_registro}`
+
+            notificacion(mensaje, subtitulo);
         }
         restaurar()
         setData([])
@@ -226,8 +232,6 @@ export const Desplazamiento = () => {
             enviarIncidente(incidenteSelected, uuidDesplazamiento)
         }
 
-
-
     }, [incidenteSelected])
 
 
@@ -246,18 +250,19 @@ export const Desplazamiento = () => {
         }
         const response = await storeReporteIncidente(data)
         if (response.rowsAffected === 1) {
-            const mensaje = '!Incidente almacenado!'
-            notificacion(mensaje);
+            const mensaje = 'Incidente registrado'
+            const subtitulo = `${data.nombre} registrado la fecha de ${data.fecha_reporte}`
+            notificacion(mensaje, subtitulo);
         }
 
     }
 
-    const notificacion = (mensaje) => {
-        ToastAndroid.showWithGravity(
-            mensaje,
-            ToastAndroid.LONG,
-            ToastAndroid.CENTER,
-        );
+    const notificacion = (mensaje, subtitulo = '') => {
+        Toast.show({
+            type: 'success',
+            text1: mensaje,
+            text2: subtitulo
+        });
     };
 
     if (!mediosDesplazamientos || !incidentes) return <Loading />
