@@ -4,7 +4,7 @@ import {API_URL} from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const http_axios = async (url, params, method = 'get', data) => {
-  const baseURL = API_URL;
+  const baseURL = API_URL||'http://45.33.119.69:8100';
   console.log("RUTA", baseURL+url)
 
   const headers = {

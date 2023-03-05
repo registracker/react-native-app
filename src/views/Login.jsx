@@ -20,12 +20,16 @@ export const Login = () => {
     try {
       setCargando(true)
       signIn({ email, password });
+      cleanForm()
+
     } catch (error) {
       ToastAndroid.showWithGravity(
         'Ha ocurrido un error interno',
         ToastAndroid.SHORT,
         ToastAndroid.CENTER,
       );
+    } finally {
+      setCargando(false)
     }
   }
 

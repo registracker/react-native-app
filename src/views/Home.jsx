@@ -12,7 +12,7 @@ export const Home = ({navigation}) => {
                 <Image
                     style={{...styles.image , width: '80%', height: '80%'}}
                     source={require('../img/travel/transporte(6).png')} />
-                    <Text style={styles.titleText}>Seguimiento APP</Text>
+                    <Text style={styles.titleText}>Desplazamientos APP</Text>
             </View>
             <View style={
                 styles.foobar

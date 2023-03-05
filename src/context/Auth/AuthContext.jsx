@@ -35,6 +35,8 @@ export const AuthProvider = ({ children }) => {
                     mensaje: error.data?.message || 'Credenciales incorrectas'
                 }
             });
+            dispatch({ type: 'logout' });
+            await AsyncStorage.removeItem('token')
             
         }
     }
@@ -42,14 +44,15 @@ export const AuthProvider = ({ children }) => {
     const logout = async() => {
         try {
             await http_axios('api/token', null, 'delete', null)
-            await AsyncStorage.multiRemove(['email', 'username', 'token'])
-            dispatch({ type: 'logout' });
         } catch (error) {
             ToastAndroid.showWithGravity(
                 'Lo sentimos, algo salio mal.',
                 ToastAndroid.LONG,
                 ToastAndroid.CENTER,
             );
+        } finally {
+            await AsyncStorage.removeItem('token')
+            dispatch({ type: 'logout' });
         }
 
 

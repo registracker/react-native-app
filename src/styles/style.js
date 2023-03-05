@@ -70,6 +70,19 @@ export const styles = StyleSheet.create({
     paddingBottom:0,
     color: 'white',
   },
+  inputError: {
+    borderWidth: 3,
+    padding: 10,
+    height: 40,
+    width: '80%',
+    borderRadius: 5,
+    borderColor: primary,
+    paddingBottom:0,
+    color: 'white',
+  },
+  errorStyle: {
+    fontSize:10
+  }, 
   buttonPrimary: {
     backgroundColor: primary,
     borderRadius: 3,
@@ -89,7 +102,7 @@ export const styles = StyleSheet.create({
   buttonContainer: {
     width: '80%',
     marginHorizontal: 50,
-    marginVertical: 10,
+    marginVertical: 5,
   },
   roundButtonDesplazamiento: {
     width: 80,

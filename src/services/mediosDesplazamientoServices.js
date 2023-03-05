@@ -1,32 +1,31 @@
 /* eslint-disable prettier/prettier */
-import { http_axios } from '../config/axios';
-import { getMediosDesplazamientosDatabase, storeCatalogoMediosDesplazamientos } from '../database/TblMediosDesplazamientos';
+import {http_axios} from '../config/axios';
+import {
+  getMediosDesplazamientosDatabase,
+  storeCatalogoMediosDesplazamientos,
+} from '../database/TblMediosDesplazamientos';
 
 const getMediosDesplazamientos = async () => {
-
   // GET DATA OF SQLITE
-  const medios = await getMediosDesplazamientosDatabase()
+  const medios = await getMediosDesplazamientosDatabase();
   if (medios.length > 0) return medios;
 
   //GET DATA OF BACKEND IF YOU DO NOT FIND DATA FROM SQLITE
-  let data = null
-  do {
+  let data = null;
   const response = await http_axios('/api/medios-desplazamiento');
-    data = response.data;
+  data = response.data;
   if (data) {
     const inserting_medios = data.map(item => {
-      return `(${item.id}, '${item.nombre}', '${item.icono}'),`
+      return `(${item.id}, '${item.nombre}', '${item.icono}'),`;
     });
 
-    const result = await storeCatalogoMediosDesplazamientos(inserting_medios.join(' '))
-    if (result.rowsAffected === 1){
+    const result = await storeCatalogoMediosDesplazamientos(
+      inserting_medios.join(' '),
+    );
+    if (result.rowsAffected === 1) {
       console.log('Data Insertada correctamente');
     }
-
   }
-  }
-  while (!data);
-
 
   return data;
 };
