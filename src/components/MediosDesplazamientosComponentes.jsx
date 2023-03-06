@@ -3,11 +3,14 @@ import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 
 import { primary, styles } from '../styles/style';
 import { Icon } from '@rneui/base';
+import { Loading } from './Loading';
 
 
 export const MediosDesplazamientosComponentes = ({ selected, cambiarMedio, mediosDesplazamientos }) => {
 
     
+
+    if (!mediosDesplazamientos) return <Loading />
 
     const renderItem = ({ item }) => {
         return (

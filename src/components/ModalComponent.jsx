@@ -2,10 +2,14 @@ import { Button, Icon } from '@rneui/base';
 import React, { useState } from 'react'
 import { FlatList, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { primary, styles } from '../styles/style';
+import { Loading } from './Loading';
 
 export const ModalComponent = ({ modalVisible, setModalVisible, data, setItem }) => {
 
     const [selected, setSelected] = useState()
+
+    if (!data) return <Loading />
+
 
     const reportarIncidente = () => {
         setItem(selected)

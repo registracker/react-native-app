@@ -20,7 +20,6 @@ export const Login = () => {
     try {
       setCargando(true)
       signIn({ email, password });
-      cleanForm()
 
     } catch (error) {
       ToastAndroid.showWithGravity(
@@ -28,8 +27,6 @@ export const Login = () => {
         ToastAndroid.SHORT,
         ToastAndroid.CENTER,
       );
-    } finally {
-      setCargando(false)
     }
   }
 
@@ -60,7 +57,7 @@ export const Login = () => {
     <View style={styles.container}>
       <ImageBackground source={require('../img/loginBackground.jpg')} resizeMode="cover" style={styles.imageBackground}>
         <View style={styles.body} >
-            <Text style={styles.titleText}>Iniciar sesión</Text>
+          <Text style={styles.titleText}>Iniciar sesión</Text>
           <Input
             onChangeText={setEmail}
             value={email}
