@@ -13,7 +13,7 @@ export const db = SQLite.openDatabase(
 );
 
 
-export const sincronizarCatalogos = () => {
+export const dropCatalogos = () => {
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(

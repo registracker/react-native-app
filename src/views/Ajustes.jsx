@@ -1,10 +1,13 @@
 import React, { useState } from 'react'
-import { Button, Icon } from '@rneui/base';
+import { Button, Icon, ListItem } from '@rneui/base';
 import { useContext } from 'react';
-import { ActivityIndicator, Modal, Pressable, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Modal, Pressable, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import { styles } from '../styles/style';
 import { AuthContext } from '../context/Auth/AuthContext'
+import { dropCatalogos } from '../config/database';
 
+import { getMediosDesplazamientos } from '../services/mediosDesplazamientoServices';
+import { getIncidentes } from '../services/incidenteServices';
 
 
 export const Ajustes = () => {
@@ -13,6 +16,8 @@ export const Ajustes = () => {
 
   const [modalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState(false)
+  const [sincronizarLoading, setSincronizarLoading] = useState(false)
+  const [expanded, setExpanded] = useState(false);
 
 
   const cerrarSesion = () => {
@@ -20,13 +25,47 @@ export const Ajustes = () => {
     logout();
   }
 
+  const sincronizarCatalogos = async() => {
+    try {
+      await dropCatalogos()
+      await getMediosDesplazamientos();
+      await getIncidentes();
+      console.log('sync');
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   return (
     <View style={styles.container}>
-      <View style={styles.body}>
+      <View style={{ flex: 10 }}>
+        <ListItem.Accordion
+          content={
+            <ListItem.Content>
+              <ListItem.Title>Sincronizar</ListItem.Title>
+            </ListItem.Content>
+          }
+          isExpanded={expanded}
+          onPress={() => {
+            setExpanded(!expanded);
+          }}
+        >
+          <ListItem
+            Component={TouchableHighlight}
+            onPress={sincronizarCatalogos}
+          >
+            <ListItem.Content>
 
-        <Text>
-          AJUSTES
-        </Text>
+              <ListItem.Title>Sincronizar catalogos</ListItem.Title>
+              <ListItem.Subtitle>Toca para actualizar</ListItem.Subtitle>
+            </ListItem.Content>
+            <Icon
+              type="material-community"
+              name={'cloud-download'}
+              color={'grey'}
+            />
+          </ListItem>
+        </ListItem.Accordion>
       </View>
       <View style={styles.foobar}>
         <Button
