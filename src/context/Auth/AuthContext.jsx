@@ -43,7 +43,7 @@ export const AuthProvider = ({ children }) => {
 
     const logout = async() => {
         try {
-            await http_axios('api/token', null, 'delete', null)
+            await http_axios('/api/token', null, 'delete', null)
         } catch (error) {
             ToastAndroid.showWithGravity(
                 'Lo sentimos, algo salio mal.',

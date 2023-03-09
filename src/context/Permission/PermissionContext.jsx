@@ -3,6 +3,7 @@ import { AppState, PermissionsAndroid } from "react-native";
 
 export const permissionsInitState = {
     locationStatus: 'unavailable',
+    locationBackground: 'unavailable',
     intentos: 0,
 }
 
@@ -28,12 +29,24 @@ export const PermissionsProvider = ({ children }) => {
             //     PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION,
             // ])
             if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                setPermissions({
-                    ...permissions,
-                    locationStatus: 'granted',
-                    intentos: 0,
+                const grantedBackground = await PermissionsAndroid.request(
+                    PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION,
+                    )
+                    if (grantedBackground === PermissionsAndroid.RESULTS.GRANTED) {
+                        setPermissions({
+                            ...permissions,
+                            locationStatus: 'granted',
+                            locationBackground: 'granted',
+                            intentos: 0,
+                        })
+                    }
+                    setPermissions({
+                        ...permissions,
+                        locationStatus: 'granted',
+                        intentos: 0,
+        
+                    })
 
-                })
             } else if (PermissionsAndroid.RESULTS.DENIED === granted) {
                 setPermissions({
                     ...permissions,

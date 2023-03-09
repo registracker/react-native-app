@@ -129,10 +129,10 @@ export const Desplazamiento = () => {
       const {delay} = taskDataArguments;
       await new Promise(async resolve => {
         for (let i = 0; BackgroundService.isRunning(); i++) {
-          console.log(i);
           Geolocation.getCurrentPosition(
             position => {
-              console.log('POSITION', JSON.stringify(position))
+              setPosition(position);
+              console.log(position);
             },
             error => {
               // See error code charts below.
@@ -157,7 +157,7 @@ export const Desplazamiento = () => {
 
   const stopLocationObserving = async () => {
     setViajeIniciado(false);
-
+    await BackgroundService.stop()
     if (data.length > 0) {
       const data = {
         uuid: uuidDesplazamiento,
@@ -173,6 +173,8 @@ export const Desplazamiento = () => {
     }
     restaurar();
     setData([]);
+    setPuntos([])
+    setPosition()
     setUuidDesplazamiento();
     setContadorMedio(0);
     Geolocation.clearWatch(watchId);
@@ -219,7 +221,6 @@ export const Desplazamiento = () => {
         id_medio_desplazamiento: medio.id,
         agrupacion_medio_desplazamiento: contadorMedio,
       };
-      setData([...data, position]);
       setPuntos([...puntos, point]);
       insertarPunto({uuid: uuidDesplazamiento, punto: point});
     }
@@ -308,7 +309,7 @@ export const Desplazamiento = () => {
         ) : (
           <FAB
             visible
-            onPress={getLocationObservation}
+              onPress={getLocationObservation}
             title="Comenzar el viaje"
             placement="left"
             upperCase
