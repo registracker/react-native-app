@@ -4,7 +4,7 @@ export const createTableIncidentes = () => {
     db.transaction(tx => {
         tx.executeSql(
             `CREATE TABLE IF NOT EXISTS tbl_incidente (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id INTEGER,
             nombre TEXT, 
             icono TEXT
             );`,
@@ -68,7 +68,7 @@ export const createTableReporteIncidentes = () => {
     db.transaction(tx => {
         tx.executeSql(
             `CREATE TABLE IF NOT EXISTS tbl_reporte_incidente (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id INTEGER,
             desplazamiento_id TEXT, 
             id_incidente INTEGER,
             nombre TEXT,
@@ -169,3 +169,23 @@ export const enviarIncidente = (id) => {
         });
     });
 };
+
+export const dropIncidentes = () => {
+    return new Promise((resolve, reject) => {
+        db.transaction(tx => {
+            tx.executeSql(
+                `
+                DELETE FROM tbl_incidente;
+                `,
+                [],
+                (transaction, res) => {
+                    console.log("🚀 ~ file: TblIncidentes.jsx:182 ~ returnnewPromise ~ res:", res)
+                    resolve(res);
+                },
+                () => {
+                    reject(false);
+                },
+            );
+        });
+    });
+}

@@ -10,6 +10,7 @@ export const http_axios = async (url, params, method = 'get', data) => {
   const headers = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
+    timeout: 10000,
   };
 
   const token = await AsyncStorage.getItem('token');
@@ -17,7 +18,6 @@ export const http_axios = async (url, params, method = 'get', data) => {
   if (token !== null) {
     headers.Authorization = `Bearer ${token}`;
   }
-  console.log("HEADERS:", headers)
 
   const instance = axios.create({
     baseURL,

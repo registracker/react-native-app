@@ -14,6 +14,8 @@ const getMediosDesplazamientos = async () => {
   let data = null;
   const response = await http_axios('/api/medios-desplazamiento');
   data = response.data;
+  console.log("🚀 ~ file: incidenteServices.js:20 ~ getIncidentes ~ data:", JSON.stringify(data, null, 2));
+
   if (data) {
     const inserting_medios = data.map(item => {
       return `(${item.id}, '${item.nombre}', '${item.icono}'),`;
@@ -23,7 +25,7 @@ const getMediosDesplazamientos = async () => {
       inserting_medios.join(' '),
     );
     if (result.rowsAffected === 1) {
-      console.log('Data Insertada correctamente');
+      console.log('Data Insertada correctamente medios_desplazamientos');
     }
   }
 

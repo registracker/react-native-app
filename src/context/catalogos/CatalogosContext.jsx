@@ -1,8 +1,9 @@
-import { createContext } from "react"
-import { catalogosReducer } from "./catalogosReducer";
+import React, { useReducer, createContext } from 'react'
+import { catalogosReducer } from './catalogosReducer';
 
-import { getMediosDesplazamientos } from '../services/mediosDesplazamientoServices';
-import { getIncidentes } from '../services/incidenteServices';
+import { getMediosDesplazamientos } from '../../services/mediosDesplazamientoServices';
+import { getIncidentes } from '../../services/incidenteServices';
+
 
 
 export const CatalogosContext = createContext();
@@ -23,18 +24,18 @@ export const CatalogosProvider = ({ children }) => {
 
     const obtenerIncidentes = async () => {
         const data = await getIncidentes()
-        dispatch({ type: 'medios_desplazamientos', payload: { data } })
+        dispatch({ type: 'ctl_incidentes', payload: { data } })
     }
 
     return (
         <CatalogosContext.Provider
             value={{
-                ...catalogosInicial,
+                ...catalogosState,
                 obtenerMediosDesplazamientos,
                 obtenerIncidentes
             }}
         >
-
+            {children}
         </CatalogosContext.Provider>
     )
 }

@@ -1,13 +1,12 @@
 import React, { useState } from 'react'
 import { Button, Icon, ListItem } from '@rneui/base';
 import { useContext } from 'react';
-import { ActivityIndicator, Modal, Pressable, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
-import { styles } from '../styles/style';
+import { ActivityIndicator, Modal, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { primary, styles } from '../styles/style';
 import { AuthContext } from '../context/Auth/AuthContext'
-import { dropCatalogos } from '../config/database';
-
-import { getMediosDesplazamientos } from '../services/mediosDesplazamientoServices';
-import { getIncidentes } from '../services/incidenteServices';
+import { CatalogosContext } from '../context/Catalogos/CatalogosContext';
+import { dropMediosDesplazamientos } from '../database/TblMediosDesplazamientos';
+import { dropIncidentes } from '../database/TblIncidentes';
 
 
 export const Ajustes = () => {
@@ -19,20 +18,26 @@ export const Ajustes = () => {
   const [sincronizarLoading, setSincronizarLoading] = useState(false)
   const [expanded, setExpanded] = useState(false);
 
+  const { obtenerMediosDesplazamientos, obtenerIncidentes } = useContext(CatalogosContext)
 
   const cerrarSesion = () => {
     setLoading(true);
     logout();
   }
 
-  const sincronizarCatalogos = async() => {
+  const sincronizarCatalogos = async () => {
     try {
-      await dropCatalogos()
-      await getMediosDesplazamientos();
-      await getIncidentes();
-      console.log('sync');
+      setSincronizarLoading(true)
+      await dropMediosDesplazamientos()
+      await dropIncidentes()
+
+      await obtenerMediosDesplazamientos();
+      await obtenerIncidentes();
     } catch (error) {
       console.error(error)
+    }
+    finally {
+      setSincronizarLoading(false)
     }
   }
 
@@ -59,11 +64,18 @@ export const Ajustes = () => {
               <ListItem.Title>Sincronizar catalogos</ListItem.Title>
               <ListItem.Subtitle>Toca para actualizar</ListItem.Subtitle>
             </ListItem.Content>
-            <Icon
-              type="material-community"
-              name={'cloud-download'}
-              color={'grey'}
-            />
+            {
+              sincronizarLoading ? (
+                <ActivityIndicator size="small" color={primary} />
+              ) : (
+                <Icon
+                  type="material-community"
+                  name={'cloud-download'}
+                  color={'grey'}
+                />
+              )
+            }
+
           </ListItem>
         </ListItem.Accordion>
       </View>

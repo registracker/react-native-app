@@ -7,25 +7,20 @@ import uuid from 'react-native-uuid';
 import BackgroundService from 'react-native-background-actions';
 
 import {MediosDesplazamientosComponentes} from '../components/MediosDesplazamientosComponentes';
-import {
-  addItemDesplazamiento,
-  createTableDesplazamiento,
-} from '../database/TblDesplazamientos';
+import { addItemDesplazamiento, createTableDesplazamiento } from '../database/TblDesplazamientos';
 import {getMediosDesplazamientos} from '../services/mediosDesplazamientoServices';
-import {getIncidentes, postIncidente} from '../services/incidenteServices';
+import {getIncidentes} from '../services/incidenteServices';
 
 import {primary, styles} from '../styles/style';
 import {RecorridosContext} from '../context/Recorrido/RecorridosContext';
 import {ModalComponent} from '../components/ModalComponent';
 import {createTableMediosDesplazamiento} from '../database/TblMediosDesplazamientos';
-import {
-  createTableIncidentes,
-  createTableReporteIncidentes,
-  storeReporteIncidente,
-} from '../database/TblIncidentes';
+import { createTableIncidentes, createTableReporteIncidentes, storeReporteIncidente } from '../database/TblIncidentes';
 import {Loading} from '../components/Loading';
 import {Toast} from 'react-native-toast-message/lib/src/Toast';
 import {useKeepAwake} from '@sayem314/react-native-keep-awake';
+
+import {CatalogosContext} from '../context/Catalogos/CatalogosContext'
 
 export const Desplazamiento = () => {
   const [data, setData] = useState([]);
@@ -35,11 +30,7 @@ export const Desplazamiento = () => {
   const [viajeIniciado, setViajeIniciado] = useState(false);
   const [open, setOpen] = useState(false);
   const [uuidDesplazamiento, setUuidDesplazamiento] = useState();
-  const [medio, setMedio] = useState({
-    id: 1,
-    nombre: 'Caminando',
-    icono: 'walk',
-  });
+  const [medio, setMedio] = useState({ id: 1, nombre: 'Caminando', icono: 'walk' });
   const [mediosDesplazamientos, setMediosDesplazamientos] = useState();
   const [fechaHoraInciado, setFechaHoraInciado] = useState();
   const [modalMarcadores, setModalMarcadores] = useState(false);
@@ -53,6 +44,8 @@ export const Desplazamiento = () => {
 
   const {desplazamientoState, insertarPunto, restaurar} =
     useContext(RecorridosContext);
+
+  const { ctl_medios_desplazamientos, ctl_incidentes, obtenerMediosDesplazamientos, obtenerIncidentes  } = useContext(CatalogosContext)
 
 
   const options = {
@@ -71,12 +64,8 @@ export const Desplazamiento = () => {
   };
 
   const created = async () => {
-    const medios_desplazamientos = await getMediosDesplazamientos();
-    const incidentes = await getIncidentes();
-
-    setMediosDesplazamientos(medios_desplazamientos);
-    setIncidentes(incidentes);
-
+    await obtenerMediosDesplazamientos() 
+    await obtenerIncidentes()
   };
 
   const getLocation = () => {
@@ -286,7 +275,7 @@ export const Desplazamiento = () => {
         modalVisible={modalIncidentes}
         setModalVisible={setModalIncidentes}
         setItem={setIncidenteSelected}
-        data={incidentes}
+        data={ctl_incidentes.data}
       />
       <View style={styles.body}>
         <Text style={styles.subtitleText}>
@@ -296,7 +285,7 @@ export const Desplazamiento = () => {
         <MediosDesplazamientosComponentes
           selected={medio}
           cambiarMedio={setMedio}
-          mediosDesplazamientos={mediosDesplazamientos}
+          mediosDesplazamientos={ctl_medios_desplazamientos.data}
         />
       </View>
 

@@ -4,7 +4,7 @@ export const createTableMediosDesplazamiento = () => {
     db.transaction(tx => {
         tx.executeSql(
             `CREATE TABLE IF NOT EXISTS tbl_medios_desplazamiento (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id INTEGER,
             nombre TEXT, 
             icono TEXT
             );`,
@@ -63,3 +63,23 @@ export const storeCatalogoMediosDesplazamientos = (medios_desplazamiento) => {
         
     });
 };
+
+export const dropMediosDesplazamientos = () => {
+    return new Promise((resolve, reject) => {
+        db.transaction(tx => {
+            tx.executeSql(
+                `
+                DELETE FROM tbl_medios_desplazamiento;
+                `,
+                [],
+                (transaction, res) => {
+                    console.log("🚀 ~ file: TblDesplazamientos.jsx:81 ~ returnnewPromise ~ res:", res)
+                    resolve(res);
+                },
+                () => {
+                    reject(false);
+                },
+            );
+        });
+    });
+}

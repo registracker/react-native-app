@@ -6,15 +6,19 @@ export const catalogosReducer = (state, action) => {
       return {
         ...state,
         ctl_medios_desplazamientos: {
-          data: [action.payload.data],
+          data: action.payload.data,
           lastUpdated: format(new Date(), 'dd-MM-yyyy HH:mm:ss'),
         },
       };
-    case 'incidentes':
+    case 'ctl_incidentes':
       return {
         ...state,
-        ctl_incidentes: [...action.payload.data],
-        lastUpdated: format(new Date(), 'dd-MM-yyyy HH:mm:ss'),
+        ctl_incidentes: {
+          data: action.payload.data,
+          lastUpdated: format(new Date(), 'dd-MM-yyyy HH:mm:ss'),
+        },
       };
+    default:
+      return state;
   }
 };
