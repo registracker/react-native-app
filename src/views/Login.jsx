@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Alert, ImageBackground, Text, ToastAndroid, View } from 'react-native'
+import { Alert, ImageBackground, StyleSheet, Text, ToastAndroid, View } from 'react-native'
 import { styles } from '../styles/style'
 import { Button } from '@rneui/base'
 import { AuthContext } from '../context/Auth/AuthContext'
@@ -11,6 +11,8 @@ export const Login = () => {
   const [password, setPassword] = useState('password');
   const [cargando, setCargando] = useState(false)
   const { signIn, mensajeError, cleanError, autenticado } = useContext(AuthContext)
+  const [emailErrorMessage, setEmailErrorMessage] = useState();
+
 
   if (autenticado === 'verificar') {
     return <Loading />;
@@ -34,6 +36,18 @@ export const Login = () => {
     setEmail(null);
     setPassword(null);
   }
+
+  const isEmail = () => {
+    const validRegex = /^[a-zA-Z0-9_]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    if (!email.match(validRegex)) {
+      setEmailErrorMessage('Ingrese un correo electrónico valido');
+      return false;
+    } else {
+      setEmailErrorMessage();
+      return true;
+    }
+  };
+
 
   useEffect(() => {
     if (mensajeError.length === 0) return;
@@ -65,7 +79,9 @@ export const Login = () => {
             keyboardType="email-address"
             inputMode="email"
             textAlign='center'
-            style={styles.input}
+            style={emailErrorMessage ? styles.inputError : styles.input}            onBlur={() => isEmail()}
+            errorMessage={emailErrorMessage}
+            errorStyle={emailErrorMessage ? stylesRegistro.errorStyle : null}
             label="Correo electrónico"
             labelStyle={{ color: 'white' }}
             inputContainerStyle={{ borderBottomWidth: 0 }}
@@ -87,12 +103,12 @@ export const Login = () => {
 
           />
           <Button
-            title="Iniciar sesión"
+            title="Continuar"
             onPress={iniciarSesion}
             buttonStyle={styles.buttonPrimary}
             disabledStyle={styles.buttonPrimaryDisabled}
             loading={cargando}
-            disabled={cargando}
+            disabled={emailErrorMessage || cargando ? true : false}
             radius="lg"
             containerStyle={styles.buttonContainer}
           />
@@ -102,3 +118,10 @@ export const Login = () => {
     </View>
   )
 }
+
+const stylesRegistro = StyleSheet.create({
+  errorStyle: {
+    color: 'white',
+    textAlign: 'center',
+  },
+});

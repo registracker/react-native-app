@@ -200,45 +200,6 @@ export const FormularioRegistro = ({route, navigation}) => {
                 borderRadius: 20,
                 width: 130,
                 height: 160,
-                backgroundColor: '#A31621',
-                paddingHorizontal: 0,
-                paddingTop: 0,
-                marginHorizontal: '5%',
-                marginBottom: 0,
-                borderColor: 'white',
-                borderWidth: rol?.id === 3 ? 2 : 0,
-              }}
-              onPress={() => setRol(investigador)}>
-              <View
-                style={{
-                  flex: 1,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <Icon
-                  name="account-hard-hat"
-                  type="material-community"
-                  size={36}
-                  color="white"
-                />
-                <Text
-                  style={{
-                    color: 'white',
-                    fontSize: rol?.id === 3 ? 20 : 16,
-                  }}>
-                  Investigador
-                </Text>
-              </View>
-            </TouchableHighlight>
-            <TouchableHighlight
-              style={{
-                alignItems: 'center',
-                padding: 20,
-                justifyContent: 'center',
-                borderWidth: 2,
-                borderRadius: 20,
-                width: 130,
-                height: 160,
                 backgroundColor: '#111d4a',
                 borderColor: 'white',
                 borderWidth: rol?.id === 2 ? 2 : 0,
@@ -270,6 +231,46 @@ export const FormularioRegistro = ({route, navigation}) => {
                 </Text>
               </View>
             </TouchableHighlight>
+            <TouchableHighlight
+              style={{
+                alignItems: 'center',
+                padding: 20,
+                justifyContent: 'center',
+                borderWidth: 2,
+                borderRadius: 20,
+                width: 130,
+                height: 160,
+                backgroundColor: '#A31621',
+                paddingHorizontal: 0,
+                paddingTop: 0,
+                marginHorizontal: '5%',
+                marginBottom: 0,
+                borderColor: 'white',
+                borderWidth: rol?.id === 3 ? 2 : 0,
+              }}
+              onPress={() => setRol(investigador)}>
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Icon
+                  name="account-hard-hat"
+                  type="material-community"
+                  size={36}
+                  color="white"
+                />
+                <Text
+                  style={{
+                    color: 'white',
+                    fontSize: rol?.id === 3 ? 20 : 16,
+                  }}>
+                  Investigador
+                </Text>
+              </View>
+            </TouchableHighlight>
+
           </View>
           <View style={{alignItems: 'center'}}>
             {selectionRol && (

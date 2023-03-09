@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
         } catch (error) {
             dispatch({
                 type: 'error', payload: {
-                    mensaje: error.data?.message || 'Credenciales incorrectas'
+                    mensaje: 'Credenciales incorrectas. correo o contraseña invalidas'
                 }
             });
             dispatch({ type: 'logout' });

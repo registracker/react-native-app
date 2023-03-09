@@ -11,7 +11,7 @@ export const Home = ({navigation}) => {
             <View style={ styles.body }>
                 <Image
                     style={{...styles.image , width: '80%', height: '80%'}}
-                    source={require('../img/travel/transporte(6).png')} />
+                    source={require('../img/minerva2.png')} />
                     <Text style={styles.titleText}>Desplazamientos APP</Text>
             </View>
             <View style={

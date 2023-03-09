@@ -4,7 +4,7 @@ import { FlatList, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react
 import { primary, styles } from '../styles/style';
 import { Loading } from './Loading';
 
-export const ModalComponent = ({ modalVisible, setModalVisible, data, setItem }) => {
+export const ModalComponent = ({ modalVisible, setModalVisible, data=[], setItem }) => {
 
     const [selected, setSelected] = useState()
 
