@@ -1,5 +1,6 @@
-import React, {useEffect, useState, createRef} from 'react';
+import React, { useEffect, useState, createRef } from 'react';
 import {
+  FlatList,
   ImageBackground,
   ScrollView,
   StyleSheet,
@@ -8,12 +9,12 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native';
-import {primary, styles} from '../styles/style';
-import {Button, Icon} from '@rneui/base';
-import {Input} from '@rneui/themed';
-import {register} from '../services/aurtenticacionServices';
+import { primary, styles } from '../styles/style';
+import { Button, Icon } from '@rneui/base';
+import { Input } from '@rneui/themed';
+import { register } from '../services/aurtenticacionServices';
 
-export const FormularioRegistro = ({route, navigation}) => {
+export const FormularioRegistro = ({ route, navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState();
@@ -30,8 +31,8 @@ export const FormularioRegistro = ({route, navigation}) => {
   const inputPasswordConfirm = createRef();
   const inputEmail = createRef();
 
-  const investigador = {type: 'investigador', id: 3};
-  const participante = {type: 'participante', id: 2};
+  const investigador = { type: 'investigador', id: 3 };
+  const participante = { type: 'participante', id: 2 };
 
   const registrar = async () => {
     const data = {
@@ -43,7 +44,7 @@ export const FormularioRegistro = ({route, navigation}) => {
     try {
       setCargando(true);
       if (comparePassword()) {
-        const {usuario, estado_cuenta} = await register(null, data);
+        const { usuario, estado_cuenta } = await register(null, data);
         if (estado_cuenta === 'En revisión') {
           ToastAndroid.showWithGravity(
             'Cuenta en revisión',
@@ -135,25 +136,19 @@ export const FormularioRegistro = ({route, navigation}) => {
     setPasswordConfirm(null);
   };
 
-  useEffect(() => {
+  const matchPassword = () => {
     if (password !== passwordConfirm && passwordConfirm) {
       setPasswordErrorMessage('Las contraseña no coinciden');
       setPasswordConfirmErrorMessage('Las contraseña no coinciden');
       setFormInvalid(true);
     }
-    if (password == passwordConfirm && passwordConfirm) {
-      setPasswordErrorMessage('');
-      setPasswordConfirmErrorMessage('');
-      setFormInvalid(true);
-    }
+  }
+
+  useEffect(() => {
+ 
     if (!email && password && passwordConfirm) {
       setEmailErrorMessage('Ingrese un correo electrónico');
       setFormInvalid(true);
-    }
-    if (email) {
-      if (isEmail()) {
-        setFormInvalid(true);
-      }
     }
     if (
       password === passwordConfirm &&
@@ -172,6 +167,35 @@ export const FormularioRegistro = ({route, navigation}) => {
   useEffect(() => {
     if (rol) setSelectionRol(false);
   }, [rol]);
+
+          
+  const claveSegura = [
+    {
+      id: 1,
+      title: 'Una contraseña segura debe llevar:'
+    },
+    {
+      id: 2,
+      title: 'Una letra mayúscula'
+    },
+    {
+      id: 3,
+      title: 'Un dígito'
+    },
+    {
+      id: 4,
+      title: 'Almeno tres letras minúsculas'
+    },
+    {
+      id: 5,
+      title: 'Almeno 8 caracteres,'
+    }
+  ]
+  const Item = ({ title }) => (
+    <View style={{ color: 'white', fontSize: 12 }}>
+      <Text style={styles.title}>{title}</Text>
+    </View>
+  );
 
   return (
     <View style={styles.container}>
@@ -272,14 +296,14 @@ export const FormularioRegistro = ({route, navigation}) => {
             </TouchableHighlight>
 
           </View>
-          <View style={{alignItems: 'center'}}>
+          <View style={{ alignItems: 'center' }}>
             {selectionRol && (
-              <Text style={{color: 'white', fontSize: 12}}>
+              <Text style={{ color: 'white', fontSize: 14 }}>
                 Debe seleccionar un rol
               </Text>
             )}
           </View>
-          <View style={{...styles.foobar, flex: 3, marginTop: 10}}>
+          <View style={{ ...styles.foobar, flex: 3, marginTop: 10 }}>
             <Input
               onChangeText={setEmail}
               value={email}
@@ -288,20 +312,21 @@ export const FormularioRegistro = ({route, navigation}) => {
               keyboardType="email-address"
               inputMode="email"
               textAlign="center"
-              style={emailErrorMessage ? styles.inputError : styles.input}
-              inputContainerStyle={{borderBottomWidth: 0}}
+              style={styles.input}
+              inputContainerStyle={emailErrorMessage ? styles.inputContainerError : styles.inputContainer}
+              leftIcon={emailErrorMessage ? <Icon name="information-outline" type='material-community' size={20} color='white' /> : ''}
               ref={inputEmail}
               errorMessage={emailErrorMessage}
               onBlur={() => isEmail()}
-              labelStyle={{marginTop: 10, color: 'white'}}
+              labelStyle={{ marginTop: 10, color: 'white' }}
               errorStyle={emailErrorMessage ? stylesRegistro.errorStyle : null}
             />
             <Input
               onChangeText={setPassword}
               value={password}
-              style={passwordErrorMessage ? styles.inputError : styles.input}
+              style={styles.input}
               label="Contraseña"
-              labelStyle={{marginTop: 10, color: 'white'}}
+              labelStyle={{ marginTop: 10, color: 'white' }}
               textAlign="center"
               placeholder="**********"
               autoCapitalize="none"
@@ -309,7 +334,8 @@ export const FormularioRegistro = ({route, navigation}) => {
               textContentType="newPassword"
               secureTextEntry
               enablesReturnKeyAutomatically
-              inputContainerStyle={{borderBottomWidth: 0}}
+              inputContainerStyle={passwordErrorMessage ? styles.inputContainerError : styles.inputContainer}
+              leftIcon={passwordErrorMessage ? <Icon name="information-outline" type='material-community' size={20} color='white' /> : ''}
               errorMessage={passwordErrorMessage}
               errorStyle={
                 passwordErrorMessage ? stylesRegistro.errorStyle : null
@@ -321,11 +347,9 @@ export const FormularioRegistro = ({route, navigation}) => {
             <Input
               onChangeText={setPasswordConfirm}
               value={passwordConfirm}
-              style={
-                passwordConfirmErrorMessage ? styles.inputError : styles.input
-              }
+              style={styles.input}
               label="Confirmar contraseña"
-              labelStyle={{marginTop: 10, color: 'white'}}
+              labelStyle={{ marginTop: 10, color: 'white' }}
               textAlign="center"
               placeholder=" *********"
               autoCapitalize="none"
@@ -333,13 +357,23 @@ export const FormularioRegistro = ({route, navigation}) => {
               textContentType="newPassword"
               secureTextEntry
               enablesReturnKeyAutomatically
-              inputContainerStyle={{borderBottomWidth: 0}}
+              inputContainerStyle={passwordConfirmErrorMessage ? styles.inputContainerError : styles.inputContainer}
+              leftIcon={passwordConfirmErrorMessage ? <Icon name="information-outline" type='material-community' size={20} color='white' /> : ''}
+
               errorMessage={passwordConfirmErrorMessage}
               errorStyle={
                 passwordConfirmErrorMessage ? stylesRegistro.errorStyle : null
               }
               ref={inputPasswordConfirm}
+              onBlur={matchPassword}
             />
+            {/* <View style={{ alignItems: 'center' }}>
+              <FlatList
+                data={claveSegura}
+                renderItem={({ item }) => <Item title={item.title} />}
+                keyExtractor={item => item.id}
+              />
+            </View> */}
             <Button
               title="Registrarse"
               onPress={registrar}
@@ -361,5 +395,11 @@ const stylesRegistro = StyleSheet.create({
   errorStyle: {
     color: 'white',
     textAlign: 'center',
+    backgroundColor: primary,
+    borderRadius: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    fontSize:14,
+    opacity: 0.8
   },
 });

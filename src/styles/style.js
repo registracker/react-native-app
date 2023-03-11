@@ -61,14 +61,28 @@ export const styles = StyleSheet.create({
     color: 'gray',
   },
   input: {
+    height: 40,
+    width: '80%',
+    paddingBottom:8,
+    color: 'white',
+  },
+  inputContainer: {
     borderWidth: 2,
     padding: 10,
     height: 40,
-    width: '80%',
     borderRadius: 5,
     borderColor: 'white',
-    paddingBottom:0,
     color: 'white',
+    alignItems: 'center',
+  },
+  inputContainerError: {
+    borderWidth: 2,
+    padding: 10,
+    height: 40,
+    borderRadius: 5,
+    borderColor: primary,
+    color: 'white',
+    alignItems: 'center',
   },
   inputError: {
     borderWidth: 3,
@@ -81,7 +95,7 @@ export const styles = StyleSheet.create({
     color: 'white',
   },
   errorStyle: {
-    fontSize:10
+    fontSize:12
   }, 
   buttonPrimary: {
     backgroundColor: primary,
