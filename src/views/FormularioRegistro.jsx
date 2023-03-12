@@ -94,13 +94,15 @@ export const FormularioRegistro = ({ route, navigation }) => {
   };
 
   const isEmail = () => {
-    const validRegex = /^[a-zA-Z0-9_]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-    if (!email.match(validRegex)) {
-      setEmailErrorMessage('Ingrese un correo electrónico valido');
-      return false;
-    } else {
-      setEmailErrorMessage();
-      return true;
+    if(email){
+      const validRegex = /^[a-zA-Z0-9_]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+      if (!email.match(validRegex)) {
+        setEmailErrorMessage('Ingrese un correo electrónico valido');
+        return false;
+      } else {
+        setEmailErrorMessage();
+        return true;
+      }
     }
   };
 
@@ -120,6 +122,8 @@ export const FormularioRegistro = ({ route, navigation }) => {
     $                         End anchor.
     */
   const isPasswordSecure = () => {
+    if(password){
+
     const validRegex =
       /^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8,}$/;
     if (!password.match(validRegex)) {
@@ -128,6 +132,7 @@ export const FormularioRegistro = ({ route, navigation }) => {
     } else {
       setPasswordErrorMessage();
     }
+  }
   };
 
   const cleanForm = () => {
@@ -312,6 +317,7 @@ export const FormularioRegistro = ({ route, navigation }) => {
               keyboardType="email-address"
               inputMode="email"
               textAlign="center"
+              onFocus={() => { setEmailErrorMessage()}}
               style={styles.input}
               inputContainerStyle={emailErrorMessage ? styles.inputContainerError : styles.inputContainer}
               leftIcon={emailErrorMessage ? <Icon name="information-outline" type='material-community' size={20} color='white' /> : ''}
@@ -323,6 +329,8 @@ export const FormularioRegistro = ({ route, navigation }) => {
             />
             <Input
               onChangeText={setPassword}
+              onFocus={() => { setPasswordErrorMessage()}}
+
               value={password}
               style={styles.input}
               label="Contraseña"
@@ -346,6 +354,8 @@ export const FormularioRegistro = ({ route, navigation }) => {
 
             <Input
               onChangeText={setPasswordConfirm}
+              onFocus={() => { setpasswordConfirmErrorMessage("")}}
+
               value={passwordConfirm}
               style={styles.input}
               label="Confirmar contraseña"
@@ -393,13 +403,13 @@ export const FormularioRegistro = ({ route, navigation }) => {
 
 const stylesRegistro = StyleSheet.create({
   errorStyle: {
-    color: 'white',
+    color: primary,
     textAlign: 'center',
-    backgroundColor: primary,
+    backgroundColor: 'white' ,
     borderRadius: 2,
     justifyContent: 'center',
     alignItems: 'center',
     fontSize:14,
-    opacity: 0.8
+    opacity: 0.6
   },
 });

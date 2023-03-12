@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Alert, ImageBackground, StyleSheet, Text, ToastAndroid, View } from 'react-native'
-import { styles } from '../styles/style'
-import { Button } from '@rneui/base'
+import { primary, styles } from '../styles/style'
+import { Button, Icon } from '@rneui/base'
 import { AuthContext } from '../context/Auth/AuthContext'
 import { Input } from '@rneui/themed'
 
@@ -10,18 +10,27 @@ export const Login = () => {
   const [email, setEmail] = useState('developer@gmail.com')
   const [password, setPassword] = useState('password');
   const [cargando, setCargando] = useState(false)
-  const { signIn, mensajeError, cleanError, autenticado } = useContext(AuthContext)
+  const [validLogin, setvalidLogin] = useState(false)
   const [emailErrorMessage, setEmailErrorMessage] = useState();
+  const { signIn, mensajeError, cleanError, autenticado } = useContext(AuthContext)
 
 
   if (autenticado === 'verificar') {
     return <Loading />;
   }
 
-  const iniciarSesion = () => {
+  const iniciarSesion = async () => {
     try {
       setCargando(true)
-      signIn({ email, password });
+      const response = await signIn({ email, password });
+      if(!response){
+        setCargando(false)
+        ToastAndroid.showWithGravity(
+          'Ha ocurrido un error interno en el servidor. Intente de nuevo',
+          ToastAndroid.SHORT,
+          ToastAndroid.CENTER,
+        );
+      }
 
     } catch (error) {
       ToastAndroid.showWithGravity(
@@ -40,7 +49,7 @@ export const Login = () => {
   const isEmail = () => {
     const validRegex = /^[a-zA-Z0-9_]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
     if (!email.match(validRegex)) {
-      setEmailErrorMessage('Ingrese un correo electrónico valido');
+      setEmailErrorMessage('Correo electrónico invalido');
       return false;
     } else {
       setEmailErrorMessage();
@@ -66,7 +75,17 @@ export const Login = () => {
       ]
     )
   }, [mensajeError])
+  
+  useEffect(() => {
+    if(!emailErrorMessage && password){
+      setvalidLogin(true)
+    }else {
+      setvalidLogin(false)
+    }
+  
 
+  }, [email, password])
+  
   return (
     <View style={styles.container}>
       <ImageBackground source={require('../img/loginBackground.jpg')} resizeMode="cover" style={styles.imageBackground}>
@@ -75,16 +94,20 @@ export const Login = () => {
           <Input
             onChangeText={setEmail}
             value={email}
-            placeholder="Correo electrónico"
+            placeholder={emailErrorMessage ? emailErrorMessage: "Correo electrónico"}
             keyboardType="email-address"
             inputMode="email"
             textAlign='center'
-            style={emailErrorMessage ? styles.inputError : styles.input}            onBlur={() => isEmail()}
+            style={styles.input}
+            onBlur={() => isEmail()}
             errorMessage={emailErrorMessage}
+            leftIcon={emailErrorMessage ? <Icon name="information-outline" type='material-community' size={20} color='white' /> : ''}
             errorStyle={emailErrorMessage ? stylesRegistro.errorStyle : null}
             label="Correo electrónico"
             labelStyle={{ color: 'white' }}
-            inputContainerStyle={{ borderBottomWidth: 0 }}
+            inputContainerStyle={emailErrorMessage ? styles.inputContainerError : styles.inputContainer}
+            onFocus={() => { setEmailErrorMessage("")}}
+
           />
           <Input
             onChangeText={setPassword}
@@ -99,7 +122,7 @@ export const Login = () => {
             enablesReturnKeyAutomatically
             label="Contraseña"
             labelStyle={{ color: 'white' }}
-            inputContainerStyle={{ borderBottomWidth: 0 }}
+            inputContainerStyle={styles.inputContainer}
 
           />
           <Button
@@ -108,7 +131,7 @@ export const Login = () => {
             buttonStyle={styles.buttonPrimary}
             disabledStyle={styles.buttonPrimaryDisabled}
             loading={cargando}
-            disabled={emailErrorMessage || cargando ? true : false}
+            disabled={!validLogin}
             radius="lg"
             containerStyle={styles.buttonContainer}
           />
@@ -123,5 +146,9 @@ const stylesRegistro = StyleSheet.create({
   errorStyle: {
     color: 'white',
     textAlign: 'center',
+    borderRadius: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    fontSize:14,
   },
 });
