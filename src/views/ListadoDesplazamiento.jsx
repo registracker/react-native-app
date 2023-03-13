@@ -92,9 +92,8 @@ export const ListadoDesplazamiento = () => {
 
   const enviarReporteIncidente = async (item, reset) => {
     const mensaje = 'Incidente enviado exitosamente.';
-    
+
     try {
-      console.log("🚀 ~ file: ListadoDesplazamiento.jsx:94 ~ enviarReporteIncidente ~ item:", JSON.stringify(item, null, 3))
       setCargando(true)
       await postIncidente(item)
       await enviarIncidente(item.id)
@@ -132,7 +131,7 @@ export const ListadoDesplazamiento = () => {
   if (!listadoDesplazamientos) return <Loading />
 
 
-  const ItemDesplazamiento = ({item}) => (
+  const ItemDesplazamiento = ({ item }) => (
     <ListItem.Swipeable
       leftContent={(reset) => (
         <Button
@@ -156,19 +155,19 @@ export const ListadoDesplazamiento = () => {
     >
       <Icon name="run" type='material-community' />
       <ListItem.Content  >
-        <ListItem.Title>{item.uuid}</ListItem.Title>
-        <ListItem.Subtitle>{item.fecha_registro}</ListItem.Subtitle>
+        <ListItem.Title>Registrado: {item.fecha_registro}</ListItem.Title>
+        <ListItem.Subtitle>{item.uuid}</ListItem.Subtitle>
       </ListItem.Content>
 
       <Icon
         type="material-community"
-        name={item.enviado == 1 ? 'check-circle-outline' : 'cloud-upload'}
-        color={item.enviado == 1 ? 'green' : 'grey'}
+        name={item.enviado === 1 ? 'check-circle-outline' : 'cloud-upload'}
+        color={item.enviado === 1 ? 'green' : 'grey'}
       />
     </ListItem.Swipeable>
   )
 
-  const itemIncidente = ({item}) => (
+  const itemIncidente = ({ item }) => (
     <ListItem.Swipeable
       leftContent={(reset) => (
         <Button
@@ -220,7 +219,7 @@ export const ListadoDesplazamiento = () => {
             renderItem={ItemDesplazamiento}
           />
         </TabView.Item>
-        <TabView.Item  style={{ width: '100%' }}>
+        <TabView.Item style={{ width: '100%' }}>
           <FlatList
             data={listadoIncidentes}
             refreshing={refreshing}

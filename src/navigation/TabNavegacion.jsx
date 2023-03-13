@@ -45,7 +45,7 @@ export const TabNavegacion = () => {
                 name="ListadoDesplazamiento"
                 component={ListadoDesplazamiento}
                 options={{
-                    title: 'Mis desplazamientos',
+                    title: 'Registros',
                     tabBarIcon: ({ color, size }) => (
                         <Icon name="map-search-outline" type='material-community' color={color} size={size} />
                     ),

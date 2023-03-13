@@ -68,7 +68,7 @@ export const createTableReporteIncidentes = () => {
     db.transaction(tx => {
         tx.executeSql(
             `CREATE TABLE IF NOT EXISTS tbl_reporte_incidente (
-            id INTEGER,
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
             desplazamiento_id TEXT, 
             id_incidente INTEGER,
             nombre TEXT,
@@ -151,6 +151,7 @@ export const deleteReporteIncidente = (id) => {
 }
 
 export const enviarIncidente = (id) => {
+    console.log("🚀 ~ file:", id)
     return new Promise((resolve, reject) => {
         db.transaction(tx => {
             tx.executeSql(
