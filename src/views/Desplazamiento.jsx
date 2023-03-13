@@ -1,26 +1,29 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
-import {Chip, FAB, SpeedDial} from '@rneui/base';
-import {format} from 'date-fns';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { View, Text, StyleSheet, Image, Animated } from 'react-native';
+import { Chip, FAB, Icon, SpeedDial } from '@rneui/base';
+import { format } from 'date-fns';
 import Geolocation from 'react-native-geolocation-service';
 import uuid from 'react-native-uuid';
 import BackgroundService from 'react-native-background-actions';
+import { es } from 'date-fns/locale'
+import { setDefaultOptions } from 'date-fns'
 
-import {MediosDesplazamientosComponentes} from '../components/MediosDesplazamientosComponentes';
+import { MediosDesplazamientosComponentes } from '../components/MediosDesplazamientosComponentes';
 import { addItemDesplazamiento, createTableDesplazamiento } from '../database/TblDesplazamientos';
-import {getMediosDesplazamientos} from '../services/mediosDesplazamientoServices';
-import {getIncidentes} from '../services/incidenteServices';
+import { getMediosDesplazamientos } from '../services/mediosDesplazamientoServices';
+import { getIncidentes } from '../services/incidenteServices';
 
-import {primary, styles} from '../styles/style';
-import {RecorridosContext} from '../context/Recorrido/RecorridosContext';
-import {ModalComponent} from '../components/ModalComponent';
-import {createTableMediosDesplazamiento} from '../database/TblMediosDesplazamientos';
+import { primary, styles } from '../styles/style';
+import { RecorridosContext } from '../context/Recorrido/RecorridosContext';
+import { ModalComponent } from '../components/ModalComponent';
+import { createTableMediosDesplazamiento } from '../database/TblMediosDesplazamientos';
 import { createTableIncidentes, createTableReporteIncidentes, storeReporteIncidente } from '../database/TblIncidentes';
-import {Loading} from '../components/Loading';
-import {Toast} from 'react-native-toast-message/lib/src/Toast';
-import {useKeepAwake} from '@sayem314/react-native-keep-awake';
+import { Toast } from 'react-native-toast-message/lib/src/Toast';
+import { useKeepAwake } from '@sayem314/react-native-keep-awake';
 
-import {CatalogosContext} from '../context/Catalogos/CatalogosContext'
+import { CatalogosContext } from '../context/Catalogos/CatalogosContext'
+import { ToastAndroid } from 'react-native';
+
 
 export const Desplazamiento = () => {
   const [data, setData] = useState([]);
@@ -32,7 +35,10 @@ export const Desplazamiento = () => {
   const [uuidDesplazamiento, setUuidDesplazamiento] = useState();
   const [medio, setMedio] = useState({ id: 1, nombre: 'Caminando', icono: 'walk' });
   const [mediosDesplazamientos, setMediosDesplazamientos] = useState();
-  const [fechaHoraInciado, setFechaHoraInciado] = useState();
+  const [horaInciado, setHoraInciado] = useState();
+  const [fechaInciado, setFechaInciado] = useState();
+  const [ultimahoraInciado, setUltimaHoraInciado] = useState();
+  const [ultimaFechaInciado, setUltimaFechaInciado] = useState();
   const [modalMarcadores, setModalMarcadores] = useState(false);
   const [marcadores, setMarcadores] = useState();
   const [marcadorSelected, setMarcadorSelected] = useState();
@@ -40,12 +46,15 @@ export const Desplazamiento = () => {
   const [modalIncidentes, setModalIncidentes] = useState(false);
   const [incidenteSelected, setIncidenteSelected] = useState();
   const [contadorMedio, setContadorMedio] = useState(0);
-  const [loading, setLoading] = useState(true)
+  const [fechaUltimoDesplazamiento, setFechaUltimoDesplazamiento] = useState()
 
-  const {desplazamientoState, insertarPunto, restaurar} =
+  const { desplazamientoState, insertarPunto, restaurar } =
     useContext(RecorridosContext);
 
-  const { ctl_medios_desplazamientos, ctl_incidentes, obtenerMediosDesplazamientos, obtenerIncidentes  } = useContext(CatalogosContext)
+  const { ctl_medios_desplazamientos, ctl_incidentes, obtenerMediosDesplazamientos, obtenerIncidentes } = useContext(CatalogosContext)
+
+  const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
+
 
 
   const options = {
@@ -64,7 +73,7 @@ export const Desplazamiento = () => {
   };
 
   const created = async () => {
-    await obtenerMediosDesplazamientos() 
+    await obtenerMediosDesplazamientos()
     await obtenerIncidentes()
   };
 
@@ -96,7 +105,9 @@ export const Desplazamiento = () => {
   const getLocationObservation = () => {
     setViajeIniciado(true);
     setUuidDesplazamiento(uuid.v4());
-    setFechaHoraInciado(new Date());
+    setDefaultOptions({ locale: es })
+    setHoraInciado(format(new Date(), 'hh:mm:ss aaaa'));
+    setFechaInciado(format(new Date(), 'PPP'));
 
 
     const observation = Geolocation.watchPosition(
@@ -126,7 +137,7 @@ export const Desplazamiento = () => {
       new Promise(resolve => setTimeout(() => resolve(), time));
     const veryIntensiveTask = async taskDataArguments => {
       // Example of an infinite loop task
-      const {delay} = taskDataArguments;
+      const { delay } = taskDataArguments;
       await new Promise(async resolve => {
         for (let i = 0; BackgroundService.isRunning(); i++) {
           Geolocation.getCurrentPosition(
@@ -168,7 +179,6 @@ export const Desplazamiento = () => {
 
       const mensaje = 'Desplazamiento finalizado';
       const subtitulo = `Registrado en la fecha ${data.fecha_registro}`;
-
       notificacion(mensaje, subtitulo);
     }
     restaurar();
@@ -178,6 +188,9 @@ export const Desplazamiento = () => {
     setUuidDesplazamiento();
     setContadorMedio(0);
     Geolocation.clearWatch(watchId);
+    setFechaUltimoDesplazamiento(format(new Date(), 'PPPP p'))
+    setUltimaHoraInciado(format(new Date(), 'hh:mm:ss aaaa'));
+    setUltimaFechaInciado(format(new Date(), 'PPP'));
   };
 
   const openModalIncidentes = async () => {
@@ -222,7 +235,7 @@ export const Desplazamiento = () => {
         agrupacion_medio_desplazamiento: contadorMedio,
       };
       setPuntos([...puntos, point]);
-      insertarPunto({uuid: uuidDesplazamiento, punto: point});
+      insertarPunto({ uuid: uuidDesplazamiento, punto: point });
     }
   }, [position]);
 
@@ -262,13 +275,10 @@ export const Desplazamiento = () => {
       type: 'success',
       text1: mensaje,
       text2: subtitulo,
+      position: 'top',
+      topOffset: 0
     });
   };
-
-
-
-
-
 
   return (
     <View style={styles.container}>
@@ -278,7 +288,68 @@ export const Desplazamiento = () => {
         setItem={setIncidenteSelected}
         data={ctl_incidentes.data}
       />
+      <View style={{ flex: 1, marginHorizontal: '12%' }}>
+        {
+          viajeIniciado ? (
+
+            <View style={stylesDesplazamiento.panel}>
+              <View style={stylesDesplazamiento.backgroundImage}>
+
+                <Image
+                  style={{ width: 65, height: 65, }}
+                  source={require('../img/travel/image-location.gif')}
+                />
+              </View>
+              <View style={{ flexDirection: 'column' }}>
+
+                <Text style={stylesDesplazamiento.textPanel} >
+                  Viaje en curso
+                </Text>
+
+                <Text style={stylesDesplazamiento.textPanel} >
+                  Iniciado: {horaInciado}
+                </Text>
+
+                <Text style={stylesDesplazamiento.textPanel} >
+                  Fecha: {fechaInciado}
+                </Text>
+              </View>
+            </View>
+          ) : (
+            fechaUltimoDesplazamiento && (
+
+              <View style={stylesDesplazamiento.panelOff}>
+                <View style={stylesDesplazamiento.backgroundImage}>
+
+                  <Icon
+                    name='history'
+                    color='#808080'
+                    type='material-community'
+                    size={50}
+                    containerStyle={{ width: 65, height: 65, justifyContent: 'center', alignItems: 'center' }}
+                  />
+                </View>
+                <View style={{ flexDirection: 'column' }}>
+
+                  <Text style={stylesDesplazamiento.textPanelOff} >
+                    Ultimo viaje
+                  </Text>
+                    <Text style={stylesDesplazamiento.textPanelOff} >
+                      Hora: {horaInciado}
+                    </Text>
+
+                    <Text style={stylesDesplazamiento.textPanelOff} >
+                      Fecha: {fechaInciado}
+                    </Text>
+                </View>
+              </View>
+            )
+          )
+        }
+
+      </View>
       <View style={styles.body}>
+
         <Text style={styles.subtitleText}>
           Elige tu medio de desplazamientos
         </Text>
@@ -303,18 +374,18 @@ export const Desplazamiento = () => {
             placement="left"
             upperCase
             icon={stylesDesplazamiento.iconoTerminarViaje}
-            style={{marginBottom: 20}}
+            style={{ marginBottom: 20 }}
             color={styles.primary}
           />
         ) : (
           <FAB
             visible
-              onPress={getLocationObservation}
+            onPress={getLocationObservation}
             title="Comenzar el viaje"
             placement="left"
             upperCase
             icon={stylesDesplazamiento.iconoComenzarViaje}
-            style={{marginBottom: 20}}
+            style={{ marginBottom: 20 }}
             color="green"
           />
         )}
@@ -339,17 +410,39 @@ export const Desplazamiento = () => {
 
 const stylesDesplazamiento = StyleSheet.create({
   panel: {
-    backgroundColor: styles.primary,
-    padding: '2%',
-    margin: '5%',
-    height: 80,
+    backgroundColor: primary,
+    borderColor: 'white',
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 10,
+    borderWidth: 3,
+    margin: 10,
+    padding: 10,
+  },
+  panelOff: {
+    backgroundColor: '#d0d0d0',
+    borderColor: 'white',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-evenly',
-    borderRadius: 20,
+    borderRadius: 10,
+    borderWidth: 3,
+    margin: 10,
+    padding: 10,
   },
-  textPanel: {color: 'white', fontSize: 12},
-  textTitlePanel: {color: 'white', fontSize: 20},
+  textPanel: { color: 'white', fontSize: 14 },
+  textPanelOff: {
+    color: 'black', fontSize: 14
+  },
+  backgroundImage: {
+    backgroundColor: 'white',
+    marginLeft: 10,
+    marginRight: 10,
+    padding: 0,
+    borderRadius: 5,
+    marginRight: 15
+  },
+  textTitlePanel: { color: 'white', fontSize: 20 },
   iconoFAB: {
     name: 'map-marker-radius',
     color: 'white',
@@ -360,7 +453,7 @@ const stylesDesplazamiento = StyleSheet.create({
     color: 'white',
     type: 'material-community',
   },
-  iconoFABClose: {name: 'close', color: 'white'},
+  iconoFABClose: { name: 'close', color: 'white' },
   iconoComenzarViaje: {
     name: 'map-marker-distance',
     color: 'white',
@@ -371,4 +464,5 @@ const stylesDesplazamiento = StyleSheet.create({
     color: 'white',
     type: 'material-community',
   },
+
 });

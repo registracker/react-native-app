@@ -354,7 +354,7 @@ export const FormularioRegistro = ({ route, navigation }) => {
 
             <Input
               onChangeText={setPasswordConfirm}
-              onFocus={() => { setpasswordConfirmErrorMessage("")}}
+              onFocus={() => { setPasswordConfirmErrorMessage("")}}
 
               value={passwordConfirm}
               style={styles.input}
@@ -403,13 +403,12 @@ export const FormularioRegistro = ({ route, navigation }) => {
 
 const stylesRegistro = StyleSheet.create({
   errorStyle: {
-    color: primary,
+    color: 'black',
     textAlign: 'center',
     backgroundColor: 'white' ,
-    borderRadius: 2,
+    borderRadius: 3,
     justifyContent: 'center',
     alignItems: 'center',
     fontSize:14,
-    opacity: 0.6
   },
 });

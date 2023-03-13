@@ -9,7 +9,7 @@ export const recorridosReducer = (state, action) => {
         uuid: action.payload.uuid,
         desplazamiento: [...state.desplazamiento, action.payload.punto],
         cantidadPuntos: state.desplazamiento.length + 1,
-        ultimaActualizacion: format(new Date(), 'dd-MM-yyyy HH:mm:ss'),
+        ultimaActualizacion: format(new Date(), 'PPPP'),
         ultimoPunto: action.payload.punto
       }
     case 'restaurar':

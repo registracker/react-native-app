@@ -4,7 +4,7 @@ export const createTableDesplazamiento = () => {
   db.transaction(tx => {
     tx.executeSql(
       `CREATE TABLE IF NOT EXISTS tbl_desplazamiento (
-        uuid TEXT PRIMARY KEY,
+         TEXT PRIMARY KEY,
         desplazamiento TEXT,
         enviado INTEGER,
         activo INTEGER,
@@ -90,6 +90,24 @@ export const sendDesplazamiento = (uuid) => {
          SET enviado = 1
          WHERE uuid = ?;`,
         [uuid],
+        (transaction, res) => {
+          console.log("🚀 ~ file: TblDesplazamientos.jsx:81 ~ returnnewPromise ~ res:", res)
+          resolve(res);
+        },
+        () => {
+          reject(false);
+        },
+      );
+    });
+  });
+};
+
+export const getLastDesplazamiento = () => {
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        `SELECT * FROM tbl_desplazamiento ORDER BY fecha_registro DESC LIMIT 1`,
+        [],
         (transaction, res) => {
           console.log("🚀 ~ file: TblDesplazamientos.jsx:81 ~ returnnewPromise ~ res:", res)
           resolve(res);
