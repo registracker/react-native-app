@@ -4,7 +4,7 @@ export const createTableDesplazamiento = () => {
   db.transaction(tx => {
     tx.executeSql(
       `CREATE TABLE IF NOT EXISTS tbl_desplazamiento (
-         TEXT PRIMARY KEY,
+        uuid TEXT PRIMARY KEY,
         desplazamiento TEXT,
         enviado INTEGER,
         activo INTEGER,
