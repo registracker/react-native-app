@@ -176,6 +176,7 @@ export const styles = StyleSheet.create({
   },
   modalView:{
     flex: 2, 
+    marginHorizontal: 20,
     justifyContent: 'center', 
   },
   modalItems: { flex: 2, justifyContent: 'center', alignContent: 'center' },

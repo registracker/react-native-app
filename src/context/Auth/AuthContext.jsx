@@ -24,6 +24,7 @@ export const AuthProvider = ({ children }) => {
         try {
             const response = await http_axios('/api/sanctum/token', params, 'post');
             const token = response?.token;
+            console.log("🚀 ~ file: AuthContext.jsx:27 ~ signIn ~ token:", token)
             
             if (token){
                 dispatch({ type: 'signIn', payload: { token } });
@@ -39,6 +40,7 @@ export const AuthProvider = ({ children }) => {
             });
             dispatch({ type: 'logout' });
             await AsyncStorage.removeItem('token')
+            return true;
         }
     }
 

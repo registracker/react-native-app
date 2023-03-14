@@ -4,17 +4,17 @@ import { FlatList, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react
 import { primary, styles } from '../styles/style';
 import { Loading } from './Loading';
 
-export const ModalComponent = ({ modalVisible, setModalVisible, data, setItem }) => {
+export const ModalComponent = ({ modalVisible, setModalVisible, data, setItem, enviar, uuid }) => {
 
     const [selected, setSelected] = useState()
 
     if (!data) return <Loading />
 
 
-    const reportarIncidente = () => {
-        setItem(selected)
+    const reportarIncidente = async () => {
         setModalVisible(!modalVisible)
         setSelected()
+        await enviar(selected, uuid );
     }
 
     const renderItem = ({ item }) => {

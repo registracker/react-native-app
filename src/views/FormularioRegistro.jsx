@@ -45,19 +45,19 @@ export const FormularioRegistro = ({ route, navigation }) => {
       setCargando(true);
       if (comparePassword()) {
         const { usuario, estado_cuenta } = await register(null, data);
-        if (estado_cuenta === 'En revisión') {
-          ToastAndroid.showWithGravity(
-            'Cuenta en revisión',
-            ToastAndroid.SHORT,
-            ToastAndroid.CENTER,
-          );
-        } else if (estado_cuenta === 'Activa') {
-          ToastAndroid.showWithGravity(
-            'Cuenta en creada con exito',
-            ToastAndroid.LONG,
-            ToastAndroid.CENTER,
-          );
-        }
+        // if (estado_cuenta === 'En revisión') {
+        //   ToastAndroid.showWithGravity(
+        //     'Cuenta en revisión',
+        //     ToastAndroid.SHORT,
+        //     ToastAndroid.CENTER,
+        //   );
+        // } else if (estado_cuenta === 'Activa') {
+        // }
+        ToastAndroid.showWithGravity(
+          'Cuenta en creada con exito',
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER,
+        );
         navigation.navigate('Login');
       } else {
         inputPassword.current.focus();
@@ -122,17 +122,17 @@ export const FormularioRegistro = ({ route, navigation }) => {
     $                         End anchor.
     */
   const isPasswordSecure = () => {
-    if(password){
+  //   if(password){
 
-    const validRegex =
-      /^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8,}$/;
-    if (!password.match(validRegex)) {
-      setFormInvalid(true);
-      setPasswordErrorMessage('Ingrese un correo electrónico segura');
-    } else {
-      setPasswordErrorMessage();
-    }
-  }
+  //   const validRegex =
+  //     /^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8,}$/;
+  //   if (!password.match(validRegex)) {
+  //     setFormInvalid(true);
+  //     setPasswordErrorMessage('Ingrese un correo electrónico segura');
+  //   } else {
+  //     setPasswordErrorMessage();
+  //   }
+  // }
   };
 
   const cleanForm = () => {
@@ -213,13 +213,17 @@ export const FormularioRegistro = ({ route, navigation }) => {
         }}>
         <ScrollView>
           <Text style={styles.titleText}>Registro de usuario</Text>
+          <Text style={{color:'white', textAlign:'center', size: 14, marginTop:20}}>Elige un rol para tu usuario</Text>
+
           <View
             style={{
               ...styles.body,
+              paddingTop:10,
               flex: 1,
               flexDirection: 'row',
               justifyContent: 'center',
             }}>
+
             <TouchableHighlight
               style={{
                 alignItems: 'center',
@@ -312,6 +316,7 @@ export const FormularioRegistro = ({ route, navigation }) => {
             <Input
               onChangeText={setEmail}
               value={email}
+              autoCapitalize='none'
               label="Correo electrónico"
               placeholder="Correo electrónico"
               keyboardType="email-address"

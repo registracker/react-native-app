@@ -19,12 +19,20 @@ export const CatalogosProvider = ({ children }) => {
 
     const obtenerMediosDesplazamientos = async () => {
         const data = await getMediosDesplazamientos()
-        dispatch({ type: 'medios_desplazamientos', payload: { data } })
+        if(data){
+            dispatch({ type: 'medios_desplazamientos', payload: { data } })
+        }else {
+            obtenerMediosDesplazamientos()
+        }
     }
 
     const obtenerIncidentes = async () => {
         const data = await getIncidentes()
-        dispatch({ type: 'ctl_incidentes', payload: { data } })
+        if(data){
+            dispatch({ type: 'ctl_incidentes', payload: { data } })
+        }else {
+            obtenerIncidentes()
+        }
     }
 
     return (

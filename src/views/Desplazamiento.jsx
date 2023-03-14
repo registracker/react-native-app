@@ -53,10 +53,6 @@ export const Desplazamiento = () => {
 
   const { ctl_medios_desplazamientos, ctl_incidentes, obtenerMediosDesplazamientos, obtenerIncidentes } = useContext(CatalogosContext)
 
-  const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
-
-
-
   const options = {
     taskName: 'Example',
     taskTitle: 'ExampleTask title',
@@ -173,7 +169,7 @@ export const Desplazamiento = () => {
       const data = {
         uuid: uuidDesplazamiento,
         desplazamiento: JSON.stringify(puntos, null),
-        fecha_registro: format(new Date(), 'dd-MM-yyyy HH:mm:ss'),
+        fecha_registro: format(new Date(), 'dd-MM-yyyy hh:mm:ss aaaa'),
       };
       addItemDesplazamiento(data);
 
@@ -226,6 +222,7 @@ export const Desplazamiento = () => {
   //Detectar cambios de la posicion
   useEffect(() => {
     if (position) {
+      console.log("🚀 NEW POINT")
       const point = {
         latitud: position.coords.latitude,
         longitud: position.coords.longitude,
@@ -243,12 +240,6 @@ export const Desplazamiento = () => {
     if (viajeIniciado) setContadorMedio(contadorMedio + 1);
   }, [medio]);
 
-  useEffect(() => {
-    if (incidenteSelected) {
-      enviarIncidente(incidenteSelected, uuidDesplazamiento);
-    }
-  }, [incidenteSelected]);
-
   const enviarIncidente = async (incidente, uuid = null) => {
     const position = await getUbicacionActual();
 
@@ -260,7 +251,7 @@ export const Desplazamiento = () => {
       longitud: position.coords.longitude,
       latitud: position.coords.latitude,
       altitud: position.coords.altitude,
-      fecha_reporte: format(new Date(), 'dd-MM-yyyy HH:mm:ss'),
+      fecha_reporte: format(new Date(), 'dd-MM-yyyy hh:mm:ss'),
     };
     const response = await storeReporteIncidente(data);
     if (response.rowsAffected === 1) {
@@ -287,6 +278,8 @@ export const Desplazamiento = () => {
         setModalVisible={setModalIncidentes}
         setItem={setIncidenteSelected}
         data={ctl_incidentes.data}
+        enviar={enviarIncidente}
+        uuid={uuidDesplazamiento}
       />
       <View style={{ flex: 1, marginHorizontal: '12%' }}>
         {

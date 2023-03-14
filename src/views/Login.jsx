@@ -7,8 +7,8 @@ import { Input } from '@rneui/themed'
 
 export const Login = () => {
 
-  const [email, setEmail] = useState('developer@gmail.com')
-  const [password, setPassword] = useState('password');
+  const [email, setEmail] = useState()
+  const [password, setPassword] = useState();
   const [cargando, setCargando] = useState(false)
   const [validLogin, setvalidLogin] = useState(false)
   const [emailErrorMessage, setEmailErrorMessage] = useState();
@@ -22,14 +22,13 @@ export const Login = () => {
   const iniciarSesion = async () => {
     try {
       setCargando(true)
+      setvalidLogin(false)
+
       const response = await signIn({ email, password });
       if(!response){
         setCargando(false)
-        ToastAndroid.showWithGravity(
-          'Ha ocurrido un error interno en el servidor. Intente de nuevo',
-          ToastAndroid.SHORT,
-          ToastAndroid.CENTER,
-        );
+
+        iniciarSesion()
       }
 
     } catch (error) {
@@ -38,6 +37,8 @@ export const Login = () => {
         ToastAndroid.SHORT,
         ToastAndroid.CENTER,
       );
+    }finally {
+      setCargando(false)
     }
   }
 
@@ -48,12 +49,15 @@ export const Login = () => {
 
   const isEmail = () => {
     const validRegex = /^[a-zA-Z0-9_]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-    if (!email.match(validRegex)) {
-      setEmailErrorMessage('Correo electrónico invalido');
-      return false;
-    } else {
-      setEmailErrorMessage();
-      return true;
+    if(email){
+
+      if (!email.match(validRegex)) {
+        setEmailErrorMessage('Correo electrónico invalido');
+        return false;
+      } else {
+        setEmailErrorMessage();
+        return true;
+      }
     }
   };
 
@@ -94,6 +98,7 @@ export const Login = () => {
           <Input
             onChangeText={setEmail}
             value={email}
+            autoCapitalize='none'
             placeholder={emailErrorMessage ? emailErrorMessage: "Correo electrónico"}
             keyboardType="email-address"
             inputMode="email"
