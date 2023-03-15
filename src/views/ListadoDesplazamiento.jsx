@@ -91,10 +91,12 @@ export const ListadoDesplazamiento = () => {
   }
 
   const enviarReporteIncidente = async (item, reset) => {
+    console.log("🚀 ~ file: ListadoDesplazamiento.jsx:94 ~ enviarReporteIncidente ~ item:", item)
     const mensaje = 'Incidente enviado exitosamente.';
 
     try {
       setCargando(true)
+      console.log("🚀 ~ file: ListadoDesplazamiento.jsx:110 ~ enviarReporteIncidente ~ item:", item)
       await postIncidente(item)
       await enviarIncidente(item.id)
       items();

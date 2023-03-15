@@ -122,17 +122,17 @@ export const FormularioRegistro = ({ route, navigation }) => {
     $                         End anchor.
     */
   const isPasswordSecure = () => {
-  //   if(password){
+    if(password){
 
-  //   const validRegex =
-  //     /^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8,}$/;
-  //   if (!password.match(validRegex)) {
-  //     setFormInvalid(true);
-  //     setPasswordErrorMessage('Ingrese un correo electrónico segura');
-  //   } else {
-  //     setPasswordErrorMessage();
-  //   }
-  // }
+    const validRegex =
+      /^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8,}$/;
+    if (!password.match(validRegex)) {
+      setFormInvalid(true);
+      setPasswordErrorMessage('La contraseña debe tener mínimo una letra mayúscula, tres minúscula, un carácter especial, un dígito y mínimo ocho caracteres');
+    } else {
+      setPasswordErrorMessage();
+    }
+  }
   };
 
   const cleanForm = () => {

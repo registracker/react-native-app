@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Icon, ListItem } from '@rneui/base';
 import { useContext } from 'react';
 import { ActivityIndicator, Modal, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
@@ -7,6 +7,8 @@ import { AuthContext } from '../context/Auth/AuthContext'
 import { CatalogosContext } from '../context/Catalogos/CatalogosContext';
 import { dropMediosDesplazamientos } from '../database/TblMediosDesplazamientos';
 import { dropIncidentes } from '../database/TblIncidentes';
+import { Switch } from 'react-native-gesture-handler';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export const Ajustes = () => {
@@ -17,6 +19,9 @@ export const Ajustes = () => {
   const [loading, setLoading] = useState(false)
   const [sincronizarLoading, setSincronizarLoading] = useState(false)
   const [expanded, setExpanded] = useState(false);
+
+  const [checkOpcionDesplazamiento, setCheckOpcionDesplazamiento] = useState()
+  const [checkOpcionIncidente, setCheckOpcionIncidente] = useState()
 
   const { obtenerMediosDesplazamientos, obtenerIncidentes } = useContext(CatalogosContext)
 
@@ -41,43 +46,109 @@ export const Ajustes = () => {
     }
   }
 
+  const sincronizarDesplazamiento = async (value) => {
+    const estado = value ? 'activo' : 'inactivo'
+    await AsyncStorage.setItem('opcion-desplazamiento', estado)
+    setCheckOpcionDesplazamiento(value)
+  }
+
+  const sincronizarIncidente = async (value) => {
+    const estado = value ? 'activo' : 'inactivo'
+    await AsyncStorage.setItem('opcion-incidente', estado)
+    setCheckOpcionIncidente(value)
+  }
+
+  const getEstadoOpciones = async () => {
+    const desplazamiento = await AsyncStorage.getItem('opcion-desplazamiento');
+    desplazamiento === 'activo' ? setCheckOpcionDesplazamiento(true) : setCheckOpcionDesplazamiento(false)
+
+    const incidente = await AsyncStorage.getItem('opcion-incidente');
+    incidente === 'activo' ? setCheckOpcionIncidente(true) : setCheckOpcionIncidente(false)
+  }
+
+  useEffect(() => {
+    getEstadoOpciones();
+  }, [])
+
+
+  const SincronizarList = () => {
+    return (
+      <ListItem.Accordion
+        content={
+          <ListItem.Content>
+            <ListItem.Title>Sincronizar</ListItem.Title>
+          </ListItem.Content>
+        }
+        isExpanded={expanded}
+        onPress={() => {
+          setExpanded(!expanded);
+        }}
+      >
+        <ListItem
+          Component={TouchableHighlight}
+          onPress={sincronizarCatalogos}
+        >
+          <ListItem.Content>
+
+            <ListItem.Title>Sincronizar catalogos</ListItem.Title>
+            <ListItem.Subtitle>Toca para actualizar</ListItem.Subtitle>
+          </ListItem.Content>
+          {
+            sincronizarLoading ? (
+              <ActivityIndicator size="small" color={primary} />
+            ) : (
+              <Icon
+                type="material-community"
+                name={'cloud-download'}
+                color={'grey'}
+              />
+            )
+          }
+
+        </ListItem>
+      </ListItem.Accordion>
+    )
+  }
+
+  const OpcionDesplazamiento = () => {
+    return (
+      <ListItem>
+        <ListItem.Content>
+          <ListItem.Title>Envió automático de registros de desplazamientos</ListItem.Title>
+        </ListItem.Content>
+        <Switch
+          trackColor={{ false: '#767577', true: '#767577' }}
+          thumbColor={checkOpcionDesplazamiento ? primary : '#f4f3f4'}
+          value={checkOpcionDesplazamiento}
+          onValueChange={(value) => sincronizarDesplazamiento(value)}
+        />
+
+      </ListItem>
+    )
+  }
+  const OpcionIncidente = () => {
+    return (
+      <ListItem>
+        <ListItem.Content>
+          <ListItem.Title>Envió automático de registros de incidentes</ListItem.Title>
+        </ListItem.Content>
+        <Switch
+          trackColor={{ false: '#767577', true: '#767577' }}
+          thumbColor={checkOpcionIncidente ? primary : '#f4f3f4'}
+          value={checkOpcionIncidente}
+          onValueChange={(value) => sincronizarIncidente(value)}
+        />
+
+      </ListItem>
+    )
+  }
+
   return (
     <View style={styles.container}>
       <View style={{ flex: 10 }}>
-        <ListItem.Accordion
-          content={
-            <ListItem.Content>
-              <ListItem.Title>Sincronizar</ListItem.Title>
-            </ListItem.Content>
-          }
-          isExpanded={expanded}
-          onPress={() => {
-            setExpanded(!expanded);
-          }}
-        >
-          <ListItem
-            Component={TouchableHighlight}
-            onPress={sincronizarCatalogos}
-          >
-            <ListItem.Content>
-
-              <ListItem.Title>Sincronizar catalogos</ListItem.Title>
-              <ListItem.Subtitle>Toca para actualizar</ListItem.Subtitle>
-            </ListItem.Content>
-            {
-              sincronizarLoading ? (
-                <ActivityIndicator size="small" color={primary} />
-              ) : (
-                <Icon
-                  type="material-community"
-                  name={'cloud-download'}
-                  color={'grey'}
-                />
-              )
-            }
-
-          </ListItem>
-        </ListItem.Accordion>
+        <SincronizarList />
+        <OpcionDesplazamiento />
+        <OpcionIncidente />
       </View>
       <View style={styles.foobar}>
         <Button

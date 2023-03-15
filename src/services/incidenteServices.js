@@ -17,7 +17,6 @@ const getIncidentes = async () => {
   const response = await http_axios('/api/incidentes');
 
   data = response.data;
-  console.log("🚀 ~ file: incidenteServices.js:20 ~ getIncidentes ~ data:", JSON.stringify(data, null, 2));
   if (data) {
     const inserting_incidentes = data.map(item => {
       return `(${item.id}, '${item.nombre}', '${item.icono}'),`;

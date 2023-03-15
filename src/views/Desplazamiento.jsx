@@ -1,28 +1,31 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import { View, Text, StyleSheet, Image, Animated } from 'react-native';
-import { Chip, FAB, Icon, SpeedDial } from '@rneui/base';
+import React, { useContext, useEffect, useState } from 'react';
+import { View, Text, StyleSheet, Image } from 'react-native';
+import { FAB, Icon, SpeedDial } from '@rneui/base';
 import { format } from 'date-fns';
 import Geolocation from 'react-native-geolocation-service';
 import uuid from 'react-native-uuid';
 import BackgroundService from 'react-native-background-actions';
+import KeepAwake from '@sayem314/react-native-keep-awake';
 import { es } from 'date-fns/locale'
 import { setDefaultOptions } from 'date-fns'
-
-import { MediosDesplazamientosComponentes } from '../components/MediosDesplazamientosComponentes';
-import { addItemDesplazamiento, createTableDesplazamiento } from '../database/TblDesplazamientos';
-import { getMediosDesplazamientos } from '../services/mediosDesplazamientoServices';
-import { getIncidentes } from '../services/incidenteServices';
-
-import { primary, styles } from '../styles/style';
-import { RecorridosContext } from '../context/Recorrido/RecorridosContext';
-import { ModalComponent } from '../components/ModalComponent';
-import { createTableMediosDesplazamiento } from '../database/TblMediosDesplazamientos';
-import { createTableIncidentes, createTableReporteIncidentes, storeReporteIncidente } from '../database/TblIncidentes';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
-import { useKeepAwake } from '@sayem314/react-native-keep-awake';
+//Componentes
+import { primary, styles } from '../styles/style';
+import { MediosDesplazamientosComponentes } from '../components/MediosDesplazamientosComponentes';
+import { ModalComponent } from '../components/ModalComponent';
+//Base de datos 
+import { createTableMediosDesplazamiento } from '../database/TblMediosDesplazamientos';
+import { createTableIncidentes, createTableReporteIncidentes, storeReporteIncidente, enviarIncidente } from '../database/TblIncidentes';
+import { addItemDesplazamiento, createTableDesplazamiento, sendDesplazamiento } from '../database/TblDesplazamientos';
 
+//Servicios
+import { postDesplazamiento } from '../services/desplazamientoServices'
+import { postIncidente } from '../services/incidenteServices'
+
+//Context
+import { RecorridosContext } from '../context/Recorrido/RecorridosContext';
 import { CatalogosContext } from '../context/Catalogos/CatalogosContext'
-import { ToastAndroid } from 'react-native';
 
 
 export const Desplazamiento = () => {
@@ -34,39 +37,15 @@ export const Desplazamiento = () => {
   const [open, setOpen] = useState(false);
   const [uuidDesplazamiento, setUuidDesplazamiento] = useState();
   const [medio, setMedio] = useState({ id: 1, nombre: 'Caminando', icono: 'walk' });
-  const [mediosDesplazamientos, setMediosDesplazamientos] = useState();
   const [horaInciado, setHoraInciado] = useState();
   const [fechaInciado, setFechaInciado] = useState();
-  const [ultimahoraInciado, setUltimaHoraInciado] = useState();
-  const [ultimaFechaInciado, setUltimaFechaInciado] = useState();
-  const [modalMarcadores, setModalMarcadores] = useState(false);
-  const [marcadores, setMarcadores] = useState();
-  const [marcadorSelected, setMarcadorSelected] = useState();
-  const [incidentes, setIncidentes] = useState();
   const [modalIncidentes, setModalIncidentes] = useState(false);
   const [incidenteSelected, setIncidenteSelected] = useState();
   const [contadorMedio, setContadorMedio] = useState(0);
   const [fechaUltimoDesplazamiento, setFechaUltimoDesplazamiento] = useState()
 
-  const { desplazamientoState, insertarPunto, restaurar } =
-    useContext(RecorridosContext);
-
+  const { insertarPunto, restaurar } = useContext(RecorridosContext);
   const { ctl_medios_desplazamientos, ctl_incidentes, obtenerMediosDesplazamientos, obtenerIncidentes } = useContext(CatalogosContext)
-
-  const options = {
-    taskName: 'Example',
-    taskTitle: 'ExampleTask title',
-    taskDesc: 'ExampleTask description',
-    taskIcon: {
-      name: 'ic_launcher',
-      type: 'mipmap',
-    },
-    color: primary,
-    linkingURI: 'yourSchemeHere://chat/jane', // See Deep Linking for more info
-    parameters: {
-      delay: 5000,
-    },
-  };
 
   const created = async () => {
     await obtenerMediosDesplazamientos()
@@ -97,33 +76,6 @@ export const Desplazamiento = () => {
 
     return position;
   };
-
-  const getLocationObservation = () => {
-    setViajeIniciado(true);
-    setUuidDesplazamiento(uuid.v4());
-    setDefaultOptions({ locale: es })
-    setHoraInciado(format(new Date(), 'hh:mm:ss aaaa'));
-    setFechaInciado(format(new Date(), 'PPP'));
-
-
-    const observation = Geolocation.watchPosition(
-      position => {
-        setPosition(position);
-        setData([...data, position]);
-      },
-      error => {
-        console.error(error.code, error.message);
-      },
-      {
-        enableHighAccuracy: true,
-        interval: 5000,
-        distanceFilter: 0,
-      },
-    );
-
-    setWatchId(observation);
-  };
-
   const IniciarDesplazamiento = async () => {
     setViajeIniciado(true);
     setUuidDesplazamiento(uuid.v4());
@@ -162,6 +114,31 @@ export const Desplazamiento = () => {
     });
   };
 
+  const getLocationObservation = () => {
+    setViajeIniciado(true);
+    setUuidDesplazamiento(uuid.v4());
+    setDefaultOptions({ locale: es })
+    setHoraInciado(format(new Date(), 'hh:mm:ss aaaa'));
+    setFechaInciado(format(new Date(), 'PPP'));
+
+    const observation = Geolocation.watchPosition(
+      position => {
+        setPosition(position);
+        setData([...data, position]);
+      },
+      error => {
+        console.error(error.code, error.message);
+      },
+      {
+        enableHighAccuracy: true,
+        interval: 5000,
+        distanceFilter: 0,
+      },
+    );
+
+    setWatchId(observation);
+  };
+
   const stopLocationObserving = async () => {
     setViajeIniciado(false);
     await BackgroundService.stop()
@@ -171,11 +148,18 @@ export const Desplazamiento = () => {
         desplazamiento: JSON.stringify(puntos, null),
         fecha_registro: format(new Date(), 'dd-MM-yyyy hh:mm:ss aaaa'),
       };
-      addItemDesplazamiento(data);
+      await addItemDesplazamiento(data);
+
+      const optionDesplazamiento = await AsyncStorage.getItem('opcion-desplazamiento');
+      if (optionDesplazamiento === 'activo') {
+        await postDesplazamiento({ uuid: uuidDesplazamiento, desplazamiento: puntos })
+        await sendDesplazamiento(uuidDesplazamiento)
+      }
 
       const mensaje = 'Desplazamiento finalizado';
       const subtitulo = `Registrado en la fecha ${data.fecha_registro}`;
       notificacion(mensaje, subtitulo);
+
     }
     restaurar();
     setData([]);
@@ -185,8 +169,6 @@ export const Desplazamiento = () => {
     setContadorMedio(0);
     Geolocation.clearWatch(watchId);
     setFechaUltimoDesplazamiento(format(new Date(), 'PPPP p'))
-    setUltimaHoraInciado(format(new Date(), 'hh:mm:ss aaaa'));
-    setUltimaFechaInciado(format(new Date(), 'PPP'));
   };
 
   const openModalIncidentes = async () => {
@@ -208,6 +190,48 @@ export const Desplazamiento = () => {
           distanceFilter: 0,
         },
       );
+    });
+  };
+
+  const enviarIncidenteModal = async (incidente, uuid = null) => {
+    const position = await getUbicacionActual();
+
+    const data = {
+      id_incidente: incidente.id,
+      icono: incidente.icono,
+      nombre: incidente.nombre,
+      longitud: position.coords.longitude,
+      latitud: position.coords.latitude,
+      altitud: position.coords.altitude,
+      fecha_reporte: format(new Date(), 'dd-MM-yyyy hh:mm:ss'),
+    };
+    if (uuid) data.desplazamiento_id = uuid;
+
+
+    const response = await storeReporteIncidente(data);
+    if (response.rowsAffected === 1) {
+
+      const optionIncidente = await AsyncStorage.getItem('opcion-incidente');
+      if (optionIncidente === 'activo') {
+        await postIncidente(data)
+        await enviarIncidente(response.insertId)
+      }
+
+
+
+      const mensaje = 'Incidente registrado';
+      const subtitulo = `${data.nombre} registrado la fecha de ${data.fecha_reporte}`;
+      notificacion(mensaje, subtitulo);
+    }
+  };
+
+  const notificacion = (mensaje, subtitulo = '') => {
+    Toast.show({
+      type: 'success',
+      text1: mensaje,
+      text2: subtitulo,
+      position: 'top',
+      topOffset: 0
     });
   };
 
@@ -240,69 +264,34 @@ export const Desplazamiento = () => {
     if (viajeIniciado) setContadorMedio(contadorMedio + 1);
   }, [medio]);
 
-  const enviarIncidente = async (incidente, uuid = null) => {
-    const position = await getUbicacionActual();
-
-    const data = {
-      desplazamiento_id: uuid,
-      id_incidente: incidente.id,
-      icono: incidente.icono,
-      nombre: incidente.nombre,
-      longitud: position.coords.longitude,
-      latitud: position.coords.latitude,
-      altitud: position.coords.altitude,
-      fecha_reporte: format(new Date(), 'dd-MM-yyyy hh:mm:ss'),
-    };
-    const response = await storeReporteIncidente(data);
-    if (response.rowsAffected === 1) {
-      const mensaje = 'Incidente registrado';
-      const subtitulo = `${data.nombre} registrado la fecha de ${data.fecha_reporte}`;
-      notificacion(mensaje, subtitulo);
-    }
-  };
-
-  const notificacion = (mensaje, subtitulo = '') => {
-    Toast.show({
-      type: 'success',
-      text1: mensaje,
-      text2: subtitulo,
-      position: 'top',
-      topOffset: 0
-    });
-  };
-
   return (
     <View style={styles.container}>
+      <KeepAwake />
       <ModalComponent
         modalVisible={modalIncidentes}
         setModalVisible={setModalIncidentes}
         setItem={setIncidenteSelected}
         data={ctl_incidentes.data}
-        enviar={enviarIncidente}
+        enviar={enviarIncidenteModal}
         uuid={uuidDesplazamiento}
       />
       <View style={{ flex: 1, marginHorizontal: '12%' }}>
         {
           viajeIniciado ? (
-
             <View style={stylesDesplazamiento.panel}>
               <View style={stylesDesplazamiento.backgroundImage}>
-
                 <Image
                   style={{ width: 65, height: 65, }}
                   source={require('../img/travel/image-location.gif')}
                 />
               </View>
               <View style={{ flexDirection: 'column' }}>
-
                 <Text style={stylesDesplazamiento.textPanel} >
                   Viaje en curso
                 </Text>
-
                 <Text style={stylesDesplazamiento.textPanel} >
                   Iniciado: {horaInciado}
                 </Text>
-
                 <Text style={stylesDesplazamiento.textPanel} >
                   Fecha: {fechaInciado}
                 </Text>
@@ -310,10 +299,8 @@ export const Desplazamiento = () => {
             </View>
           ) : (
             fechaUltimoDesplazamiento && (
-
               <View style={stylesDesplazamiento.panelOff}>
                 <View style={stylesDesplazamiento.backgroundImage}>
-
                   <Icon
                     name='history'
                     color='#808080'
@@ -323,41 +310,34 @@ export const Desplazamiento = () => {
                   />
                 </View>
                 <View style={{ flexDirection: 'column' }}>
-
                   <Text style={stylesDesplazamiento.textPanelOff} >
                     Ultimo viaje
                   </Text>
-                    <Text style={stylesDesplazamiento.textPanelOff} >
-                      Hora: {horaInciado}
-                    </Text>
-
-                    <Text style={stylesDesplazamiento.textPanelOff} >
-                      Fecha: {fechaInciado}
-                    </Text>
+                  <Text style={stylesDesplazamiento.textPanelOff} >
+                    Hora: {horaInciado}
+                  </Text>
+                  <Text style={stylesDesplazamiento.textPanelOff} >
+                    Fecha: {fechaInciado}
+                  </Text>
                 </View>
               </View>
             )
           )
         }
-
       </View>
       <View style={styles.body}>
-
         <Text style={styles.subtitleText}>
           Elige tu medio de desplazamientos
         </Text>
-
         <MediosDesplazamientosComponentes
           selected={medio}
           cambiarMedio={setMedio}
           mediosDesplazamientos={ctl_medios_desplazamientos.data}
         />
       </View>
-
       <View style={styles.foobar}>
         {/* Deja un espacio vació entre los medios de desplazamientos y los botones de FAB */}
       </View>
-
       <>
         {viajeIniciado ? (
           <FAB

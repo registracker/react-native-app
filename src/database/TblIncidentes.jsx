@@ -151,7 +151,6 @@ export const deleteReporteIncidente = (id) => {
 }
 
 export const enviarIncidente = (id) => {
-    console.log("🚀 ~ file:", id)
     return new Promise((resolve, reject) => {
         db.transaction(tx => {
             tx.executeSql(
