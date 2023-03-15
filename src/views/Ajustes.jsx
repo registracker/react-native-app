@@ -117,7 +117,7 @@ export const Ajustes = () => {
           <ListItem.Title>Envió automático de registros de desplazamientos</ListItem.Title>
         </ListItem.Content>
         <Switch
-          trackColor={{ false: '#767577', true: '#767577' }}
+          trackColor={{ false: '#d8d8db', true: '#d8d8db' }}
           thumbColor={checkOpcionDesplazamiento ? primary : '#f4f3f4'}
           value={checkOpcionDesplazamiento}
           onValueChange={(value) => sincronizarDesplazamiento(value)}
@@ -133,7 +133,7 @@ export const Ajustes = () => {
           <ListItem.Title>Envió automático de registros de incidentes</ListItem.Title>
         </ListItem.Content>
         <Switch
-          trackColor={{ false: '#767577', true: '#767577' }}
+          trackColor={{ false: '#d8d8db', true: '#d8d8db' }}
           thumbColor={checkOpcionIncidente ? primary : '#f4f3f4'}
           value={checkOpcionIncidente}
           onValueChange={(value) => sincronizarIncidente(value)}
@@ -170,6 +170,7 @@ export const Ajustes = () => {
       <Modal
         animationType="fade"
         visible={modalVisible}
+        transparent={true}
         statusBarTranslucent={true}
         onRequestClose={() => {
           setModalVisible(!modalVisible);
@@ -177,7 +178,8 @@ export const Ajustes = () => {
       >
         <View style={stylesAjustes.centeredView}>
           <View style={stylesAjustes.modalView}>
-            <Text style={stylesAjustes.modalText}>¿Salir de tu cuenta?</Text>
+            <Text style={{ ...styles.titleText, color: primary, fontSize: 20 }}>Cerrar sesión</Text>
+            <Text style={{ ...styles.titleText, color: 'gray', fontSize: 16, marginBottom: 20, fontWeight: 'normal' }}>¿Seguro de cerrar sesión?</Text>
             <View style={{
               flexDirection: 'row'
             }}>
@@ -186,12 +188,11 @@ export const Ajustes = () => {
                   <ActivityIndicator size="large" color={styles.primary} />
                 ) : (
                   <>
-                    <Button title="Cancelar" type="clear" onPress={() => { setModalVisible(!modalVisible) }} />
-                    <Button title="Salir" type="clear" titleStyle={{ color: 'red' }} onPress={() => { cerrarSesion() }} />
+                    <Button title="Sí, seguro" type="clear" titleStyle={{ color: 'gray' }} onPress={() => { cerrarSesion() }} />
+                    <Button title="Cancelar" type="clear" titleStyle={{ color: primary }} onPress={() => { setModalVisible(!modalVisible) }} />
                   </>
                 )
               }
-
             </View>
           </View>
         </View>
@@ -205,15 +206,13 @@ const stylesAjustes = StyleSheet.create({
   centeredView: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 22,
-    backgroundColor: 'rgba(0, 0, 0, 0.3)'
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
   },
   modalView: {
-    margin: 20,
+    margin: 10,
     backgroundColor: 'white',
     borderRadius: 20,
-    padding: 35,
+    padding: 15,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
@@ -223,19 +222,5 @@ const stylesAjustes = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-  },
-  textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  textStyleSalir: {
-    color: 'red',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: 'center',
   },
 });
