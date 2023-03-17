@@ -65,10 +65,7 @@ export const FormularioRegistro = ({ route, navigation }) => {
         inputPasswordConfirm.current.clear();
       }
     } catch (error) {
-      console.error(
-        '🚀 ~ file: Login.jsx:24 ~ registrar ~ error',
-        JSON.stringify(error.data.message),
-      );
+
       ToastAndroid.showWithGravity(
         `${error.data.message}`,
         ToastAndroid.SHORT,
