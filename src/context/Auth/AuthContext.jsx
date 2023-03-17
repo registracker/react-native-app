@@ -71,7 +71,6 @@ export const AuthProvider = ({ children }) => {
             dispatch({ type: 'signIn', payload: { token } })
 
         } catch (error) {
-            console.error(error);
             ToastAndroid.showWithGravity(
                 'Sin autenticacion',
                 ToastAndroid.SHORT,

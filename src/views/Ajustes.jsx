@@ -39,7 +39,6 @@ export const Ajustes = () => {
       await obtenerMediosDesplazamientos();
       await obtenerIncidentes();
     } catch (error) {
-      console.error(error)
     }
     finally {
       setSincronizarLoading(false)
