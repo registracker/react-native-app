@@ -55,7 +55,7 @@ export const Login = () => {
         setEmailErrorMessage('Correo electrónico invalido');
         return false;
       } else {
-        setEmailErrorMessage();
+        setEmailErrorMessage('');
         return true;
       }
     }
@@ -65,7 +65,7 @@ export const Login = () => {
   useEffect(() => {
     if (mensajeError.length === 0) return;
     Alert.alert(
-      'Inicio de sesión incorrecto',
+      'No se logró iniciar sesión',
       mensajeError,
       [
         {

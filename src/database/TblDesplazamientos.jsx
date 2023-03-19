@@ -113,3 +113,20 @@ export const getLastDesplazamiento = () => {
     });
   });
 };
+
+export const removeDesplazamientos = () => {
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        `DELETE FROM tbl_desplazamiento;`,
+        [],
+        (transaction, res) => {
+          resolve(res);
+        },
+        () => {
+          reject(false);
+        },
+      );
+    });
+  });
+};

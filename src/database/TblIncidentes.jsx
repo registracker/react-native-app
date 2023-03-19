@@ -179,3 +179,21 @@ export const dropIncidentes = () => {
         });
     });
 }
+
+export const deleteReporteIncidentes = () => {
+    return new Promise((resolve, reject) => {
+        db.transaction(tx => {
+            tx.executeSql(
+                `DELETE FROM tbl_reporte_incidente;`,
+                [],
+                (sqlTxn, result) => {
+                    resolve(result)
+                },
+                error => {
+                    reject(error)
+                },
+            );
+        });
+
+    });
+}

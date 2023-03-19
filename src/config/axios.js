@@ -42,7 +42,7 @@ export const http_axios = async (url, params, method = 'get', data) => {
             resolve(response.data);
           })
           .catch(err => {
-            reject(err.response);
+            reject(err);
           });
 
       case 'put':
