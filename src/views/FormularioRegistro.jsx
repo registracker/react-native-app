@@ -133,9 +133,9 @@ export const FormularioRegistro = ({ route, navigation }) => {
   };
 
   const cleanForm = () => {
-    setEmail(null);
     setPassword(null);
     setPasswordConfirm(null);
+    setRol()
   };
 
   const matchPassword = () => {

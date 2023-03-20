@@ -43,7 +43,6 @@ export const Login = () => {
   }
 
   const cleanForm = () => {
-    setEmail(null);
     setPassword(null);
   }
 
