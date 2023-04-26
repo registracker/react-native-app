@@ -2,18 +2,12 @@ import React, { useContext, useEffect } from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { Home } from '../views/Home';
-import { Desplazamiento } from '../views/Desplazamiento';
-import { Permission } from '../views/Permission';
 import { PermissionContext } from '../context/Permission/PermissionContext';
-import { Loading } from '../components/Loading';
 import { Permisos } from '../views/Permisos';
 import { Login } from '../views/Login';
-import { AuthContext } from '../context/Auth/AuthContext';
-import { PanelPrincipal } from '../views/PanelPrincipal';
-import { MediosDesplazamiento } from '../views/MediosDesplazamiento';
-import { Registrarse } from '../views/Registrarse';
 import { FormularioRegistro } from '../views/FormularioRegistro';
 import { TabNavegacion } from './TabNavegacion';
+import { AuthContext } from '../context/authentication/AuthContext';
 
 const Stack = createNativeStackNavigator();
 

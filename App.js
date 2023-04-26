@@ -8,8 +8,7 @@ import Toast from 'react-native-toast-message';
 import { NavigationContainer } from '@react-navigation/native';
 import { PermissionsProvider } from './src/context/Permission/PermissionContext';
 import { Navigation } from './src/navigation/Navigation';
-import { AuthProvider } from './src/context/Auth/AuthContext';
-import { RecorridosProvider } from './src/context/Recorrido/RecorridosContext';
+import { AuthProvider } from './src/context/authentication/AuthContext';
 import { CatalogosProvider } from './src/context/Catalogos/CatalogosContext';
 
 function App() {
@@ -17,12 +16,10 @@ function App() {
     <NavigationContainer>
       <PermissionsProvider>
         <AuthProvider>
-          <RecorridosProvider>
             <CatalogosProvider>
               <Navigation />
               <Toast />
             </CatalogosProvider>
-          </RecorridosProvider>
         </AuthProvider>
       </PermissionsProvider>
     </NavigationContainer>

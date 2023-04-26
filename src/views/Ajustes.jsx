@@ -3,7 +3,7 @@ import { Button, Icon, ListItem } from '@rneui/base';
 import { useContext } from 'react';
 import { ActivityIndicator, Modal, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import { primary, styles } from '../styles/style';
-import { AuthContext } from '../context/Auth/AuthContext'
+import { AuthContext } from '../context/authentication/AuthContext'
 import { CatalogosContext } from '../context/Catalogos/CatalogosContext';
 import { dropMediosDesplazamientos } from '../database/TblMediosDesplazamientos';
 import { dropIncidentes } from '../database/TblIncidentes';

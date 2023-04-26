@@ -24,7 +24,6 @@ import { postDesplazamiento } from '../services/desplazamientoServices'
 import { postIncidente } from '../services/incidenteServices'
 
 //Context
-import { RecorridosContext } from '../context/Recorrido/RecorridosContext';
 import { CatalogosContext } from '../context/Catalogos/CatalogosContext'
 
 
@@ -40,11 +39,10 @@ export const Desplazamiento = () => {
   const [horaInciado, setHoraInciado] = useState();
   const [fechaInciado, setFechaInciado] = useState();
   const [modalIncidentes, setModalIncidentes] = useState(false);
-  const [incidenteSelected, setIncidenteSelected] = useState();
+  const [, setIncidenteSelected] = useState();
   const [contadorMedio, setContadorMedio] = useState(0);
   const [fechaUltimoDesplazamiento, setFechaUltimoDesplazamiento] = useState()
 
-  const { insertarPunto, restaurar } = useContext(RecorridosContext);
   const { ctl_medios_desplazamientos, ctl_incidentes, obtenerMediosDesplazamientos, obtenerIncidentes } = useContext(CatalogosContext)
 
   const created = async () => {
@@ -157,7 +155,6 @@ export const Desplazamiento = () => {
       notificacion(mensaje, subtitulo);
 
     }
-    restaurar();
     setData([]);
     setPuntos([])
     setPosition()
@@ -251,7 +248,6 @@ export const Desplazamiento = () => {
         agrupacion_medio_desplazamiento: contadorMedio,
       };
       setPuntos([...puntos, point]);
-      insertarPunto({ uuid: uuidDesplazamiento, punto: point });
     }
   }, [position]);
 

@@ -4,8 +4,6 @@ import { catalogosReducer } from './catalogosReducer';
 import { getMediosDesplazamientos } from '../../services/mediosDesplazamientoServices';
 import { getIncidentes } from '../../services/incidenteServices';
 
-
-
 export const CatalogosContext = createContext();
 
 const catalogosInicial = {
