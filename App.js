@@ -7,7 +7,7 @@ import Toast from 'react-native-toast-message';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { PermissionsProvider } from './src/context/permissions/PermissionContext';
-import { Navigation } from './src/navigation/Navigation';
+import { Navigation } from './src/menu/Navigation';
 import { AuthProvider } from './src/context/authentication/AuthContext';
 import { CatalogosProvider } from './src/context/store/CatalogosContext';
 
