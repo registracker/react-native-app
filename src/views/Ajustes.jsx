@@ -4,7 +4,7 @@ import { useContext } from 'react';
 import { ActivityIndicator, Modal, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import { primary, styles } from '../styles/style';
 import { AuthContext } from '../context/authentication/AuthContext'
-import { CatalogosContext } from '../context/Catalogos/CatalogosContext';
+import { CatalogosContext } from '../context/store/CatalogosContext';
 import { dropMediosDesplazamientos } from '../database/TblMediosDesplazamientos';
 import { dropIncidentes } from '../database/TblIncidentes';
 import { Switch } from 'react-native-gesture-handler';

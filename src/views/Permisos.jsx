@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Image, ImageBackground, Linking, StyleSheet, Text, View } from 'react-native'
-import { PermissionContext } from '../context/permissionsAndroid/PermissionContext';
+import { PermissionContext } from '../context/permissions/PermissionContext';
 import { Button } from '@rneui/base'
 import { Loading } from '../components/Loading';
 import { styles } from '../styles/style';

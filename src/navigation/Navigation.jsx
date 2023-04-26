@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { Home } from '../views/Home';
-import { PermissionContext } from '../context/permissionsAndroid/PermissionContext';
+import { PermissionContext } from '../context/permissions/PermissionContext';
 import { Permisos } from '../views/Permisos';
 import { Login } from '../views/Login';
 import { FormularioRegistro } from '../views/FormularioRegistro';

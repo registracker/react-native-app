@@ -24,7 +24,7 @@ import { postDesplazamiento } from '../services/desplazamientoServices'
 import { postIncidente } from '../services/incidenteServices'
 
 //Context
-import { CatalogosContext } from '../context/Catalogos/CatalogosContext'
+import { CatalogosContext } from '../context/store/CatalogosContext'
 
 
 export const Desplazamiento = () => {
