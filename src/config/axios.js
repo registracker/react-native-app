@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const http_axios = async (url, params, method = 'get', data) => {
   const baseURL = API_URL||'http://45.33.119.69:8100';
+  console.log("🚀 ~ file: axios.js:8 ~ const http_axios= ~ baseURL:", baseURL+url)
 
   const headers = {
     Accept: 'application/json',

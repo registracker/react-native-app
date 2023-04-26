@@ -10,7 +10,7 @@ import {
   View,
 } from 'react-native';
 import { primary, styles } from '../styles/style';
-import { Button, Icon } from '@rneui/base';
+import { Button, CheckBox, Icon } from '@rneui/base';
 import { Input } from '@rneui/themed';
 import { register } from '../services/aurtenticacionServices';
 
@@ -26,6 +26,10 @@ export const FormularioRegistro = ({ route, navigation }) => {
   const [cargando, setCargando] = useState(false);
   const [rol, setRol] = useState();
   const [selectionRol, setSelectionRol] = useState(false);
+
+  const [checked, setChecked] = React.useState(false);
+  const toggleCheckbox = () => setChecked(!checked);
+  const viewTerminosCondiciones= () => console.log("TERMINOS Y CONDICIONES");
 
   const inputPassword = createRef();
   const inputPasswordConfirm = createRef();
@@ -147,7 +151,7 @@ export const FormularioRegistro = ({ route, navigation }) => {
   }
 
   useEffect(() => {
- 
+
     if (!email && password && passwordConfirm) {
       setEmailErrorMessage('Ingrese un correo electrónico');
       setFormInvalid(true);
@@ -157,42 +161,23 @@ export const FormularioRegistro = ({ route, navigation }) => {
       email &&
       passwordConfirm &&
       isEmail() &&
-      selectRol()
+      selectRol() && 
+      checked
     ) {
       setPasswordErrorMessage();
       setPasswordConfirmErrorMessage();
       setEmailErrorMessage();
       setFormInvalid(false);
+    }else {
+      setFormInvalid(true);
     }
-  }, [passwordConfirm, password, email, rol]);
+
+  }, [passwordConfirm, password, email, rol, checked]);
 
   useEffect(() => {
     if (rol) setSelectionRol(false);
   }, [rol]);
 
-          
-  const claveSegura = [
-    {
-      id: 1,
-      title: 'Una contraseña segura debe llevar:'
-    },
-    {
-      id: 2,
-      title: 'Una letra mayúscula'
-    },
-    {
-      id: 3,
-      title: 'Un dígito'
-    },
-    {
-      id: 4,
-      title: 'Almeno tres letras minúsculas'
-    },
-    {
-      id: 5,
-      title: 'Almeno 8 caracteres,'
-    }
-  ]
   const Item = ({ title }) => (
     <View style={{ color: 'white', fontSize: 12 }}>
       <Text style={styles.title}>{title}</Text>
@@ -309,6 +294,7 @@ export const FormularioRegistro = ({ route, navigation }) => {
               </Text>
             )}
           </View>
+          
           <View style={{ ...styles.foobar, flex: 3, marginTop: 10 }}>
             <Input
               onChangeText={setEmail}
@@ -386,6 +372,21 @@ export const FormularioRegistro = ({ route, navigation }) => {
                 keyExtractor={item => item.id}
               />
             </View> */}
+            <View>
+              <CheckBox
+                checked={checked}
+                onPress={viewTerminosCondiciones}
+                onIconPress={toggleCheckbox}
+                iconType="material-community"
+                checkedIcon="checkbox-outline"
+                uncheckedIcon={'checkbox-blank-outline'}
+                checkedColor={primary}
+                title="He leído, y acepto los términos y condiciones."
+                containerStyle={{
+                  borderRadius: 3,
+                }}
+              />
+            </View>
             <Button
               title="Registrarse"
               onPress={registrar}
@@ -397,6 +398,7 @@ export const FormularioRegistro = ({ route, navigation }) => {
               containerStyle={styles.buttonContainer}
             />
           </View>
+          
         </ScrollView>
       </ImageBackground>
     </View>
