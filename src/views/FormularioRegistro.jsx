@@ -2,6 +2,8 @@ import React, { useEffect, useState, createRef } from 'react';
 import {
   FlatList,
   ImageBackground,
+  Modal,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -29,7 +31,8 @@ export const FormularioRegistro = ({ route, navigation }) => {
 
   const [checked, setChecked] = React.useState(false);
   const toggleCheckbox = () => setChecked(!checked);
-  const viewTerminosCondiciones= () => console.log("TERMINOS Y CONDICIONES");
+  const viewTerminosCondiciones = () => console.log("TERMINOS Y CONDICIONES");
+  const [modalVisible, setModalVisible] = useState(false);
 
   const inputPassword = createRef();
   const inputPasswordConfirm = createRef();
@@ -95,7 +98,7 @@ export const FormularioRegistro = ({ route, navigation }) => {
   };
 
   const isEmail = () => {
-    if(email){
+    if (email) {
       const validRegex = /^[a-zA-Z0-9._]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
       if (!email.match(validRegex)) {
         setEmailErrorMessage('Ingrese un correo electrónico valido');
@@ -123,17 +126,17 @@ export const FormularioRegistro = ({ route, navigation }) => {
     $                         End anchor.
     */
   const isPasswordSecure = () => {
-    if(password){
+    if (password) {
 
-    const validRegex =
-      /^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8,}$/;
-    if (!password.match(validRegex)) {
-      setFormInvalid(true);
-      setPasswordErrorMessage('La contraseña debe tener mínimo una letra mayúscula, tres minúscula, un carácter especial, un dígito y mínimo ocho caracteres');
-    } else {
-      setPasswordErrorMessage();
+      const validRegex =
+        /^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8,}$/;
+      if (!password.match(validRegex)) {
+        setFormInvalid(true);
+        setPasswordErrorMessage('La contraseña debe tener mínimo una letra mayúscula, tres minúscula, un carácter especial, un dígito y mínimo ocho caracteres');
+      } else {
+        setPasswordErrorMessage();
+      }
     }
-  }
   };
 
   const cleanForm = () => {
@@ -161,14 +164,14 @@ export const FormularioRegistro = ({ route, navigation }) => {
       email &&
       passwordConfirm &&
       isEmail() &&
-      selectRol() && 
+      selectRol() &&
       checked
     ) {
       setPasswordErrorMessage();
       setPasswordConfirmErrorMessage();
       setEmailErrorMessage();
       setFormInvalid(false);
-    }else {
+    } else {
       setFormInvalid(true);
     }
 
@@ -195,12 +198,12 @@ export const FormularioRegistro = ({ route, navigation }) => {
         }}>
         <ScrollView>
           <Text style={styles.titleText}>Registro de usuario</Text>
-          <Text style={{color:'white', textAlign:'center', size: 14, marginTop:20}}>Elige un rol para tu usuario</Text>
+          <Text style={{ color: 'white', textAlign: 'center', size: 14, marginTop: 20 }}>Elige un rol para tu usuario</Text>
 
           <View
             style={{
               ...styles.body,
-              paddingTop:10,
+              paddingTop: 10,
               flex: 1,
               flexDirection: 'row',
               justifyContent: 'center',
@@ -294,7 +297,7 @@ export const FormularioRegistro = ({ route, navigation }) => {
               </Text>
             )}
           </View>
-          
+
           <View style={{ ...styles.foobar, flex: 3, marginTop: 10 }}>
             <Input
               onChangeText={setEmail}
@@ -305,7 +308,7 @@ export const FormularioRegistro = ({ route, navigation }) => {
               keyboardType="email-address"
               inputMode="email"
               textAlign="center"
-              onFocus={() => { setEmailErrorMessage()}}
+              onFocus={() => { setEmailErrorMessage() }}
               style={styles.input}
               inputContainerStyle={emailErrorMessage ? styles.inputContainerError : styles.inputContainer}
               leftIcon={emailErrorMessage ? <Icon name="information-outline" type='material-community' size={20} color='white' /> : ''}
@@ -317,7 +320,7 @@ export const FormularioRegistro = ({ route, navigation }) => {
             />
             <Input
               onChangeText={setPassword}
-              onFocus={() => { setPasswordErrorMessage()}}
+              onFocus={() => { setPasswordErrorMessage() }}
 
               value={password}
               style={styles.input}
@@ -339,10 +342,9 @@ export const FormularioRegistro = ({ route, navigation }) => {
               ref={inputPassword}
               onBlur={isPasswordSecure}
             />
-
             <Input
               onChangeText={setPasswordConfirm}
-              onFocus={() => { setPasswordConfirmErrorMessage("")}}
+              onFocus={() => { setPasswordConfirmErrorMessage("") }}
 
               value={passwordConfirm}
               style={styles.input}
@@ -365,27 +367,34 @@ export const FormularioRegistro = ({ route, navigation }) => {
               ref={inputPasswordConfirm}
               onBlur={matchPassword}
             />
-            {/* <View style={{ alignItems: 'center' }}>
-              <FlatList
-                data={claveSegura}
-                renderItem={({ item }) => <Item title={item.title} />}
-                keyExtractor={item => item.id}
-              />
-            </View> */}
-            <View>
+            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+
               <CheckBox
                 checked={checked}
                 onPress={viewTerminosCondiciones}
                 onIconPress={toggleCheckbox}
                 iconType="material-community"
-                checkedIcon="checkbox-outline"
+                checkedIcon="checkbox-marked"
                 uncheckedIcon={'checkbox-blank-outline'}
-                checkedColor={primary}
-                title="He leído, y acepto los términos y condiciones."
+                checkedColor='white'
+                // title="He leído, y acepto los términos y condiciones."
                 containerStyle={{
                   borderRadius: 3,
+                  backgroundColor: 'transparent',
                 }}
               />
+              <Text
+                style={{
+                  textAlign: 'center',
+                  color: 'white',
+                  fontSize: 14,
+                  textDecorationLine: 'underline'
+                }}
+                onPress={() => setModalVisible(true)}
+              >
+                He leído, acepto los
+                términos y condiciones
+              </Text>
             </View>
             <Button
               title="Registrarse"
@@ -398,7 +407,38 @@ export const FormularioRegistro = ({ route, navigation }) => {
               containerStyle={styles.buttonContainer}
             />
           </View>
-          
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+              setModalVisible(!modalVisible);
+            }}>
+            <View style={styles.centeredView}>
+              <View style={{
+                flex: 1
+              }}>
+                <View style={{
+                  flex: 7
+                }}>
+                  <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Términos y Condiciones</Text>
+                  <Text style={{
+                    fontSize: 11,
+                    textAlign: 'center',
+                  }}>LOREM</Text>
+                </View>
+                <View style={{
+                  flex: 0.5
+                }}>
+                  <Pressable
+                    style={[styles.button, styles.buttonClose]}
+                    onPress={() => setModalVisible(!modalVisible)}>
+                    <Text style={styles.textStyle}>Cerrar</Text>
+                  </Pressable>
+                </View>
+              </View>
+            </View>
+          </Modal>
         </ScrollView>
       </ImageBackground>
     </View>
@@ -409,10 +449,11 @@ const stylesRegistro = StyleSheet.create({
   errorStyle: {
     color: 'black',
     textAlign: 'center',
-    backgroundColor: 'white' ,
+    backgroundColor: 'white',
     borderRadius: 3,
     justifyContent: 'center',
     alignItems: 'center',
-    fontSize:14,
+    fontSize: 14,
   },
+
 });
