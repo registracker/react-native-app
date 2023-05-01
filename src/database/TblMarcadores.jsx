@@ -33,7 +33,7 @@ export const getMarcadoresDatabase = () => {
                     resolve(result);
                 },
                 () => {
-                    reject(false);
+                    reject([]);
                 },
             );
         });

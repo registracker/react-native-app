@@ -30,7 +30,7 @@ export const http_axios = async (url, params, method = 'get', data) => {
         return instance
           .get(url, params)
           .then(response => {
-            resolve(response.data);
+            resolve({ data: response.data, status: response.status});
           })
           .catch(err => {
             reject(err.response);

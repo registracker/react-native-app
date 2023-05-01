@@ -15,8 +15,8 @@ const getIncidentes = async () => {
   //GET DATA OF BACKEND IF YOU DO NOT FIND DATA FROM SQLITE
   let data = null;
   const response = await http_axios('/api/incidentes');
-
   data = response.data;
+
   if (data) {
     const inserting_incidentes = data.map(item => {
       return `(${item.id}, '${item.nombre}', '${item.icono}'),`;

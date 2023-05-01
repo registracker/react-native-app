@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, Modal } from 'react-native';
 import { FAB, Icon, SpeedDial } from '@rneui/base';
 import { format } from 'date-fns';
 import Geolocation from 'react-native-geolocation-service';
@@ -25,6 +25,9 @@ import { postIncidente } from '../services/incidenteServices'
 
 //Context
 import { CatalogosContext } from '../context/store/CatalogosContext'
+import { MarcadorModalComponent } from '../components/MarcadorModalComponent';
+import { Pressable } from 'react-native';
+import { createTableMarcadores } from '../database/TblMarcadores';
 
 
 export const Desplazamiento = () => {
@@ -42,6 +45,7 @@ export const Desplazamiento = () => {
   const [, setIncidenteSelected] = useState();
   const [contadorMedio, setContadorMedio] = useState(0);
   const [fechaUltimoDesplazamiento, setFechaUltimoDesplazamiento] = useState()
+  const [modalVisible, setModalVisible] = useState(false);
 
   const { ctl_medios_desplazamientos, ctl_incidentes, obtenerMediosDesplazamientos, obtenerIncidentes } = useContext(CatalogosContext)
 
@@ -233,6 +237,7 @@ export const Desplazamiento = () => {
     createTableMediosDesplazamiento();
     createTableIncidentes();
     createTableReporteIncidentes();
+    createTableMarcadores();
     created();
   }, []);
 
@@ -265,6 +270,11 @@ export const Desplazamiento = () => {
         data={ctl_incidentes.data}
         enviar={enviarIncidenteModal}
         uuid={uuidDesplazamiento}
+      />
+      <MarcadorModalComponent
+        open={modalVisible}
+        setOpen={setModalVisible}
+        getUbicacion={getUbicacionActual}
       />
       <View style={{ flex: 1, marginHorizontal: '12%' }}>
         {
@@ -362,6 +372,12 @@ export const Desplazamiento = () => {
         onClose={() => setOpen(!open)}
         color={styles.primary}>
         <SpeedDial.Action
+          title="Marcador"
+          icon={stylesDesplazamiento.iconoMarcador}
+          color={styles.primary}
+          onPress={()=>setModalVisible(!modalVisible)}
+        />
+        <SpeedDial.Action
           title="Incidente"
           icon={stylesDesplazamiento.iconoIncidente}
           color={styles.primary}
@@ -414,6 +430,11 @@ const stylesDesplazamiento = StyleSheet.create({
   },
   iconoIncidente: {
     name: 'marker-check',
+    color: 'white',
+    type: 'material-community',
+  },
+  iconoMarcador: {
+    name: 'map-marker-check',
     color: 'white',
     type: 'material-community',
   },

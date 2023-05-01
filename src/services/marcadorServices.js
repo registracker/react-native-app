@@ -10,23 +10,19 @@ const getMarcadores = async () => {
   }
 
   //GET DATA OF BACKEND IF YOU DO NOT FIND DATA FROM SQLITE
-  let data = null
-  do {
-    const response  = await http_axios('/api/marcadores');
-    data = response.data;
-    if (data) {
-      const inserting_marcadores = data.map(item => {
-        return `(${item.id}, '${item.nombre}', '${item.icono}'),`;
-      });
+  const response = await http_axios('/api/marcadores');
+  const {data, status} = response.data;
+  if (data) {
+    const inserting_marcadores = data.map(item => {
+      return `(${item.id}, '${item.nombre}', '${item.icono}'),`;
+    });
 
-      const result = await storeCatalogoMarcadores(
-        inserting_marcadores.join(' '),
-      );
-      if (result.rowsAffected === 1) {
-      }
+    const result = await storeCatalogoMarcadores(
+      inserting_marcadores.join(' '),
+    );
+    if (result.rowsAffected === 1) {
     }
   }
-  while (!data);
 
   return data;
 };

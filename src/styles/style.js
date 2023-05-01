@@ -177,7 +177,7 @@ export const styles = StyleSheet.create({
   modalView:{
     flex: 2, 
     marginHorizontal: 20,
-    justifyContent: 'center', 
+    justifyContent: 'center',
   },
   modalItems: { flex: 2, justifyContent: 'center', alignContent: 'center' },
   iconos: {
@@ -194,7 +194,6 @@ export const styles = StyleSheet.create({
     height: 80,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 10,
     borderRadius: 100,
     backgroundColor: 'white',
     borderColor: primary,

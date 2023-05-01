@@ -7,8 +7,8 @@ import { Input } from '@rneui/themed'
 
 export const Login = () => {
 
-  const [email, setEmail] = useState()
-  const [password, setPassword] = useState();
+  const [email, setEmail] = useState("developer@gmail.com")
+  const [password, setPassword] = useState("password");
   const [cargando, setCargando] = useState(false)
   const [validLogin, setvalidLogin] = useState(false)
   const [emailErrorMessage, setEmailErrorMessage] = useState();
