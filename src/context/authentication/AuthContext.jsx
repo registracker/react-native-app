@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
 
         try {
             const response = await http_axios('/api/sanctum/token', params, 'post');
-            const token = response?.token;
+            const token = response.data?.token;
             
             if (token){
                 dispatch({ type: 'signIn', payload: { token } });

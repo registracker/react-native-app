@@ -40,7 +40,7 @@ export const http_axios = async (url, params, method = 'get', data) => {
         return instance
           .post(url, {...params, ...data})
           .then(response => {
-            resolve(response.data);
+            resolve({ data: response.data, status: response.status });
           })
           .catch(err => {
             reject(err);

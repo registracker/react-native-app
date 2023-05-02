@@ -28,6 +28,7 @@ import { CatalogosContext } from '../context/store/CatalogosContext'
 import { MarcadorModalComponent } from '../components/MarcadorModalComponent';
 import { Pressable } from 'react-native';
 import { createTableMarcadores } from '../database/TblMarcadores';
+import { createTableReporteMarcador } from '../database/TblReporteMarcador';
 
 
 export const Desplazamiento = () => {
@@ -238,6 +239,7 @@ export const Desplazamiento = () => {
     createTableIncidentes();
     createTableReporteIncidentes();
     createTableMarcadores();
+    createTableReporteMarcador()
     created();
   }, []);
 

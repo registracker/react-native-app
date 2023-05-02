@@ -3,17 +3,17 @@ import React, { useEffect, useState } from 'react'
 import { FlatList, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { primary, styles } from '../styles/style';
 import { Input } from '@rneui/themed';
-import Geolocation from 'react-native-geolocation-service';
 
 
 // Import services
 import { getLevantamiento, postLevantamiento } from '../services/levantamientoServices'
 import { getMarcadores } from '../services/marcadorServices'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { compareAsc } from 'date-fns';
+import { compareAsc, format } from 'date-fns';
+import { getUbicacionActual } from '../utils/functions';
 
 export const MarcadorModalComponent = ({ open, setOpen, getUbicacion }) => {
-    const [levantamiento, setLevantamiento] = useState("ad33-8d16-7c06")
+    const [levantamiento, setLevantamiento] = useState("c338-b3cb-05d2")
     // const [levantamiento, setLevantamiento] = useState("1e57-ea66-dabb")
     const [levantamientoErrors, setLevantamientoErrors] = useState("")
     const [cargando, setCargando] = useState(false)
@@ -23,23 +23,6 @@ export const MarcadorModalComponent = ({ open, setOpen, getUbicacion }) => {
     const [descripcion, setDescripcion] = useState()
     const [enviar, setEnviar] = useState(true)
 
-    const getUbicacionActual = () => {
-        return new Promise((resolve, reject) => {
-            Geolocation.getCurrentPosition(
-                position => {
-                    resolve(position);
-                },
-                error => {
-                    reject(error);
-                },
-                {
-                    enableHighAccuracy: true,
-                    distanceFilter: 0,
-                },
-            );
-        });
-    };
-
     const getMarcadoresView = async () => {
         const response = await getMarcadores()
         if (response.length > 0) {
@@ -48,11 +31,11 @@ export const MarcadorModalComponent = ({ open, setOpen, getUbicacion }) => {
     }
 
     useEffect(() => {
-      if(selected){
-        setEnviar(false)
-      }
+        if (selected) {
+            setEnviar(false)
+        }
     }, [selected])
-    
+
 
     const unirseLevantamiento = async () => {
         setCargando(true)
@@ -69,26 +52,24 @@ export const MarcadorModalComponent = ({ open, setOpen, getUbicacion }) => {
         }
     }
 
-    const enviarMarcador = async() =>{
+    const enviarMarcador = async () => {
         const ubicacion = await getUbicacionActual()
         const levantamiento = await AsyncStorage.getItem('levantamiento')
-        const { id, codigo } = JSON.parse(levantamiento);
+        const { codigo } = JSON.parse(levantamiento);
 
-        const data = {
-            id_usuario: 1,
-            id_levantamiento: id,
+        const datos = {
+            codigo,
             id_marcador: selected.id,
             latitud: ubicacion.coords.latitude,
             longitud: ubicacion.coords.longitude,
             altitud: ubicacion.coords.altitude,
-            comentario: descripcion? descripcion : ''
+            comentario: descripcion ? descripcion : '',
+            fecha_reporte: format(new Date(), 'dd-MM-yyyy hh:mm:ss'),
         }
-        console.log("🚀 ~ file: MarcadorModalComponent.jsx:90 ~ enviarMarcador ~ data:", data)
-        // await postLevantamiento(data)
+        await postLevantamiento(datos)
         setSelected()
         setDescripcion("")
         setEnviar(true)
-
     }
 
     const cerrarLevantamiento = async () => {
@@ -146,8 +127,6 @@ export const MarcadorModalComponent = ({ open, setOpen, getUbicacion }) => {
             }
         }
         vericarLevantimiento()
-
-
     }, [])
 
 
@@ -169,6 +148,7 @@ export const MarcadorModalComponent = ({ open, setOpen, getUbicacion }) => {
                                 type='material-community'
                                 size={30}
                                 onPress={cerrarModal}
+                                suppressHighlighting={true}
                             />
                             <Text style={{ fontSize: 15 }}>
                                 Volver
@@ -183,6 +163,7 @@ export const MarcadorModalComponent = ({ open, setOpen, getUbicacion }) => {
                                     type='font-awesome'
                                     size={30}
                                     onPress={cerrarLevantamiento}
+                                    suppressHighlighting={true}
                                 />
                                 <Text style={{ fontSize: 15 }}>
                                     Cerrar
@@ -199,20 +180,20 @@ export const MarcadorModalComponent = ({ open, setOpen, getUbicacion }) => {
                                         <Text style={styles.modalTextTitle}>
                                             Seleccione un marcador
                                         </Text>
-                                            <FlatList
-                                                data={marcadores}
-                                                renderItem={renderItem}
-                                                keyExtractor={item => item.id}
-                                                numColumns='3'
-                                            />
+                                        <FlatList
+                                            data={marcadores}
+                                            renderItem={renderItem}
+                                            keyExtractor={item => item.id}
+                                            numColumns='3'
+                                        />
                                         <Text style={styles.modalTextSubtitle}>
                                             Agregar descripción (Opcional)
                                         </Text>
-                                        <View style={{ flex: 0.4,  width: '80%' }}>
+                                        <View style={{ flex: 0.4, width: '80%' }}>
                                             <TextInput
                                                 multiline={true}
                                                 numberOfLines={8}
-                                                style={{ borderWidth: 2, borderColor: primary, borderRadius: 5}}
+                                                style={{ borderWidth: 2, borderColor: primary, borderRadius: 5 }}
                                                 onChangeText={setDescripcion}
                                                 value={descripcion}
                                             />
@@ -246,14 +227,9 @@ export const MarcadorModalComponent = ({ open, setOpen, getUbicacion }) => {
 
                     </View>
                     <View style={stylesMarcador.footer}>
-                        {/* <Pressable
-                            style={[styles.button, styles.buttonClose]}
-                            onPress={() => setOpen(!open)}>
-                            <Text style={styles.textStyle}>Hide Modal</Text>
-                        </Pressable> */}
                         <Button
                             title={levantamientoActivo ? 'Enviar' : 'Unirse'}
-                            onPress={levantamientoActivo? enviarMarcador : unirseLevantamiento}
+                            onPress={levantamientoActivo ? enviarMarcador : unirseLevantamiento}
                             buttonStyle={styles.buttonPrimary}
                             disabledStyle={styles.buttonPrimaryDisabled}
                             loading={cargando}

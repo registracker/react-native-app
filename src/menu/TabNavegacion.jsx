@@ -6,6 +6,7 @@ import { Ajustes } from '../views/Ajustes';
 import { Icon, Image } from '@rneui/base';
 import { styles } from '../styles/style';
 import { ImageBackground } from 'react-native';
+import { Registros } from '../views/Registros';
 
 const Tab = createBottomTabNavigator();
 
@@ -42,8 +43,8 @@ export const TabNavegacion = () => {
                 }}
             />
             <Tab.Screen
-                name="ListadoDesplazamiento"
-                component={ListadoDesplazamiento}
+                name="Registros"
+                component={Registros}
                 options={{
                     title: 'Registros',
                     tabBarIcon: ({ color, size }) => (

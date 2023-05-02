@@ -23,6 +23,7 @@ export const Ajustes = () => {
 
   const [checkOpcionDesplazamiento, setCheckOpcionDesplazamiento] = useState()
   const [checkOpcionIncidente, setCheckOpcionIncidente] = useState()
+  const [checkOpcionMarcador, setCheckOpcionMarcador] = useState()
 
   const { obtenerMediosDesplazamientos, obtenerIncidentes } = useContext(CatalogosContext)
   const [fecha] = useState(format(new Date(), 'yyyy'))
@@ -57,6 +58,12 @@ export const Ajustes = () => {
     const estado = value ? 'activo' : 'inactivo'
     await AsyncStorage.setItem('opcion-incidente', estado)
     setCheckOpcionIncidente(value)
+  }
+
+  const sincronizarMarcador = async (value) => {
+    const estado = value ? 'activo' : 'inactivo'
+    await AsyncStorage.setItem('opcion-marcador', estado)
+    setCheckOpcionMarcador(value)
   }
 
   const getEstadoOpciones = async () => {
@@ -143,6 +150,22 @@ export const Ajustes = () => {
       </ListItem>
     )
   }
+  const OpcionMarcador = () => {
+    return (
+      <ListItem>
+        <ListItem.Content>
+          <ListItem.Title>Envió automático de registros de marcadores</ListItem.Title>
+        </ListItem.Content>
+        <Switch
+          trackColor={{ false: '#d8d8db', true: '#d8d8db' }}
+          thumbColor={checkOpcionMarcador ? primary : '#f4f3f4'}
+          value={checkOpcionMarcador}
+          onValueChange={(value) => sincronizarMarcador(value)}
+        />
+
+      </ListItem>
+    )
+  }
 
   return (
     <View style={styles.container}>
@@ -150,6 +173,7 @@ export const Ajustes = () => {
         <SincronizarList />
         <OpcionDesplazamiento />
         <OpcionIncidente />
+        <OpcionMarcador />
       </View>
       <View style={styles.foobar}>
         <Button
@@ -167,10 +191,10 @@ export const Ajustes = () => {
           }
           iconRight
         />
-        <View style={{marginTop:10, justifyContent:'center', alignContent:'center'}}>
+        <View style={{ marginTop: 10, justifyContent: 'center', alignContent: 'center' }}>
 
-                    <Text style={{color: 'gray', fontSize: 14, fontWeight: 'normal', textAlign:'center' }}>© { fecha } Universidad de El Salvador.</Text>
-                    <Text style={{ color: 'gray', fontSize: 14, fontWeight: 'normal', textAlign:'center' }}>Todos los derechos reservados</Text>
+          <Text style={{ color: 'gray', fontSize: 14, fontWeight: 'normal', textAlign: 'center' }}>© {fecha} Universidad de El Salvador.</Text>
+          <Text style={{ color: 'gray', fontSize: 14, fontWeight: 'normal', textAlign: 'center' }}>Todos los derechos reservados</Text>
         </View>
 
       </View>

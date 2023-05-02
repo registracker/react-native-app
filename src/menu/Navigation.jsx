@@ -8,6 +8,10 @@ import { Login } from '../views/Login';
 import { FormularioRegistro } from '../views/FormularioRegistro';
 import { TabNavegacion } from './TabNavegacion';
 import { AuthContext } from '../context/authentication/AuthContext';
+import { ListadoDesplazamiento } from '../views/ListadoDesplazamiento';
+import { primary } from '../styles/style';
+import { ListadoIncidentes } from '../views/ListadoIncidentes';
+import { ListadoMarcadores } from '../views/ListadoMarcadores';
 
 const Stack = createNativeStackNavigator();
 
@@ -25,6 +29,24 @@ const options = {
 
     //   cardOverlayEnabled: true
 }
+
+const optionsView = {
+    headerMode: 'float',
+    headerTintColor: 'white',
+    headerStyle: {
+        backgroundColor: primary,
+        elevation: 0,
+    },
+    headerBackAccessibilityLabel: 'Atrás',
+    headerBackTitle: 'Atrás',
+    headerBackTitleVisible: false,
+    //   cardOverlayEnabled: true
+    headerShown: true,
+    headerTitleStyle:{
+        fontSize: 22
+    }
+}
+
 
 export const Navigation = () => {
 
@@ -48,6 +70,18 @@ export const Navigation = () => {
                             (autenticado === 'autenticado')
                                 ? <Stack.Group >
                                     <Stack.Screen name='TabNavegacion' component={TabNavegacion} />
+                                    <Stack.Screen name='ListadoDesplazamiento' component={ListadoDesplazamiento} options={{
+                                        title: 'Mis desplazamientos',
+                                        ...optionsView
+                                    }} />
+                                    <Stack.Screen name='ListadoIncidentes' component={ListadoIncidentes} options={{
+                                        title: 'Mis desplazamientos',
+                                        ...optionsView
+                                    }} />
+                                    <Stack.Screen name='ListadoMarcadores' component={ListadoMarcadores} options={{
+                                        title: 'Mis desplazamientos',
+                                        ...optionsView
+                                    }} />
                                 </Stack.Group>
                                 : <Stack.Group >
                                     <Stack.Screen name='Home' component={Home} />

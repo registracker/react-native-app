@@ -11,11 +11,13 @@ export const Home = ({ navigation }) => {
     }, [])
 
     const getOptionEnvioAutomatico = async () => {
-        const desplazamiento =  await AsyncStorage.getItem('opcion-desplazamiento');
-        const incidente =       await AsyncStorage.getItem('opcion-incidente');
-        
-        if (!desplazamiento)    await AsyncStorage.setItem('opcion-desplazamiento', 'activo')
-        if (!incidente)         await AsyncStorage.setItem('opcion-incidente', 'activo')
+        const desplazamiento = await AsyncStorage.getItem('opcion-desplazamiento');
+        const incidente = await AsyncStorage.getItem('opcion-incidente');
+        const marcador = await AsyncStorage.getItem('opcion-marcador');
+
+        if (!desplazamiento) await AsyncStorage.setItem('opcion-desplazamiento', 'activo')
+        if (!incidente) await AsyncStorage.setItem('opcion-incidente', 'activo')
+        if (!marcador) await AsyncStorage.setItem('opcion-marcador', 'activo')
     }
 
     return (
@@ -26,7 +28,7 @@ export const Home = ({ navigation }) => {
                     <Image
                         style={{ ...styles.image, width: '100%', height: '100%' }}
                         source={require('../img/logo.png')} />
-                    <Text style={{...styles.titleText, marginBottom:50}}>REGISTRACKER</Text>
+                    <Text style={{ ...styles.titleText, marginBottom: 50 }}>REGISTRACKER</Text>
                 </View>
                 <View style={
                     styles.foobar
