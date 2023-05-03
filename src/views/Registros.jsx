@@ -32,7 +32,8 @@ export const Registros = () => {
         <View style={stylesRegistros.body}>
             {
                 menu.map(item => (
-                    <TouchableOpacity 
+                    <TouchableOpacity
+                    key={item.toGo}
                     style={stylesRegistros.card}
                     onPress={() => navigation.navigate(item.toGo)}
                     >

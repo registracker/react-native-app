@@ -60,6 +60,7 @@ export const MarcadorModalComponent = ({ open, setOpen, getUbicacion }) => {
         const datos = {
             codigo,
             id_marcador: selected.id,
+            nombre: selected.nombre,
             latitud: ubicacion.coords.latitude,
             longitud: ubicacion.coords.longitude,
             altitud: ubicacion.coords.altitude,

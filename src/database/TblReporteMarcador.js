@@ -7,6 +7,8 @@ export const createTableReporteMarcador = () => {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             codigo TEXT, 
             id_marcador INTEGER,
+            nombre_marcador TEXT,
+            icono TEXT,
             latitud TEXT,
             longitud TEXT,
             altitud TEXT, 
@@ -48,10 +50,12 @@ export const storeReporteMarcador = data => {
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
-        'INSERT INTO tbl_reporte_marcador (codigo, id_marcador, latitud, longitud, altitud, comentario, fecha_reporte, enviado) VALUES (?, ?, ?, ?, ?, ?, ?, ?);',
+        'INSERT INTO tbl_reporte_marcador (codigo, id_marcador, nombre_marcador, icono, latitud, longitud, altitud, comentario, fecha_reporte, enviado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
         [
           data.codigo,
           data.id_marcador,
+          data.nombre,
+          data.icono,
           data.latitud,
           data.longitud,
           data.altitud,
@@ -105,3 +109,44 @@ export const enviarMarcador = id => {
     });
   });
 };
+
+export const getLevantamiento = () => {
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'SELECT codigo FROM tbl_reporte_marcador GROUP BY codigo',
+        [],
+        (transaction, res) => {
+          let len = res.rows.length;
+          let result = [];
+
+          if (len > 0) {
+            result = res.rows.raw();
+          }
+          resolve(result);
+        },
+        () => {
+          reject(false);
+        },
+      );
+    });
+  });
+};
+
+export const removeReporteMarcador = () => {
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        `DELETE FROM tbl_reporte_marcador;`,
+        [],
+        (sqlTxn, result) => {
+          resolve(result)
+        },
+        error => {
+          reject(error)
+        },
+      );
+    });
+
+  });
+}

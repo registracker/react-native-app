@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ToastAndroid } from 'react-native';
 import { deleteReporteIncidentes } from '../../database/TblIncidentes';
 import { removeDesplazamientos } from '../../database/TblDesplazamientos';
+import { removeReporteMarcador } from '../../database/TblReporteMarcador';
 
 
 
@@ -60,6 +61,7 @@ export const AuthProvider = ({ children }) => {
         try {
             await http_axios('/api/token', null, 'delete', null)
             await deleteReporteIncidentes();
+            await removeReporteMarcador();
             await removeDesplazamientos();
         } catch (error) {
             ToastAndroid.showWithGravity(
