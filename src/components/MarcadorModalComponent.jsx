@@ -13,8 +13,7 @@ import { compareAsc, format } from 'date-fns';
 import { getUbicacionActual } from '../utils/functions';
 
 export const MarcadorModalComponent = ({ open, setOpen, getUbicacion }) => {
-    const [levantamiento, setLevantamiento] = useState("c338-b3cb-05d2")
-    // const [levantamiento, setLevantamiento] = useState("1e57-ea66-dabb")
+    const [levantamiento, setLevantamiento] = useState("e7a6-aa6a-cbf4")
     const [levantamientoErrors, setLevantamientoErrors] = useState("")
     const [cargando, setCargando] = useState(false)
     const [marcadores, setMarcadores] = useState([])
@@ -61,11 +60,13 @@ export const MarcadorModalComponent = ({ open, setOpen, getUbicacion }) => {
             codigo,
             id_marcador: selected.id,
             nombre: selected.nombre,
+            icono: selected.icono,
             latitud: ubicacion.coords.latitude,
             longitud: ubicacion.coords.longitude,
             altitud: ubicacion.coords.altitude,
             comentario: descripcion ? descripcion : '',
             fecha_reporte: format(new Date(), 'dd-MM-yyyy hh:mm:ss'),
+            enviado: 0
         }
         await postLevantamiento(datos)
         setSelected()

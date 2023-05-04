@@ -1,12 +1,12 @@
 /* eslint-disable prettier/prettier */
-import axios from 'axios';
+import axios from 'axios'; 
 import {API_URL} from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const http_axios = async (url, params, method = 'get', data) => {
   const baseURL = API_URL||'http://45.33.119.69:8100';
-  console.log("🚀 ~ file: axios.js:8 ~ consthttp_axios= ~ baseURL:", baseURL)
-  
+  console.log("🚀 ~ ", method, baseURL+url)
+
   const headers = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
@@ -14,7 +14,7 @@ export const http_axios = async (url, params, method = 'get', data) => {
   };
 
   const token = await AsyncStorage.getItem('token');
-  
+
   if (token !== null) {
     headers.Authorization = `Bearer ${token}`;
   }
