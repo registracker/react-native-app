@@ -61,7 +61,6 @@ export const Ajustes = () => {
   }
 
   const sincronizarMarcador = async (value) => {
-    console.log("🚀 ~ file: Ajustes.jsx:64 ~ sincronizarMarcador ~ value:", value)
     const estado = value ? 'activo' : 'inactivo'
     await AsyncStorage.setItem('opcion-marcador', estado)
     setCheckOpcionMarcador(value)

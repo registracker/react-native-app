@@ -25,7 +25,6 @@ const postLevantamiento = async (datos, automatico = true) => {
   try {
     if (automatico) {
       const opcionMarcador = await AsyncStorage.getItem('opcion-marcador');
-      console.log('🚀 ~ file: levantamientoServices.js:27 ~ postLevantamiento ~ opcionMarcador:', opcionMarcador);
       if (opcionMarcador === 'activo') {
         const { data, status } = await http_axios(
           '/api/reporte-marcadores',
