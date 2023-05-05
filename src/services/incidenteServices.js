@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import {http_axios} from '../config/axios';
+import { http_axios } from '../config/axios';
 import {
   getIncidentesDatabase,
   storeCatalogoIncidentes,
@@ -13,9 +13,8 @@ const getIncidentes = async () => {
   }
 
   //GET DATA OF BACKEND IF YOU DO NOT FIND DATA FROM SQLITE
-  let data = null;
   const response = await http_axios('/api/incidentes');
-  data = response.data;
+  const  { data } = response.data;
 
   if (data) {
     const inserting_incidentes = data.map(item => {

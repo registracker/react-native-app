@@ -61,6 +61,7 @@ export const Ajustes = () => {
   }
 
   const sincronizarMarcador = async (value) => {
+    console.log("🚀 ~ file: Ajustes.jsx:64 ~ sincronizarMarcador ~ value:", value)
     const estado = value ? 'activo' : 'inactivo'
     await AsyncStorage.setItem('opcion-marcador', estado)
     setCheckOpcionMarcador(value)
@@ -72,6 +73,9 @@ export const Ajustes = () => {
 
     const incidente = await AsyncStorage.getItem('opcion-incidente');
     incidente === 'activo' ? setCheckOpcionIncidente(true) : setCheckOpcionIncidente(false)
+
+    const marcador = await AsyncStorage.getItem('opcion-marcador');
+    marcador === 'activo' ? setCheckOpcionMarcador(true) : setCheckOpcionMarcador(false)
   }
 
   useEffect(() => {

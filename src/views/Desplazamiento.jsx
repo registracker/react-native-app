@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, Modal } from 'react-native';
 import { FAB, Icon, SpeedDial } from '@rneui/base';
 import { format } from 'date-fns';
@@ -26,7 +26,6 @@ import { postIncidente } from '../services/incidenteServices'
 //Context
 import { CatalogosContext } from '../context/store/CatalogosContext'
 import { MarcadorModalComponent } from '../components/MarcadorModalComponent';
-import { Pressable } from 'react-native';
 import { createTableMarcadores } from '../database/TblMarcadores';
 import { createTableReporteMarcador } from '../database/TblReporteMarcador';
 
@@ -55,29 +54,6 @@ export const Desplazamiento = () => {
     await obtenerIncidentes()
   };
 
-  const getLocation = () => {
-    setData([])
-    setViajeIniciado(true);
-    setUuidDesplazamiento(uuid.v4());
-    setFechaHoraInciado(new Date());
-
-
-    Geolocation.getCurrentPosition(
-      position => {
-        setPosition(position);
-        setData([...data, position]);
-      },
-      error => {
-        // See error code charts below.
-      },
-      {
-        enableHighAccuracy: true,
-        distanceFilter: 0,
-      },
-    );
-
-    return position;
-  };
   const IniciarDesplazamiento = async () => {
     setViajeIniciado(true);
     setUuidDesplazamiento(uuid.v4());
@@ -169,8 +145,19 @@ export const Desplazamiento = () => {
     setFechaUltimoDesplazamiento(format(new Date(), 'PPPP p'))
   };
 
-  const openModalIncidentes = async () => {
+  /**
+  * Abrir Modal de ingreso de incidentes
+  */
+  const openModalIncidentes = () => {
     setModalIncidentes(true);
+    setOpen(false);
+  };
+  
+  /**
+   * Abrir Modal de ingreso de marcadores y levantamientos
+   */
+  const openModalMarcadores = () => {
+    setModalVisible(true);
     setOpen(false);
   };
 
@@ -214,8 +201,6 @@ export const Desplazamiento = () => {
         await postIncidente(data)
         await enviarIncidente(response.insertId)
       }
-
-
 
       const mensaje = 'Incidente registrado';
       const subtitulo = `${data.nombre} registrado la fecha de ${data.fecha_reporte}`;
@@ -377,7 +362,7 @@ export const Desplazamiento = () => {
           title="Marcador"
           icon={stylesDesplazamiento.iconoMarcador}
           color={styles.primary}
-          onPress={()=>setModalVisible(!modalVisible)}
+          onPress={openModalMarcadores}
         />
         <SpeedDial.Action
           title="Incidente"

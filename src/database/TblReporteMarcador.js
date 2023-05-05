@@ -91,7 +91,7 @@ export const deleteReporteMarcador = id => {
   });
 };
 
-export const enviarMarcador = id => {
+export const actualizarMarcador = id => {
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(

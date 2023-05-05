@@ -71,15 +71,15 @@ export const Navigation = () => {
                                 ? <Stack.Group >
                                     <Stack.Screen name='TabNavegacion' component={TabNavegacion} />
                                     <Stack.Screen name='ListadoDesplazamiento' component={ListadoDesplazamiento} options={{
-                                        title: 'Mis desplazamientos',
+                                        title: 'Listado de desplazamientos',
                                         ...optionsView
                                     }} />
                                     <Stack.Screen name='ListadoIncidentes' component={ListadoIncidentes} options={{
-                                        title: 'Mis desplazamientos',
+                                        title: 'Listado de incidentes',
                                         ...optionsView
                                     }} />
                                     <Stack.Screen name='ListadoMarcadores' component={ListadoMarcadores} options={{
-                                        title: 'Mis desplazamientos',
+                                        title: 'Listado de marcadores',
                                         ...optionsView
                                     }} />
                                 </Stack.Group>

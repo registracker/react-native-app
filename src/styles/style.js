@@ -63,7 +63,7 @@ export const styles = StyleSheet.create({
   input: {
     height: 40,
     width: '80%',
-    paddingBottom:8,
+    paddingBottom: 8,
     color: 'white',
   },
   inputContainer: {
@@ -91,12 +91,12 @@ export const styles = StyleSheet.create({
     width: '80%',
     borderRadius: 5,
     borderColor: primary,
-    paddingBottom:0,
+    paddingBottom: 0,
     color: 'white',
   },
   errorStyle: {
-    fontSize:12
-  }, 
+    fontSize: 12
+  },
   buttonPrimary: {
     backgroundColor: primary,
     borderRadius: 3,
@@ -136,22 +136,22 @@ export const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 100,
     backgroundColor: 'white',
-    borderColor:primary,
+    borderColor: primary,
     borderWidth: 5,
   },
   roundButtonCatalogos: {
     justifyContent: 'flex-start',
     alignItems: 'center',
-    margin:8,
+    margin: 8,
     height: 90,
     width: 90,
   },
   centeredView: {
-    flex:1,
+    flex: 1,
     justifyContent: 'space-between',
     alignItems: 'center',
     // backgroundColor: 'rgba(0, 0, 0, 0.8)',
-    backgroundColor:'white',
+    backgroundColor: 'white',
   },
   textStyle: {
     color: 'black',
@@ -160,22 +160,24 @@ export const styles = StyleSheet.create({
   },
   modalText: {
     color: 'black',
-    textAlign:'center',
+    textAlign: 'center',
+    width: '100%'
+
   },
   modalTextTitle: {
     fontSize: 30,
     color: 'black',
-    textAlign:'center',
+    textAlign: 'center',
     fontWeight: 'bold',
   },
   modalTextSubtitle: {
     color: 'gray',
-    textAlign:'center',
+    textAlign: 'center',
     fontSize: 15,
     fontWeight: 'bold',
   },
-  modalView:{
-    flex: 2, 
+  modalView: {
+    flex: 2,
     marginHorizontal: 20,
     justifyContent: 'center',
   },

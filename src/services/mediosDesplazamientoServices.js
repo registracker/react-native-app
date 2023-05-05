@@ -11,9 +11,9 @@ const getMediosDesplazamientos = async () => {
   if (medios.length > 0) return medios;
 
   //GET DATA OF BACKEND IF YOU DO NOT FIND DATA FROM SQLITE
-  let data = null;
+  // let data = null;
   const response = await http_axios('/api/medios-desplazamiento');
-  data = response.data;
+  const {data} = response.data;
 
   if (data) {
     const inserting_medios = data.map(item => {

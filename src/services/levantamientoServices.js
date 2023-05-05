@@ -2,7 +2,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { http_axios } from '../config/axios';
 import {
-  enviarMarcador,
+  actualizarMarcador,
   storeReporteMarcador,
 } from '../database/TblReporteMarcador';
 
@@ -21,15 +21,29 @@ const getLevantamiento = async codigo => {
   }
 };
 
-const postLevantamiento = async datos => {
+const postLevantamiento = async (datos, automatico = true) => {
   try {
-    if(datos?.enviado === 1 ){
-      return;
-    }
-    await storeReporteMarcador({ ...datos, enviado: 0 });
-    const opcionMarcador = await AsyncStorage.getItem('opcion-marcador');
-    if (opcionMarcador === 'inactivo') {
-      return;
+    if (automatico) {
+      const opcionMarcador = await AsyncStorage.getItem('opcion-marcador');
+      console.log('🚀 ~ file: levantamientoServices.js:27 ~ postLevantamiento ~ opcionMarcador:', opcionMarcador);
+      if (opcionMarcador === 'activo') {
+        const { data, status } = await http_axios(
+          '/api/reporte-marcadores',
+          null,
+          'post',
+          datos,
+        );
+        if (status === 201) {
+          if (datos?.id) {
+            await actualizarMarcador(datos.id);
+          } else {
+            await storeReporteMarcador({ ...datos, enviado: 1 });
+          }
+          return;
+        }
+      } else {
+        await storeReporteMarcador(datos);
+      }
     } else {
       const { data, status } = await http_axios(
         '/api/reporte-marcadores',
@@ -37,8 +51,9 @@ const postLevantamiento = async datos => {
         'post',
         datos,
       );
+
       if (status === 201) {
-        await enviarMarcador(datos.id);
+        await actualizarMarcador(datos.id);
       }
     }
 
