@@ -13,7 +13,7 @@ import { compareAsc, format } from 'date-fns';
 import { getUbicacionActual } from '../utils/functions';
 
 export const MarcadorModalComponent = ({ open, setOpen, getUbicacion }) => {
-    const [levantamiento, setLevantamiento] = useState("e7a6-aa6a-cbf4")
+    const [levantamiento, setLevantamiento] = useState("b66f-8f76-0ba0")
     const [levantamientoErrors, setLevantamientoErrors] = useState("")
     const [cargando, setCargando] = useState(false)
     const [marcadores, setMarcadores] = useState([])
@@ -52,7 +52,7 @@ export const MarcadorModalComponent = ({ open, setOpen, getUbicacion }) => {
     }
 
     const enviarMarcador = async () => {
-        const ubicacion = await getUbicacionActual()        
+        const ubicacion = await getUbicacionActual()
         const levantamiento = await AsyncStorage.getItem('levantamiento')
         const { codigo } = JSON.parse(levantamiento);
         setCargando(true)
@@ -133,8 +133,8 @@ export const MarcadorModalComponent = ({ open, setOpen, getUbicacion }) => {
 
 
     return (
-        <View>
-            <ScrollView>
+        <ScrollView>
+            <View>
 
                 <Modal
                     animationType="slide"
@@ -159,7 +159,6 @@ export const MarcadorModalComponent = ({ open, setOpen, getUbicacion }) => {
                             </View>
                             {
                                 levantamientoActivo &&
-
                                 <View style={{ width: 110, minHeight: 60, alignItems: 'center' }}>
                                     <Icon
                                         name='chain-broken'
@@ -178,7 +177,7 @@ export const MarcadorModalComponent = ({ open, setOpen, getUbicacion }) => {
                             {
                                 levantamientoActivo ?
                                     <>
-                                        <View style={{ flex: 1, alignItems: 'center', width: '100%' }}>
+                                        <View style={{ flex: 1, alignItems: 'center', width: '100%', justifyContent: 'center' }}>
                                             <Text style={styles.modalTextTitle}>
                                                 Seleccione un marcador
                                             </Text>
@@ -243,8 +242,8 @@ export const MarcadorModalComponent = ({ open, setOpen, getUbicacion }) => {
                     </View>
 
                 </Modal>
-            </ScrollView>
-        </View>
+            </View>
+        </ScrollView>
     )
 }
 
@@ -267,7 +266,6 @@ const stylesMarcador = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         flex: 2,
-        paddingHorizontal: '10%'
     },
     modal: {
         flex: 1,

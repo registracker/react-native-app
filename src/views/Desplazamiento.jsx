@@ -28,6 +28,8 @@ import { CatalogosContext } from '../context/store/CatalogosContext'
 import { MarcadorModalComponent } from '../components/MarcadorModalComponent';
 import { createTableMarcadores } from '../database/TblMarcadores';
 import { createTableReporteMarcador } from '../database/TblReporteMarcador';
+import { getUbicacionActual } from '../utils/functions';
+import RutaTransporteModalComponent from '../components/RutaTransporteModalComponent';
 
 
 export const Desplazamiento = () => {
@@ -45,7 +47,10 @@ export const Desplazamiento = () => {
   const [, setIncidenteSelected] = useState();
   const [contadorMedio, setContadorMedio] = useState(0);
   const [fechaUltimoDesplazamiento, setFechaUltimoDesplazamiento] = useState()
-  const [modalVisible, setModalVisible] = useState(false);
+  const [modalMarcador, setModalMarcador] = useState(false);
+  const [listaMediosTransporte, setlistaMediosTransporte] = useState([])
+  
+  const [medioTransporteModal, setMedioTransporteModal] = useState(false)
 
   const { ctl_medios_desplazamientos, ctl_incidentes, obtenerMediosDesplazamientos, obtenerIncidentes } = useContext(CatalogosContext)
 
@@ -157,25 +162,8 @@ export const Desplazamiento = () => {
    * Abrir Modal de ingreso de marcadores y levantamientos
    */
   const openModalMarcadores = () => {
-    setModalVisible(true);
+    setModalMarcador(true);
     setOpen(false);
-  };
-
-  const getUbicacionActual = () => {
-    return new Promise((resolve, reject) => {
-      Geolocation.getCurrentPosition(
-        position => {
-          resolve(position);
-        },
-        error => {
-          reject(error);
-        },
-        {
-          enableHighAccuracy: true,
-          distanceFilter: 0,
-        },
-      );
-    });
   };
 
   const enviarIncidenteModal = async (incidente, uuid = null) => {
@@ -244,8 +232,15 @@ export const Desplazamiento = () => {
   }, [position]);
 
   useEffect(() => {
-    if (viajeIniciado) setContadorMedio(contadorMedio + 1);
-  }, [medio]);
+    if (viajeIniciado) {
+      setContadorMedio(contadorMedio + 1);
+      setlistaMediosTransporte([...listaMediosTransporte, medio]);
+    }
+    if (medio.nombre === 'Autobús' && viajeIniciado) {
+      setMedioTransporteModal(true)
+      console.log("object");
+    }
+  }, [medio, viajeIniciado]);
 
   return (
     <View style={styles.container}>
@@ -259,10 +254,14 @@ export const Desplazamiento = () => {
         uuid={uuidDesplazamiento}
       />
       <MarcadorModalComponent
-        open={modalVisible}
-        setOpen={setModalVisible}
+        open={modalMarcador}
+        setOpen={setModalMarcador}
         getUbicacion={getUbicacionActual}
       />
+      <RutaTransporteModalComponent
+        open={medioTransporteModal}
+        setOpen={setMedioTransporteModal}
+       />
       <View style={{ flex: 1, marginHorizontal: '12%' }}>
         {
           viajeIniciado ? (
