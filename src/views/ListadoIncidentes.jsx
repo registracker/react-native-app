@@ -7,12 +7,44 @@ import { Loading } from '../components/Loading'
 import { styles } from '../styles/style';
 import { deleteReporteIncidente, enviarIncidente, getReporteIncidentesDatabase } from '../database/TblIncidentes';
 import { postIncidente } from '../services/incidenteServices'
+import { SearchBar } from '@rneui/themed';
 
 export const ListadoIncidentes = () => {
 
     const [listadoIncidentes, setListadoIncidentes] = useState()
     const [cargando, setCargando] = useState(false)
     const [refreshing, setRefreshing] = useState(false);
+
+    const [search, setSearch] = useState("");
+
+    const updateSearch = (search) => {
+        setSearch(search);
+    };
+
+    const searchText = async () => {
+        const regexFecha = /^\d{2}-\d{2}-\d{4}$/;
+        const incidentes = await getReporteIncidentesDatabase()
+
+        let result = null;
+        if (!search) {
+            items();
+            return;
+        }
+
+        if (regexFecha.test(search)) {
+            result = incidentes.filter(element => {
+                const fecha = element.fecha_reporte.split(" ")[0];
+                if (fecha === search) {
+                    return element
+                }
+                return;
+            })
+        } else {
+            result = incidentes.filter(element => element.nombre.toLowerCase() === search.toLowerCase())
+        }
+        setListadoIncidentes(result)
+    }
+
 
 
     const items = async () => {
@@ -79,8 +111,6 @@ export const ListadoIncidentes = () => {
     }, []);
 
 
-    if (!listadoIncidentes) return <Loading />
-
     const itemIncidente = ({ item }) => (
         <ListItem.Swipeable
             leftContent={(reset) => (
@@ -119,6 +149,16 @@ export const ListadoIncidentes = () => {
 
     return (
         <View style={styles.container}>
+            <SearchBar
+                placeholder="Buscar por fecha o incidente..."
+                onChangeText={updateSearch}
+                value={search}
+                lightTheme
+                onBlur={searchText}
+                onClear={items}
+                // onKeyboardHide={searchText}
+                autoCapitalize='none'
+            />
             <FlatList
                 data={listadoIncidentes}
                 refreshing={refreshing}

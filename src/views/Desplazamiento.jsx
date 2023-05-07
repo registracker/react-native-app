@@ -28,7 +28,7 @@ import { CatalogosContext } from '../context/store/CatalogosContext'
 import { MarcadorModalComponent } from '../components/MarcadorModalComponent';
 import { createTableMarcadores } from '../database/TblMarcadores';
 import { createTableReporteMarcador } from '../database/TblReporteMarcador';
-import { getUbicacionActual } from '../utils/functions';
+import { createTables, getUbicacionActual } from '../utils/functions';
 import RutaTransporteModalComponent from '../components/RutaTransporteModalComponent';
 
 
@@ -51,6 +51,7 @@ export const Desplazamiento = () => {
   const [listaMediosTransporte, setlistaMediosTransporte] = useState([])
   
   const [medioTransporteModal, setMedioTransporteModal] = useState(false)
+  const [ultimoMedio, setUltimoMedio] = useState()
 
   const { ctl_medios_desplazamientos, ctl_incidentes, obtenerMediosDesplazamientos, obtenerIncidentes } = useContext(CatalogosContext)
 
@@ -144,6 +145,8 @@ export const Desplazamiento = () => {
     setData([]);
     setPuntos([])
     setPosition()
+    setlistaMediosTransporte([])
+    setUltimoMedio()
     setUuidDesplazamiento();
     setContadorMedio(0);
     Geolocation.clearWatch(watchId);
@@ -207,18 +210,18 @@ export const Desplazamiento = () => {
   };
 
   useEffect(() => {
-    createTableDesplazamiento();
-    createTableMediosDesplazamiento();
-    createTableIncidentes();
-    createTableReporteIncidentes();
-    createTableMarcadores();
-    createTableReporteMarcador()
+    createTables()
     created();
   }, []);
 
   //Detectar cambios de la posicion
   useEffect(() => {
-    if (position) {
+    if (position && viajeIniciado) {
+      if(medio.id !== ultimoMedio?.id){
+        setContadorMedio(contadorMedio + 1);
+        setUltimoMedio(medio)
+        setlistaMediosTransporte([...listaMediosTransporte, medio]);
+      }
       const point = {
         latitud: position.coords.latitude,
         longitud: position.coords.longitude,
@@ -229,16 +232,11 @@ export const Desplazamiento = () => {
       };
       setPuntos([...puntos, point]);
     }
-  }, [position]);
+  }, [position, viajeIniciado]);
 
   useEffect(() => {
-    if (viajeIniciado) {
-      setContadorMedio(contadorMedio + 1);
-      setlistaMediosTransporte([...listaMediosTransporte, medio]);
-    }
     if (medio.nombre === 'Autobús' && viajeIniciado) {
-      setMedioTransporteModal(true)
-      console.log("object");
+      // setMedioTransporteModal(true)
     }
   }, [medio, viajeIniciado]);
 

@@ -151,7 +151,7 @@ export const ListadoMarcadores = () => {
     return (
         <View style={styles.container}>
             <SearchBar
-                placeholder="Buscar por codigo, fecha o marcardor..."
+                placeholder="Buscar por código, fecha o marcador..."
                 onChangeText={updateSearch}
                 value={search}
                 lightTheme

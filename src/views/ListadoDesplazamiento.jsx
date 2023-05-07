@@ -7,6 +7,7 @@ import { getDesplazamientos, removeDesplazamiento, sendDesplazamiento } from '..
 import { postDesplazamiento } from '../services/desplazamientoServices'
 import { Loading } from '../components/Loading'
 import { styles } from '../styles/style';
+import { SearchBar } from '@rneui/themed';
 
 export const ListadoDesplazamiento = () => {
 
@@ -14,6 +15,34 @@ export const ListadoDesplazamiento = () => {
   const [cargando, setCargando] = useState(false)
   const [refreshing, setRefreshing] = useState(false);
 
+  const [search, setSearch] = useState("");
+
+  const updateSearch = (search) => {
+    setSearch(search);
+  };
+
+  const searchText = async ()  => {
+    const regex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    const regexFecha = /^\d{2}-\d{2}-\d{4}$/;
+    const desplazamientos = await getDesplazamientos();
+
+
+    let result = null;
+    if (regex.test(search)) {
+      result = desplazamientos.filter(element => element.uuid === search) 
+    } else if (regexFecha.test(search)) {
+      result = desplazamientos.filter(element => {
+        const fecha = element.fecha_registro.split(" ")[0];
+        if (fecha === search) {
+          return element
+        } 
+        return;
+      })
+    } else {
+      setListadoDesplazamientos(desplazamientos)
+    }
+    setListadoDesplazamientos(result)
+  }
 
   const items = async () => {
     const desplazamientos = await getDesplazamientos();
@@ -127,6 +156,16 @@ export const ListadoDesplazamiento = () => {
 
   return (
     <View style={styles.container}>
+      <SearchBar
+        placeholder="Buscar por identificador o fecha ..."
+        onChangeText={updateSearch}
+        value={search}
+        lightTheme
+        onBlur={searchText}
+        onClear={items}
+        // onKeyboardHide={searchText}
+        autoCapitalize='none'
+      />
           <FlatList
             data={listadoDesplazamientos}
             refreshing={refreshing}
