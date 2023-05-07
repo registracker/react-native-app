@@ -234,11 +234,6 @@ export const Desplazamiento = () => {
     }
   }, [position, viajeIniciado]);
 
-  useEffect(() => {
-    if (medio.nombre === 'Autobús' && viajeIniciado) {
-      // setMedioTransporteModal(true)
-    }
-  }, [medio, viajeIniciado]);
 
   return (
     <View style={styles.container}>
@@ -318,6 +313,8 @@ export const Desplazamiento = () => {
           selected={medio}
           cambiarMedio={setMedio}
           mediosDesplazamientos={ctl_medios_desplazamientos.data}
+          open={medioTransporteModal}
+          setOpen={setMedioTransporteModal}
         />
       </View>
       <View style={styles.foobar}>

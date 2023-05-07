@@ -2,15 +2,17 @@ import React from 'react'
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 
 import { primary, styles } from '../styles/style';
-import { Icon } from '@rneui/base';
+import { Badge, Icon } from '@rneui/base';
 import { Loading } from './Loading';
 
 
-export const MediosDesplazamientosComponentes = ({ selected, cambiarMedio, mediosDesplazamientos }) => {
+export const MediosDesplazamientosComponentes = ({ selected, cambiarMedio, mediosDesplazamientos, setOpen, open }) => {
 
-    
+
 
     if (!mediosDesplazamientos) return <Loading />
+
+
 
     const renderItem = ({ item }) => {
         return (
@@ -34,8 +36,17 @@ export const MediosDesplazamientosComponentes = ({ selected, cambiarMedio, medio
 
                 </TouchableOpacity>
                 <Text adjustsFontSizeToFit style={styles.modalText}>
-                    {item.nombre} 
+                    {item.nombre}
                 </Text>
+                {
+                    selected.nombre === 'Autobús' && item.nombre === 'Autobús' &&
+                    <Badge
+                        status="primary"
+                        value='!'
+                        containerStyle={{ position: 'absolute', top: 5, left: 60 }}
+                        onPress={() => { setOpen(!open) }}
+                    />
+                }
             </View>
         );
     };

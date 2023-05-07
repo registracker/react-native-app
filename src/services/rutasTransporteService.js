@@ -6,3 +6,19 @@ const getRutasTransporte = async () => {
 
   return data;
 };
+
+const postBuscarRutasTransporte = async datos => {
+  const response = await http_axios(
+    '/api/rutas-transporte/search',
+    null,
+    'post',
+    datos,
+  );
+  const {data} = response.data;
+  return data;
+};
+
+module.exports = {
+  getRutasTransporte,
+  postBuscarRutasTransporte,
+};
