@@ -10,16 +10,20 @@ import { PermissionsProvider } from './src/context/permissions/PermissionContext
 import { Navigation } from './src/menu/Navigation';
 import { AuthProvider } from './src/context/authentication/AuthContext';
 import { CatalogosProvider } from './src/context/store/CatalogosContext';
+import { DesplazamientoProvider } from './src/context/tracking/DesplazamientoContext';
 
 function App() {
   return (
     <NavigationContainer>
       <PermissionsProvider>
         <AuthProvider>
-            <CatalogosProvider>
+          <CatalogosProvider>
+            <DesplazamientoProvider>
+
               <Navigation />
               <Toast />
-            </CatalogosProvider>
+            </DesplazamientoProvider>
+          </CatalogosProvider>
         </AuthProvider>
       </PermissionsProvider>
     </NavigationContainer>

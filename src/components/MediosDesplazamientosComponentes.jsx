@@ -2,11 +2,11 @@ import React from 'react'
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 
 import { primary, styles } from '../styles/style';
-import { Badge, Icon } from '@rneui/base';
+import { Icon } from '@rneui/base';
 import { Loading } from './Loading';
 
 
-export const MediosDesplazamientosComponentes = ({ selected, cambiarMedio, mediosDesplazamientos, setOpen, open }) => {
+export const MediosDesplazamientosComponentes = ({ selected, cambiarMedio, mediosDesplazamientos }) => {
 
 
 
@@ -38,15 +38,6 @@ export const MediosDesplazamientosComponentes = ({ selected, cambiarMedio, medio
                 <Text adjustsFontSizeToFit style={styles.modalText}>
                     {item.nombre}
                 </Text>
-                {
-                    selected.nombre === 'Autobús' && item.nombre === 'Autobús' &&
-                    <Badge
-                        status="primary"
-                        value='!'
-                        containerStyle={{ position: 'absolute', top: 5, left: 60 }}
-                        onPress={() => { setOpen(!open) }}
-                    />
-                }
             </View>
         );
     };

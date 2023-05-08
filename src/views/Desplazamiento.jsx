@@ -30,6 +30,8 @@ import { createTableMarcadores } from '../database/TblMarcadores';
 import { createTableReporteMarcador } from '../database/TblReporteMarcador';
 import { createTables, getUbicacionActual } from '../utils/functions';
 import RutaTransporteModalComponent from '../components/RutaTransporteModalComponent';
+import CostoDesplazamientoModalComponent from '../components/CostoDesplazamientoModalComponent';
+import { DesplazamientoContext } from '../context/tracking/DesplazamientoContext';
 
 
 export const Desplazamiento = () => {
@@ -53,7 +55,11 @@ export const Desplazamiento = () => {
   const [medioTransporteModal, setMedioTransporteModal] = useState(false)
   const [ultimoMedio, setUltimoMedio] = useState()
 
+  const [costoDesplazamientoModal, setCostoDesplazamientoModal] = useState(false)
+
   const { ctl_medios_desplazamientos, ctl_incidentes, obtenerMediosDesplazamientos, obtenerIncidentes } = useContext(CatalogosContext)
+
+  const { agregarMedioDesplazamiento, countGrupo, listMedios } = useContext(DesplazamientoContext)
 
   const created = async () => {
     await obtenerMediosDesplazamientos()
@@ -151,6 +157,8 @@ export const Desplazamiento = () => {
     setContadorMedio(0);
     Geolocation.clearWatch(watchId);
     setFechaUltimoDesplazamiento(format(new Date(), 'PPPP p'))
+
+    setCostoDesplazamientoModal(true);  //Modal for displaying costo de desplazamiento
   };
 
   /**
@@ -221,6 +229,9 @@ export const Desplazamiento = () => {
         setContadorMedio(contadorMedio + 1);
         setUltimoMedio(medio)
         setlistaMediosTransporte([...listaMediosTransporte, medio]);
+        agregarMedioDesplazamiento(medio)
+        console.log(listMedios);
+        console.log(countGrupo);
       }
       const point = {
         latitud: position.coords.latitude,
@@ -234,6 +245,11 @@ export const Desplazamiento = () => {
     }
   }, [position, viajeIniciado]);
 
+  useEffect(() => {
+    if (medio.nombre === 'Autobús' && viajeIniciado) {
+      setMedioTransporteModal(true)
+    }
+  }, [medio, viajeIniciado]);
 
   return (
     <View style={styles.container}>
@@ -254,6 +270,10 @@ export const Desplazamiento = () => {
       <RutaTransporteModalComponent
         open={medioTransporteModal}
         setOpen={setMedioTransporteModal}
+       />
+      <CostoDesplazamientoModalComponent
+        open={costoDesplazamientoModal}
+        setOpen={setCostoDesplazamientoModal}
        />
       <View style={{ flex: 1, marginHorizontal: '12%' }}>
         {
