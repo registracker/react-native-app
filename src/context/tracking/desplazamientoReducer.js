@@ -2,7 +2,7 @@ import {format} from 'date-fns';
 
 export const desplazamientoReducer = (state, action) => {
   switch (action.type) {
-    case 'inicio':
+    case 'iniciar':
       return {
         ...state,
         uuid: action.payload.uuid,
@@ -11,6 +11,16 @@ export const desplazamientoReducer = (state, action) => {
         tracking: [],
         listMedios: [],
         countGrupo: 0,
+      };
+    case 'detener':
+      return {
+        ...state,
+        uuid: undefined,
+        createdAt: undefined,
+        detainedAt: undefined,
+        tracking: undefined,
+        listMedios: undefined,
+        countGrupo: undefined,
       };
     case 'agregar_medio':
       return {

@@ -59,48 +59,48 @@ export const Desplazamiento = () => {
 
   const { ctl_medios_desplazamientos, ctl_incidentes, obtenerMediosDesplazamientos, obtenerIncidentes } = useContext(CatalogosContext)
 
-  const { agregarMedioDesplazamiento, countGrupo, listMedios } = useContext(DesplazamientoContext)
+  const { agregarMedioDesplazamiento, countGrupo, listMedios, detenerDesplazamiento, iniciarDesplazamiento } = useContext(DesplazamientoContext)
 
   const created = async () => {
     await obtenerMediosDesplazamientos()
     await obtenerIncidentes()
   };
 
-  const IniciarDesplazamiento = async () => {
-    setViajeIniciado(true);
-    setUuidDesplazamiento(uuid.v4());
-    setFechaHoraInciado(new Date());
+  // const IniciarDesplazamiento = async () => {
+  //   setViajeIniciado(true);
+  //   setUuidDesplazamiento(uuid.v4());
+  //   setFechaHoraInciado(new Date());
 
-    const detener = time =>
-      new Promise(resolve => setTimeout(() => resolve(), time));
-    const veryIntensiveTask = async taskDataArguments => {
-      // Example of an infinite loop task
-      const { delay } = taskDataArguments;
-      await new Promise(async resolve => {
-        for (let i = 0; BackgroundService.isRunning(); i++) {
-          Geolocation.getCurrentPosition(
-            position => {
-              setPosition(position);
-            },
-            error => {
-              // See error code charts below.
-            },
-            {
-              enableHighAccuracy: true,
-              distanceFilter: 0,
-            },
-          );
+  //   const detener = time =>
+  //     new Promise(resolve => setTimeout(() => resolve(), time));
+  //   const veryIntensiveTask = async taskDataArguments => {
+  //     // Example of an infinite loop task
+  //     const { delay } = taskDataArguments;
+  //     await new Promise(async resolve => {
+  //       for (let i = 0; BackgroundService.isRunning(); i++) {
+  //         Geolocation.getCurrentPosition(
+  //           position => {
+  //             setPosition(position);
+  //           },
+  //           error => {
+  //             // See error code charts below.
+  //           },
+  //           {
+  //             enableHighAccuracy: true,
+  //             distanceFilter: 0,
+  //           },
+  //         );
 
-          await detener(delay);
-        }
-      });
-    };
+  //         await detener(delay);
+  //       }
+  //     });
+  //   };
 
-    await BackgroundService.start(veryIntensiveTask, options);
-    await BackgroundService.updateNotification({
-      taskDesc: 'registrando desplazamiento',
-    });
-  };
+  //   await BackgroundService.start(veryIntensiveTask, options);
+  //   await BackgroundService.updateNotification({
+  //     taskDesc: 'registrando desplazamiento',
+  //   });
+  // };
 
   const getLocationObservation = () => {
     setViajeIniciado(true);
@@ -109,6 +109,7 @@ export const Desplazamiento = () => {
     setHoraInciado(format(new Date(), 'hh:mm:ss aaaa'));
     setFechaInciado(format(new Date(), 'PPP'));
 
+    iniciarDesplazamiento(uuidDesplazamiento)
     const observation = Geolocation.watchPosition(
       position => {
         setPosition(position);
@@ -159,6 +160,7 @@ export const Desplazamiento = () => {
     setFechaUltimoDesplazamiento(format(new Date(), 'PPPP p'))
 
     setCostoDesplazamientoModal(true);  //Modal for displaying costo de desplazamiento
+    // detenerDesplazamiento()
   };
 
   /**
@@ -225,14 +227,9 @@ export const Desplazamiento = () => {
   //Detectar cambios de la posicion
   useEffect(() => {
     if (position && viajeIniciado) {
-      if(medio.id !== ultimoMedio?.id){
-        setContadorMedio(contadorMedio + 1);
-        setUltimoMedio(medio)
-        setlistaMediosTransporte([...listaMediosTransporte, medio]);
-        agregarMedioDesplazamiento(medio)
-        console.log(listMedios);
-        console.log(countGrupo);
-      }
+      agregarMedioDesplazamiento(medio)
+      setContadorMedio(contadorMedio + 1);
+      console.log(listMedios);
       const point = {
         latitud: position.coords.latitude,
         longitud: position.coords.longitude,

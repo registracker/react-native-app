@@ -19,16 +19,36 @@ export const DesplazamientoProvider = ({children}) => {
     /**
      * TODO: Implement initialization desplazamiento, Restore desplazamiento
      */
+    const iniciarDesplazamiento = (uuid) => {
+        dispatch({ type: 'iniciar', payload: { uuid } })
+    }
+
+    const detenerDesplazamiento = () => {
+        dispatch({ type: 'detener'})
+    }
 
     const agregarMedioDesplazamiento = (medio) => {
-        dispatch({ type: 'agregar_medio', payload: { medio } })
+        const ultimoMedio = desplazamientoState.listMedios[desplazamientoState.listMedios.length - 1]
+        const item = {
+            ...medio,
+            costo: 0,
+            grupo: desplazamientoState.countGrupo
+        }
+        if (desplazamientoState.listMedios.length === 0){
+            dispatch({ type: 'agregar_medio', payload: { medio: item } })
+        }
+        else if(ultimoMedio?.id !== medio.id){
+            dispatch({ type: 'agregar_medio', payload: { medio: item } })
+        }
     }
 
     return (
         <DesplazamientoContext.Provider 
         value={{
                 ...desplazamientoState,
-                agregarMedioDesplazamiento
+                agregarMedioDesplazamiento,
+                iniciarDesplazamiento, 
+                detenerDesplazamiento
         }}>
             {children}
         </DesplazamientoContext.Provider>
