@@ -28,6 +28,21 @@ export const desplazamientoReducer = (state, action) => {
         listMedios: [...state.listMedios, action.payload.medio],
         countGrupo: state.countGrupo + 1,
       };
+    case 'aumentar_costo':
+      return {
+        ...state,
+        listMedios: action.payload.listado,
+      };
+    case 'reducir_costo':
+      return {
+        ...state,
+        listMedios: action.payload.listado,
+      };
+    case 'agregar_costo':
+      return {
+        ...state,
+        listMedios: action.payload.costos,
+      };
     default:
       return state;
   }
