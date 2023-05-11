@@ -13,6 +13,7 @@ import { primary } from '../styles/style';
 import { ListadoIncidentes } from '../views/ListadoIncidentes';
 import { ListadoMarcadores } from '../views/ListadoMarcadores';
 import CostoDesplazamientos from '../views/CostoDesplazamientos';
+import ListadoRutaTransporte from '../views/ListadoRutaTransporte';
 
 const Stack = createNativeStackNavigator();
 
@@ -85,6 +86,10 @@ export const Navigation = () => {
                                     }} />
                                     <Stack.Screen name='CostosDesplazamiento' component={CostoDesplazamientos} options={{
                                         title: 'Costos',
+                                        ...optionsView
+                                    }} />
+                                    <Stack.Screen name='ListadoRutaTransporte' component={ListadoRutaTransporte} options={{
+                                        title: 'Listado de ruta de transporte',
                                         ...optionsView
                                     }} />
                                 </Stack.Group>

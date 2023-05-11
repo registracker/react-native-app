@@ -25,7 +25,10 @@ export default CostoDesplazamientoModalComponent = ({ open, setOpen }) => {
                         <Text>¿Deseas agregar la el costo del desplazamientos?</Text>
                         <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                             <Button title="Omitir" type="clear" titleStyle={{ color: 'gray' }} onPress={() => { setOpen(!open) }} />
-                            <Button title="Sí, seguro" type="clear" titleStyle={{ color: primary }} onPress={() => navigation.navigate('CostosDesplazamiento')} />
+                            <Button title="Sí, seguro" type="clear" titleStyle={{ color: primary }} onPress={() => {
+                                navigation.navigate('CostosDesplazamiento')
+                                setOpen(!open)
+                            }} />
                         </View>
                     </View>
                 </View>

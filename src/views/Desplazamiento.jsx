@@ -144,9 +144,7 @@ export const Desplazamiento = () => {
         await sendDesplazamiento(uuidDesplazamiento)
       }
 
-      const mensaje = 'Desplazamiento finalizado';
-      const subtitulo = `Registrado en la fecha ${data.fecha_registro}`;
-      notificacion(mensaje, subtitulo);
+
 
     }
     setData([]);
@@ -229,7 +227,6 @@ export const Desplazamiento = () => {
     if (position && viajeIniciado) {
       agregarMedioDesplazamiento(medio)
       setContadorMedio(contadorMedio + 1);
-      console.log(listMedios);
       const point = {
         latitud: position.coords.latitude,
         longitud: position.coords.longitude,

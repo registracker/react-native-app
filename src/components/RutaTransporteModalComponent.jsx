@@ -2,9 +2,14 @@ import { View, Text, Modal, Pressable, StyleSheet } from 'react-native'
 import React from 'react'
 import { primary, styles } from '../styles/style';
 import { Button } from '@rneui/base';
+import { NavigationContext } from '@react-navigation/native';
+import { useContext } from 'react';
 
 
 export default function RutaTransporteModalComponent({ open, setOpen }) {
+
+  const navigation = useContext(NavigationContext)
+
 
   return (
     <View>
@@ -21,7 +26,10 @@ export default function RutaTransporteModalComponent({ open, setOpen }) {
             <Text>¿Deseas agregar la ruta de transporte?</Text>
             <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
               <Button title="Omitir" type="clear" titleStyle={{ color: 'gray' }} onPress={() => { setOpen(!open) }} />
-              <Button title="Sí, seguro" type="clear" titleStyle={{ color: primary }} onPress={() => { console.log('Si') }} />
+              <Button title="Sí, seguro" type="clear" titleStyle={{ color: primary }} onPress={() => { 
+                navigation.navigate('ListadoRutaTransporte')
+                setOpen(!open)
+               }} />
             </View>
           </View>
         </View>

@@ -31,7 +31,7 @@ export const http_axios = async (url, params, method = 'get', data) => {
         return instance
           .get(url, params)
           .then(response => {
-            resolve({ data: response.data, status: response.status});
+            resolve({ data: response.data, status: response.status, links: response.links});
           })
           .catch(err => {
             reject(err.response);
@@ -41,7 +41,7 @@ export const http_axios = async (url, params, method = 'get', data) => {
         return instance
           .post(url, {...params, ...data})
           .then(response => {
-            resolve({ data: response.data, status: response.status });
+            resolve({ data: response.data, status: response.status, links: response.links });
           })
           .catch(err => {
             console.log(err);

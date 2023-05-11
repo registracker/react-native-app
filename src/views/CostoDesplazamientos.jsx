@@ -6,13 +6,12 @@ import { DesplazamientoContext } from '../context/tracking/DesplazamientoContext
 import { FlatList } from 'react-native-gesture-handler'
 import { Button, Icon } from '@rneui/base'
 
-import { primary } from '../styles/style';
+import { primary, styles } from '../styles/style';
 import { useState } from 'react'
-import { useEffect } from 'react'
 import { Input } from '@rneui/themed'
 
 
-const CostoDesplazamientos = () => {
+const CostoDesplazamientos = ({navigation}) => {
 
     const { listMedios, aumentarCostoDesplazamiento, reducirCostoDesplazamiento, agregarCostoDesplazamiento } = useContext(DesplazamientoContext)
     const [modalVisible, setModalVisible] = useState(false);
@@ -42,15 +41,15 @@ const CostoDesplazamientos = () => {
     }
 
     const Item = ({ data, index }) => (
-        <View style={styles.item}>
-            <View style={styles.elements}>
+        <View style={stylesCosto.item}>
+            <View style={stylesCosto.elements}>
                 <Icon name={data.icono} type='material-community' size={25} color="gray" />
-                <Text style={styles.title}>{data.nombre}</Text>
+                <Text style={stylesCosto.title}>{data.nombre}</Text>
             </View>
-            <View style={styles.elements}>
+            <View style={stylesCosto.elements}>
                 <Icon name='arrow-up-drop-circle' type='material-community' size={25} color={primary} onPress={() => aumentarCostoDesplazamiento(index, aumento)} />
                 <Text
-                    style={styles.title}
+                    style={stylesCosto.title}
                     onPress={() => editarCosto(index, aumento)}
                 >$ {parseFloat(data.costo, 10).toFixed(2)}</Text>
                 <Icon name='arrow-down-drop-circle' type='material-community' size={25} color={primary} onPress={() => reducirCostoDesplazamiento(index, reducir)} />
@@ -59,8 +58,7 @@ const CostoDesplazamientos = () => {
     );
 
     return (
-        <View style={styles.container}>
-            <View >
+        <View style={stylesCosto.container}>
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -70,9 +68,9 @@ const CostoDesplazamientos = () => {
                     setMensajeError()
                     setModalVisible(!modalVisible);
                 }}>
-                <View style={styles.centeredView}>
-                    <View style={styles.modalView}>
-                        <Text style={styles.modalText}>Costo del medio de transporte</Text>
+                <View style={stylesCosto.centeredView}>
+                    <View style={stylesCosto.modalView}>
+                        <Text style={stylesCosto.modalText}>Costo del medio de transporte</Text>
                         <Input
                             containerStyle={{}}
                             disabledInputStyle={{ background: "#ddd" }}
@@ -93,17 +91,25 @@ const CostoDesplazamientos = () => {
                             keyboardType='decimal-pad'
                             onFocus={() => setMensajeError()}
                         />
+                        <View style={{flexDirection:'row'}}>
 
+                        <Button
+                            title='Cancelar'
+                            onPress={() => setModalVisible(false)}
+                            buttonStyle={styles.buttonSecondary}
+                        />
                         <Button
                             title='Continuar'
                             onPress={() => ingresarCosto(cantidad)}
-                            buttonStyle={styles.button}
+                            buttonStyle={styles.buttonPrimary}
                         />
+                        </View>
                     </View>
                 </View>
             </Modal>
-                <View>
-                    <Text>CostoDesplazamientos</Text>
+            <View style={stylesCosto.body}>
+                <View style={{justifyContent: 'center', marginHorizontal: 10}}>
+                    <Text style={stylesCosto.modalText} >Definir costo de desplazamientos</Text>
                     <FlatList
                         data={listMedios}
                         renderItem={({ item, index }) => <Item data={item} index={index} />}
@@ -113,11 +119,13 @@ const CostoDesplazamientos = () => {
                 <View>
                     <Button
                         title='Omitir'
-                        buttonStyle={styles.button}
+                        buttonStyle={styles.buttonSecondary}
+                        onPress={() => navigation.navigate('TabNavegacion')}
                     />
                     <Button
                         title='Continuar'
-                        buttonStyle={styles.button}
+                        buttonStyle={styles.buttonPrimary}
+                        onPress={() => navigation.navigate('TabNavegacion')}
                     />
                 </View>
             </View>
@@ -127,20 +135,27 @@ const CostoDesplazamientos = () => {
 
 export default CostoDesplazamientos
 
-const styles = StyleSheet.create({
+const stylesCosto = StyleSheet.create({
     container: {
         flex: 1,
         marginTop: StatusBar.currentHeight || 0,
         alignContent: 'space-between',
     },
+    body: {
+        flex: 1,
+        justifyContent: 'space-around',
+        alignContent: 'center',
+        width: '100%',
+    },
     item: {
-        flexDirection: 'row',
         backgroundColor: '#e1e1e1',
         padding: 15,
         marginVertical: 2,
-        marginHorizontal: 4,
+        borderRadius: 5,
         justifyContent: 'space-between',
-        borderRadius: 5
+        alignItems: 'center',
+        flexDirection: 'row',
+
     },
     elements: {
         flexDirection: 'row',
@@ -154,7 +169,6 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
         marginVertical: 3,
         borderRadius: 5,
-        height: '80%'
     },
 
     centeredView: {
@@ -179,11 +193,6 @@ const styles = StyleSheet.create({
         padding: 10,
         justifyContent: 'space-around',
         alignItems: 'center'
-    },
-    button: {
-        borderRadius: 20,
-        padding: 10,
-        elevation: 2,
     },
     textStyle: {
         color: 'white',

@@ -18,7 +18,6 @@ export const styles = StyleSheet.create({
     flex: 10,
     padding: 20,
     paddingTop: StatusBar.currentHeight,
-
   },
   toolbar: {
     flexDirection: 'row',
@@ -100,6 +99,7 @@ export const styles = StyleSheet.create({
   buttonPrimary: {
     backgroundColor: primary,
     borderRadius: 3,
+    margin: 5
   },
   buttonPrimaryDisabled: {
     backgroundColor: primaryDisabled,
@@ -108,6 +108,7 @@ export const styles = StyleSheet.create({
   buttonSecondary: {
     backgroundColor: secondary,
     borderRadius: 3,
+    margin: 5
   },
   buttonSecondaryDisabled: {
     backgroundColor: 'rgb(180, 173, 255)',
