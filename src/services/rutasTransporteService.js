@@ -6,23 +6,25 @@ const getRutasTransporte = async () => {
   return data;
 };
 
-const postBuscarRutasTransporte = async dato => {
-  const buscar = {
-    search: {
-      value: dato,
-      case_insensitive: false,
-    },
-  };
-  const response = await http_axios(
-    '/api/rutas-transporte/search',
-    null,
-    'post',
-    buscar,
-  );
-  const {data} = response.data;
-  const {links} = response;
-
-  return {data, links};
+const postBuscarRutasTransporte = async (dato, page) => {
+  try {
+    const response = await http_axios(
+      `/api/rutas-transporte/search${page ? `?${page}` : ''}`,
+      null,
+      'post',
+      {
+        search: {
+          value: dato,
+          case_insensitive: false,
+        },
+      },
+    );
+    const {data, links} = response.data;
+    return {data, links};
+  } catch (e) {
+    console.error(e);
+  } finally {
+  }
 };
 
 module.exports = {

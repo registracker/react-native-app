@@ -15,8 +15,9 @@ const ListadoRutaTransporte = ({ navigation }) => {
     const [resultado, setResultado] = useState()
     const [links, setLinks] = useState()
 
-    const buscar = async () => {
-        const { data, links } = await postBuscarRutasTransporte(ruta)
+    const buscar = async (paginate) => {
+        const page = paginate ? paginate.split('?')[1] : null
+        const { data, links } = await postBuscarRutasTransporte(ruta, page)
         setResultado(data)
         setLinks(links)
     }
@@ -72,6 +73,41 @@ const ListadoRutaTransporte = ({ navigation }) => {
                         renderItem={({ item, index }) => <Item data={item} index={index} />}
                         keyExtractor={item => item.id}
                     />
+                    <View style={{flexDirection:'row', justifyContent: 'center', alignItems:'center', marginBottom: 10}}>
+
+                        <Button
+                            containerStyle={{ margin: 5 }}
+                            // disabled={true}
+                            disabledStyle={{
+                                borderWidth: 2,
+                                borderColor: "transparent",
+                            }}
+                            icon={<Icon name="arrow-left-thick" type='material-community' size={15} color="white" />}
+                            iconContainerStyle={{ background: "#000" }}
+                            loadingProps={{ animating: true }}
+                            loadingStyle={{}}
+                            onPress={() => buscar(links.prev)}
+                            titleProps={{}}
+                            color={primary}
+                            disabled={ !links?.prev }
+                        />
+                        <Button
+                            containerStyle={{ margin: 5 }}
+                            disabledStyle={{
+                                borderWidth: 2,
+                                borderColor: "transparent",
+                            }}
+                            icon={<Icon name="arrow-right-thick" type='material-community' size={15} color="white" />}
+                            iconContainerStyle={{ background: "#000" }}
+                            loadingProps={{ animating: true }}
+                            loadingStyle={{}}
+                            onPress={() => buscar(links.next)}
+                            titleProps={{}}
+                            color={primary}
+                            disabled={!links?.next}
+
+                        />
+                    </View>
                 </View>
             </View>
             <View>
