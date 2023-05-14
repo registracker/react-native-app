@@ -1,4 +1,4 @@
-import { Text, StyleSheet, View, TouchableOpacity } from 'react-native'
+import { Text, StyleSheet, View, TouchableOpacity, ImageBackground } from 'react-native'
 import React, { Component } from 'react'
 import { primary } from '../styles/style'
 import { Icon } from '@rneui/base'
@@ -29,28 +29,40 @@ export const Registros = () => {
 
 
     return (
-        <View style={stylesRegistros.body}>
-            {
-                menu.map(item => (
-                    <TouchableOpacity
-                    key={item.toGo}
-                    style={stylesRegistros.card}
-                    onPress={() => navigation.navigate(item.toGo)}
-                    >
-                        <Icon
-                            name={item.icon}
-                            type='material-community'
-                            color='white'
-                            size={20}
-                        />
-                        <View>
-                            <Text style={stylesRegistros.cardText}>{item.title}</Text>
-                        </View>
-                    </TouchableOpacity>
+        <ImageBackground
+            source={require('../img/fondo.png')}
+            resizeMode="cover"
+            style={{
+                flex: 1,
+                justifyContent: 'center',
+                tintColor: 'transparent'
+            }}
+        >
+            <View style={stylesRegistros.body}>
 
-                ))
-            }
-        </View>
+                {
+                    menu.map(item => (
+                        <TouchableOpacity
+                            key={item.toGo}
+                            style={stylesRegistros.card}
+                            onPress={() => navigation.navigate(item.toGo)}
+                        >
+                            <Icon
+                                name={item.icon}
+                                type='material-community'
+                                color='white'
+                                size={20}
+                            />
+                            <View>
+                                <Text style={stylesRegistros.cardText}>{item.title}</Text>
+                            </View>
+                        </TouchableOpacity>
+
+                    ))
+                }
+
+            </View>
+        </ImageBackground>
     )
 }
 

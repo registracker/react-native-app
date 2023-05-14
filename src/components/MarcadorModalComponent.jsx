@@ -3,17 +3,17 @@ import React, { useEffect, useState } from 'react'
 import { FlatList, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { primary, styles } from '../styles/style';
 import { Input } from '@rneui/themed';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 // Import services
 import { getLevantamiento, postLevantamiento } from '../services/levantamientoServices'
 import { getMarcadores } from '../services/marcadorServices'
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { compareAsc, format } from 'date-fns';
 import { getUbicacionActual } from '../utils/functions';
 
-export const MarcadorModalComponent = ({ open, setOpen, getUbicacion }) => {
-    const [levantamiento, setLevantamiento] = useState("b66f-8f76-0ba0")
+export const MarcadorModalComponent = ({ open, setOpen }) => {
+    const [levantamiento, setLevantamiento] = useState()
     const [levantamientoErrors, setLevantamientoErrors] = useState("")
     const [cargando, setCargando] = useState(false)
     const [marcadores, setMarcadores] = useState([])

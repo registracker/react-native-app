@@ -12,6 +12,7 @@ import { TouchableOpacity } from 'react-native';
 import { useBackHandler } from '@react-native-community/hooks'
 import { DesplazamientoContext } from '../context/tracking/DesplazamientoContext';
 
+
 const ListadoRutaTransporte = ({ navigation }) => {
 
     const [ruta, setRuta] = useState()

@@ -1,5 +1,5 @@
 import { Modal, Pressable, StatusBar, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useContext } from 'react'
 
 import { DesplazamientoContext } from '../context/tracking/DesplazamientoContext'
@@ -9,9 +9,10 @@ import { Button, Icon } from '@rneui/base'
 import { primary, styles } from '../styles/style';
 import { useState } from 'react'
 import { Input } from '@rneui/themed'
+import { useBackHandler } from '@react-native-community/hooks'
 
 
-const CostoDesplazamientos = ({navigation}) => {
+const CostoDesplazamientos = ({ navigation }) => {
 
     const { listMedios, aumentarCostoDesplazamiento, reducirCostoDesplazamiento, agregarCostoDesplazamiento } = useContext(DesplazamientoContext)
     const [modalVisible, setModalVisible] = useState(false);
@@ -35,6 +36,7 @@ const CostoDesplazamientos = ({navigation}) => {
             agregarCostoDesplazamiento(indexItem, parseFloat(cantidad))
             setModalVisible(false);
             setIndexItem();
+            setCantidad()
         }
         else {
             setMensajeError('La cantidad ingresa no es valida.')
@@ -63,6 +65,28 @@ const CostoDesplazamientos = ({navigation}) => {
         enviarDesplazamiento()
         navigation.navigate('TabNavegacion')
     }
+
+    useBackHandler(() => {
+        enviarDesplazamiento()
+        return true;
+    })
+
+    useEffect(() => {
+
+        navigation.setOptions({
+            headerLeft: () => (
+                <Icon 
+                onPress={() => { enviarDesplazamiento(); navigation.navigate('TabNavegacion'); }} 
+                type="ionicons" 
+                color='white' 
+                name='arrow-back' 
+                style={{marginRight: 5}}
+                />
+            ),
+        });
+    }, [navigation])
+
+
 
     return (
         <View style={stylesCosto.container}>
@@ -98,19 +122,19 @@ const CostoDesplazamientos = ({navigation}) => {
                             keyboardType='decimal-pad'
                             onFocus={() => setMensajeError()}
                         />
-                        <View style={{flexDirection:'row'}}>
+                        <View style={{ flexDirection: 'row' }}>
 
-                        <Button
-                            title='Continuar'
-                            onPress={() => ingresarCosto(cantidad)}
-                            buttonStyle={styles.buttonPrimary}
-                        />
+                            <Button
+                                title='Continuar'
+                                onPress={() => ingresarCosto(cantidad)}
+                                buttonStyle={styles.buttonPrimary}
+                            />
                         </View>
                     </View>
                 </View>
             </Modal>
             <View style={stylesCosto.body}>
-                <View style={{justifyContent: 'center', marginHorizontal: 10}}>
+                <View style={{ justifyContent: 'center', marginHorizontal: 10 }}>
                     <Text style={stylesCosto.modalText} >Definir costo de desplazamientos</Text>
                     <FlatList
                         data={listMedios}

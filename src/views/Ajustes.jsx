@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Icon, ListItem } from '@rneui/base';
 import { useContext } from 'react';
-import { ActivityIndicator, Modal, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { ActivityIndicator, ImageBackground, Modal, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import { primary, styles } from '../styles/style';
 import { AuthContext } from '../context/authentication/AuthContext'
 import { CatalogosContext } from '../context/store/CatalogosContext';
@@ -172,66 +172,77 @@ export const Ajustes = () => {
 
   return (
     <View style={styles.container}>
-      <View style={{ flex: 10 }}>
-        <SincronizarList />
-        <OpcionDesplazamiento />
-        <OpcionIncidente />
-        <OpcionMarcador />
-      </View>
-      <View style={styles.foobar}>
-        <Button
-          title="Cerrar sesión"
-          type="clear"
-          onPress={() => { setModalVisible(true) }}
-          titleStyle={{ color: styles.primary }}
-          icon={
-            <Icon
-              name="logout"
-              type="material-community"
-              size={15}
-              color={styles.primary}
-            />
-          }
-          iconRight
-        />
-        <View style={{ marginTop: 10, justifyContent: 'center', alignContent: 'center' }}>
-
-          <Text style={{ color: 'gray', fontSize: 14, fontWeight: 'normal', textAlign: 'center' }}>© {fecha} Universidad de El Salvador.</Text>
-          <Text style={{ color: 'gray', fontSize: 14, fontWeight: 'normal', textAlign: 'center' }}>Todos los derechos reservados</Text>
-        </View>
-
-      </View>
-      <Modal
-        animationType="fade"
-        visible={modalVisible}
-        transparent={true}
-        statusBarTranslucent={true}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
+      <ImageBackground
+        source={require('../img/fondo.png')}
+        resizeMode="cover"
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          tintColor: 'transparent'
         }}
       >
-        <View style={stylesAjustes.centeredView}>
-          <View style={stylesAjustes.modalView}>
-            <Text style={{ ...styles.titleText, color: primary, fontSize: 20 }}>Cerrar sesión</Text>
-            <Text style={{ ...styles.titleText, color: 'gray', fontSize: 16, fontWeight: 'normal' }}>¿Seguro de cerrar sesión?</Text>
-            <Text style={{ ...styles.titleText, color: 'gray', fontSize: 14, fontWeight: 'normal' }}>Cualquier registros no sincronizado se perderá</Text>
-            <View style={{
-              flexDirection: 'row'
-            }}>
-              {
-                loading ? (
-                  <ActivityIndicator size="large" color={styles.primary} />
-                ) : (
-                  <>
-                    <Button title="Sí, seguro" type="clear" titleStyle={{ color: primary }} onPress={() => { cerrarSesion() }} />
-                    <Button title="Cancelar" type="clear" titleStyle={{ color: 'gray' }} onPress={() => { setModalVisible(!modalVisible) }} />
-                  </>
-                )
-              }
+
+        <View style={{ flex: 10 }}>
+          <SincronizarList />
+          <OpcionDesplazamiento />
+          <OpcionIncidente />
+          <OpcionMarcador />
+        </View>
+        <View style={styles.foobar}>
+          <Button
+            title="Cerrar sesión"
+            type="clear"
+            onPress={() => { setModalVisible(true) }}
+            titleStyle={{ color: styles.primary }}
+            icon={
+              <Icon
+                name="logout"
+                type="material-community"
+                size={15}
+                color={styles.primary}
+              />
+            }
+            iconRight
+          />
+          <View style={{ marginTop: 10, justifyContent: 'center', alignContent: 'center' }}>
+
+            <Text style={{ color: 'gray', fontSize: 14, fontWeight: 'normal', textAlign: 'center' }}>© {fecha} Universidad de El Salvador.</Text>
+            <Text style={{ color: 'gray', fontSize: 14, fontWeight: 'normal', textAlign: 'center' }}>Todos los derechos reservados</Text>
+          </View>
+
+        </View>
+        <Modal
+          animationType="fade"
+          visible={modalVisible}
+          transparent={true}
+          statusBarTranslucent={true}
+          onRequestClose={() => {
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <View style={stylesAjustes.centeredView}>
+            <View style={stylesAjustes.modalView}>
+              <Text style={{ ...styles.titleText, color: primary, fontSize: 20 }}>Cerrar sesión</Text>
+              <Text style={{ ...styles.titleText, color: 'gray', fontSize: 16, fontWeight: 'normal' }}>¿Seguro de cerrar sesión?</Text>
+              <Text style={{ ...styles.titleText, color: 'gray', fontSize: 14, fontWeight: 'normal' }}>Cualquier registros no sincronizado se perderá</Text>
+              <View style={{
+                flexDirection: 'row'
+              }}>
+                {
+                  loading ? (
+                    <ActivityIndicator size="large" color={styles.primary} />
+                  ) : (
+                    <>
+                      <Button title="Sí, seguro" type="clear" titleStyle={{ color: primary }} onPress={() => { cerrarSesion() }} />
+                      <Button title="Cancelar" type="clear" titleStyle={{ color: 'gray' }} onPress={() => { setModalVisible(!modalVisible) }} />
+                    </>
+                  )
+                }
+              </View>
             </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
+      </ImageBackground>
 
     </View>
   )

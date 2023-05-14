@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, Modal } from 'react-native';
+import { View, Text, StyleSheet, Image, Modal, ImageBackground } from 'react-native';
 import { FAB, Icon, SpeedDial } from '@rneui/base';
 import { format } from 'date-fns';
 import Geolocation from 'react-native-geolocation-service';
@@ -169,10 +169,21 @@ export const Desplazamiento = () => {
       if (medio.nombre === 'Autobús') setMedioTransporteModal(true)
     }
   }, [viajeIniciado])
-  
+
+  const image = { uri: 'https://reactjs.org/logo-og.png' };
 
   return (
     <View style={styles.container}>
+      <ImageBackground 
+        source={require('../img/fondo.png')}
+        resizeMode="cover"
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          tintColor: 'transparent'
+        }}
+      >
+
       <KeepAwake />
       <ModalComponent
         modalVisible={modalIncidentes}
@@ -305,6 +316,7 @@ export const Desplazamiento = () => {
           onPress={openModalIncidentes}
         />
       </SpeedDial>
+      </ImageBackground>
     </View>
   );
 };
