@@ -1,4 +1,5 @@
-import {db} from '../config/database';
+import { format } from 'date-fns';
+import { db } from '../config/database';
 
 export const createTableDesplazamiento = () => {
   db.transaction(tx => {
@@ -6,6 +7,7 @@ export const createTableDesplazamiento = () => {
       `CREATE TABLE IF NOT EXISTS tbl_desplazamiento (
         uuid TEXT PRIMARY KEY,
         desplazamiento TEXT,
+        costos TEXT,
         enviado INTEGER,
         activo INTEGER,
         fecha_registro TEXT
@@ -24,14 +26,24 @@ export const addItemDesplazamiento = (data) => {
     alert('Enter Data');
     return;
   }
+
+  const registro = {
+    ...data,
+    desplazamiento: JSON.stringify(data.desplazamiento, null),
+    costos: JSON.stringify(data.costos, null),
+    fecha_registro: format(new Date(), 'dd-MM-yyyy hh:mm:ss aaaa'),
+  }
+
+
   db.transaction(tx => {
     tx.executeSql(
-      `INSERT INTO tbl_desplazamiento (uuid, desplazamiento, enviado, activo, fecha_registro) VALUES (?, ?, ?, ?, ?);`,
-      [data.uuid, data.desplazamiento, 0, 1, data.fecha_registro],
+      `INSERT INTO tbl_desplazamiento (uuid, desplazamiento, costos, enviado, activo, fecha_registro) VALUES (?, ?, ?, ?, ?, ?);`,
+      [registro.uuid, registro.desplazamiento, registro.costos, registro?.enviado || 0, 1, registro.fecha_registro],
       (sqlTxn, result) => {
       },
       error => {
-             },
+        console.log("🚀 ~ file: TblDesplazamientos.jsx:48 ~ addItemDesplazamiento ~ error:", error)
+      },
     );
   });
 };

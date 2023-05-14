@@ -72,21 +72,17 @@ export const ListadoDesplazamiento = () => {
   }
 
   const enviarDesplazamiento = async (item, reset) => {
-    const mensaje = 'Desplazamiento enviado exitosamente.';
+    setCargando(true)
 
     try {
-      setCargando(true)
       const data = {
         uuid: item.uuid,
-        desplazamiento: JSON.parse(item.desplazamiento)
+        desplazamiento: JSON.parse(item.desplazamiento),
+        costos: JSON.parse(item.costos)
       }
-      //Enviardo al backend
-      await postDesplazamiento(data)
-      //Actualizado en la base de datos local SQLITE
-      await sendDesplazamiento(item.uuid, reset)
+      await postDesplazamiento(data, true)
       items();
       reset()
-      mostrarNotificacion(mensaje)
     } catch (error) {
       reset()
     } finally {

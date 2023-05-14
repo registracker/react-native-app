@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, Image, Modal } from 'react-native';
 import { FAB, Icon, SpeedDial } from '@rneui/base';
 import { format } from 'date-fns';
 import Geolocation from 'react-native-geolocation-service';
-import uuid from 'react-native-uuid';
 import BackgroundService from 'react-native-background-actions';
 import KeepAwake from '@sayem314/react-native-keep-awake';
 import { es } from 'date-fns/locale'
@@ -51,7 +50,7 @@ export const Desplazamiento = () => {
   const [fechaUltimoDesplazamiento, setFechaUltimoDesplazamiento] = useState()
   const [modalMarcador, setModalMarcador] = useState(false);
   const [listaMediosTransporte, setlistaMediosTransporte] = useState([])
-  
+
   const [medioTransporteModal, setMedioTransporteModal] = useState(false)
   const [ultimoMedio, setUltimoMedio] = useState()
 
@@ -59,61 +58,20 @@ export const Desplazamiento = () => {
 
   const { ctl_medios_desplazamientos, ctl_incidentes, obtenerMediosDesplazamientos, obtenerIncidentes } = useContext(CatalogosContext)
 
-  const { agregarMedioDesplazamiento, countGrupo, listMedios, detenerDesplazamiento, iniciarDesplazamiento } = useContext(DesplazamientoContext)
+  const { agregarMedioDesplazamiento, iniciarDesplazamiento, registrarDesplazamiento } = useContext(DesplazamientoContext)
 
   const created = async () => {
     await obtenerMediosDesplazamientos()
     await obtenerIncidentes()
   };
 
-  // const IniciarDesplazamiento = async () => {
-  //   setViajeIniciado(true);
-  //   setUuidDesplazamiento(uuid.v4());
-  //   setFechaHoraInciado(new Date());
-
-  //   const detener = time =>
-  //     new Promise(resolve => setTimeout(() => resolve(), time));
-  //   const veryIntensiveTask = async taskDataArguments => {
-  //     // Example of an infinite loop task
-  //     const { delay } = taskDataArguments;
-  //     await new Promise(async resolve => {
-  //       for (let i = 0; BackgroundService.isRunning(); i++) {
-  //         Geolocation.getCurrentPosition(
-  //           position => {
-  //             setPosition(position);
-  //           },
-  //           error => {
-  //             // See error code charts below.
-  //           },
-  //           {
-  //             enableHighAccuracy: true,
-  //             distanceFilter: 0,
-  //           },
-  //         );
-
-  //         await detener(delay);
-  //       }
-  //     });
-  //   };
-
-  //   await BackgroundService.start(veryIntensiveTask, options);
-  //   await BackgroundService.updateNotification({
-  //     taskDesc: 'registrando desplazamiento',
-  //   });
-  // };
-
   const getLocationObservation = () => {
     setViajeIniciado(true);
-    setUuidDesplazamiento(uuid.v4());
     setDefaultOptions({ locale: es })
-    setHoraInciado(format(new Date(), 'hh:mm:ss aaaa'));
-    setFechaInciado(format(new Date(), 'PPP'));
 
-    iniciarDesplazamiento(uuidDesplazamiento)
     const observation = Geolocation.watchPosition(
       position => {
         setPosition(position);
-        setData([...data, position]);
       },
       error => {
       },
@@ -129,36 +87,9 @@ export const Desplazamiento = () => {
 
   const stopLocationObserving = async () => {
     setViajeIniciado(false);
-    await BackgroundService.stop()
-    if (data.length > 0) {
-      const data = {
-        uuid: uuidDesplazamiento,
-        desplazamiento: JSON.stringify(puntos, null),
-        fecha_registro: format(new Date(), 'dd-MM-yyyy hh:mm:ss aaaa'),
-      };
-      await addItemDesplazamiento(data);
-
-      const optionDesplazamiento = await AsyncStorage.getItem('opcion-desplazamiento');
-      if (optionDesplazamiento === 'activo') {
-        await postDesplazamiento({ uuid: uuidDesplazamiento, desplazamiento: puntos })
-        await sendDesplazamiento(uuidDesplazamiento)
-      }
-
-
-
-    }
-    setData([]);
-    setPuntos([])
     setPosition()
-    setlistaMediosTransporte([])
-    setUltimoMedio()
-    setUuidDesplazamiento();
-    setContadorMedio(0);
     Geolocation.clearWatch(watchId);
-    setFechaUltimoDesplazamiento(format(new Date(), 'PPPP p'))
-
     setCostoDesplazamientoModal(true);  //Modal for displaying costo de desplazamiento
-    // detenerDesplazamiento()
   };
 
   /**
@@ -168,7 +99,7 @@ export const Desplazamiento = () => {
     setModalIncidentes(true);
     setOpen(false);
   };
-  
+
   /**
    * Abrir Modal de ingreso de marcadores y levantamientos
    */
@@ -222,28 +153,23 @@ export const Desplazamiento = () => {
     created();
   }, []);
 
-  //Detectar cambios de la posicion
   useEffect(() => {
-    if (position && viajeIniciado) {
-      agregarMedioDesplazamiento(medio)
-      setContadorMedio(contadorMedio + 1);
-      const point = {
-        latitud: position.coords.latitude,
-        longitud: position.coords.longitude,
-        fecha_registro: position.timestamp,
-        velocidad: position.coords.speed,
-        id_medio_desplazamiento: medio.id,
-        agrupacion_medio_desplazamiento: contadorMedio,
-      };
-      setPuntos([...puntos, point]);
-    }
-  }, [position, viajeIniciado]);
+    if (viajeIniciado) registrarDesplazamiento(position, medio);
+  }, [position])
+
 
   useEffect(() => {
-    if (medio.nombre === 'Autobús' && viajeIniciado) {
-      setMedioTransporteModal(true)
+    if (medio.nombre === 'Autobús' && viajeIniciado) setMedioTransporteModal(true)
+  }, [medio]);
+
+  useEffect(() => {
+    if (viajeIniciado) {
+      iniciarDesplazamiento()
+      agregarMedioDesplazamiento(medio)
+      if (medio.nombre === 'Autobús') setMedioTransporteModal(true)
     }
-  }, [medio, viajeIniciado]);
+  }, [viajeIniciado])
+  
 
   return (
     <View style={styles.container}>
@@ -264,12 +190,12 @@ export const Desplazamiento = () => {
       <RutaTransporteModalComponent
         open={medioTransporteModal}
         setOpen={setMedioTransporteModal}
-       />
+      />
       <CostoDesplazamientoModalComponent
         open={costoDesplazamientoModal}
         setOpen={setCostoDesplazamientoModal}
-       />
-      <View style={{ flex: 1, marginHorizontal: '12%' }}>
+      />
+      {/* <View style={{ flex: 1, marginHorizontal: '12%' }}>
         {
           viajeIniciado ? (
             <View style={stylesDesplazamiento.panel}>
@@ -318,7 +244,7 @@ export const Desplazamiento = () => {
             )
           )
         }
-      </View>
+      </View> */}
       <View style={styles.body}>
         <Text style={styles.subtitleText}>
           Elige tu medio de desplazamientos

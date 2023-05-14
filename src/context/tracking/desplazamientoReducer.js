@@ -12,6 +12,11 @@ export const desplazamientoReducer = (state, action) => {
         listMedios: [],
         countGrupo: 0,
       };
+    case 'registrar':
+      return {
+        ...state,
+        tracking: [...state.tracking, action.payload.point],
+      };
     case 'detener':
       return {
         ...state,
@@ -21,12 +26,20 @@ export const desplazamientoReducer = (state, action) => {
         tracking: undefined,
         listMedios: undefined,
         countGrupo: undefined,
+        medioActivo: null,
       };
     case 'agregar_medio':
       return {
         ...state,
         listMedios: [...state.listMedios, action.payload.medio],
         countGrupo: state.countGrupo + 1,
+        medioActivo: action.payload.medio,
+      };
+    case 'actualizar_medio':
+      return {
+        ...state,
+        listMedios: action.payload.listMedios,
+        medioActivo: action.payload.medio,
       };
     case 'actualizar_costo':
       return {

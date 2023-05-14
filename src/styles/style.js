@@ -96,6 +96,11 @@ export const styles = StyleSheet.create({
   errorStyle: {
     fontSize: 12
   },
+  buttonSearch: {
+    backgroundColor: 'green',
+    borderRadius: 3,
+    margin: 5
+  },
   buttonPrimary: {
     backgroundColor: primary,
     borderRadius: 3,

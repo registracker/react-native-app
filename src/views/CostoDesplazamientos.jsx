@@ -23,6 +23,8 @@ const CostoDesplazamientos = ({navigation}) => {
     const [cantidad, setCantidad] = useState()
     const [mensajeError, setMensajeError] = useState()
 
+    const { enviarDesplazamiento } = useContext(DesplazamientoContext)
+
     const editarCosto = (index) => {
         setModalVisible(true);
         setIndexItem(index);
@@ -56,6 +58,11 @@ const CostoDesplazamientos = ({navigation}) => {
             </View>
         </View>
     );
+
+    const finalizar = () => {
+        enviarDesplazamiento()
+        navigation.navigate('TabNavegacion')
+    }
 
     return (
         <View style={stylesCosto.container}>
@@ -94,11 +101,6 @@ const CostoDesplazamientos = ({navigation}) => {
                         <View style={{flexDirection:'row'}}>
 
                         <Button
-                            title='Cancelar'
-                            onPress={() => setModalVisible(false)}
-                            buttonStyle={styles.buttonSecondary}
-                        />
-                        <Button
                             title='Continuar'
                             onPress={() => ingresarCosto(cantidad)}
                             buttonStyle={styles.buttonPrimary}
@@ -125,7 +127,7 @@ const CostoDesplazamientos = ({navigation}) => {
                     <Button
                         title='Continuar'
                         buttonStyle={styles.buttonPrimary}
-                        onPress={() => navigation.navigate('TabNavegacion')}
+                        onPress={() => finalizar()}
                     />
                 </View>
             </View>
