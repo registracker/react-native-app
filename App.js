@@ -12,21 +12,26 @@ import { AuthProvider } from './src/context/authentication/AuthContext';
 import { CatalogosProvider } from './src/context/store/CatalogosContext';
 import { DesplazamientoProvider } from './src/context/tracking/DesplazamientoContext';
 import { MarcadorProvider } from './src/context/levantamiento/MarcadorContext';
+import { NetworkProvider } from './src/context/network/NetworkContext';
 
 function App() {
   return (
     <NavigationContainer>
       <PermissionsProvider>
-        <AuthProvider>
-          <CatalogosProvider>
-            <DesplazamientoProvider>
-              <MarcadorProvider>
-              <Navigation />
-              <Toast />
-              </MarcadorProvider>
-            </DesplazamientoProvider>
-          </CatalogosProvider>
-        </AuthProvider>
+        <NetworkProvider>
+
+          <AuthProvider>
+            <CatalogosProvider>
+              <DesplazamientoProvider>
+                <MarcadorProvider>
+                  <Navigation />
+                  <Toast />
+                </MarcadorProvider>
+              </DesplazamientoProvider>
+            </CatalogosProvider>
+          </AuthProvider>
+        </NetworkProvider>
+
       </PermissionsProvider>
     </NavigationContainer>
   );

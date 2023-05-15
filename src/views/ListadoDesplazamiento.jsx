@@ -110,10 +110,6 @@ export const ListadoDesplazamiento = () => {
     }, 2000);
   }, []);
 
-
-  if (!listadoDesplazamientos) return <Loading />
-
-
   const ItemDesplazamiento = ({ item }) => (
     <ListItem.Swipeable
       leftContent={(reset) => (
@@ -139,7 +135,7 @@ export const ListadoDesplazamiento = () => {
       <Icon name="run" type='material-community' />
       <ListItem.Content  >
         {/* <ListItem.Title>Registrado: {format(item.fecha_registro, 'dd-MM-yyyy hh:mm:ss aaaa')}</ListItem.Title> */}
-        <ListItem.Title>Registrado: {format(new Date(item.fecha_registro), 'dd-MM-yyyy hh:mm:ss aaaa')}</ListItem.Title>
+        <ListItem.Title>Registrado: {item.fecha_registro}</ListItem.Title>
         <ListItem.Subtitle>{item.uuid}</ListItem.Subtitle>
       </ListItem.Content>
 

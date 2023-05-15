@@ -1,12 +1,14 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Desplazamiento } from '../views/Desplazamiento';
-import { ListadoDesplazamiento } from '../views/ListadoDesplazamiento';
 import { Ajustes } from '../views/Ajustes';
 import { Icon, Image } from '@rneui/base';
 import { styles } from '../styles/style';
-import { ImageBackground } from 'react-native';
 import { Registros } from '../views/Registros';
+import { useEffect } from 'react';
+import { useNetInfo } from '@react-native-community/netinfo';
+import { NetworkContext } from '../context/network/NetworkContext';
+import { DesplazamientoContext } from '../context/tracking/DesplazamientoContext';
 
 const Tab = createBottomTabNavigator();
 
@@ -27,6 +29,17 @@ const options = {
 }
 
 export const TabNavegacion = () => {
+
+    const netInfo = useNetInfo();
+
+    const { envioAutomaticoDesplazamientos } = useContext(DesplazamientoContext)
+
+    useEffect(() => {
+        if (netInfo?.isConnected === true) {
+            envioAutomaticoDesplazamientos()
+        }
+    }, [])
+    
     return (
         <Tab.Navigator screenOptions={options}>
             <Tab.Screen

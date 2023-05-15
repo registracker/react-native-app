@@ -3,7 +3,7 @@ import uuid from 'react-native-uuid';
 import { desplazamientoReducer } from './desplazamientoReducer';
 
 import { postDesplazamiento } from '../../services/desplazamientoServices.js';
-import { limpiarDesplazamientoDatatable } from '../../database/TblDesplazamientos';
+import { limpiarDesplazamientoDatatable, obtenerSinSincronzarDesplazamientos } from '../../database/TblDesplazamientos';
 
 export const DesplazamientoContext = createContext();
 
@@ -110,11 +110,19 @@ export const DesplazamientoProvider = ({ children }) => {
     }
 
     /**
-     * METODOS PARA LIMPIAR REGISTROS DE DESPLAZAMIENTOS
+     * METODOS PARA ENVIAR AUTOMATICO REGISTROS DE DESPLAZAMIENTOS
      */
-    // const limpiarDesplazamientos = () => {
-    //     limpiarDesplazamientoDatatable()
-    // }
+    const envioAutomaticoDesplazamientos = async() => {
+        const data = await obtenerSinSincronzarDesplazamientos();
+        for await (const item of data) { 
+            const json = {
+                uuid: item.uuid,
+                desplazamiento: JSON.parse(item.desplazamiento),
+                costos: JSON.parse(item.costos)
+            }
+            await postDesplazamiento(json, true)
+        }
+    }
     return (
         <DesplazamientoContext.Provider
             value={{
@@ -127,6 +135,7 @@ export const DesplazamientoProvider = ({ children }) => {
                 enviarDesplazamiento,
                 agregarMedioDesplazamiento,
                 actualizarMedioDesplazamiento,
+                envioAutomaticoDesplazamientos
             }}>
             {children}
         </DesplazamientoContext.Provider>

@@ -17,7 +17,10 @@ import ListadoRutaTransporte from '../views/ListadoRutaTransporte';
 import Marcador from '../views/Marcador';
 import { limpiarRegistros } from '../utils/functions';
 
+import NetInfo from "@react-native-community/netinfo";
 
+import {NetworkContext} from '../context/network/NetworkContext';
+import { DesplazamientoContext } from '../context/tracking/DesplazamientoContext';
 
 const Stack = createNativeStackNavigator();
 
@@ -58,10 +61,22 @@ export const Navigation = () => {
 
     const { permissions, checkLocationPermission } = useContext(PermissionContext);
     const { autenticado } = useContext(AuthContext);
+    const { saveStatus } = useContext(NetworkContext)
+    const { envioAutomaticoDesplazamientos } = useContext(DesplazamientoContext)
+
 
     useEffect(() => {
         checkLocationPermission()
         limpiarRegistros()
+
+        const unsubscribe = NetInfo.addEventListener(state => {
+            saveStatus(state)
+            
+        });
+
+        return () => {
+            unsubscribe();
+        }
     }, [])
 
 

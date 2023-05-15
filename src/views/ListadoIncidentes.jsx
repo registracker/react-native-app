@@ -8,6 +8,7 @@ import { styles } from '../styles/style';
 import { deleteReporteIncidente, enviarIncidente, getReporteIncidentesDatabase } from '../database/TblIncidentes';
 import { postIncidente } from '../services/incidenteServices'
 import { SearchBar } from '@rneui/themed';
+import { format } from 'date-fns';
 
 export const ListadoIncidentes = () => {
 
@@ -53,11 +54,11 @@ export const ListadoIncidentes = () => {
     }
 
     const mostrarNotificacion = (mensaje) => {
-        ToastAndroid.showWithGravity(
-            mensaje,
-            ToastAndroid.LONG,
-            ToastAndroid.CENTER,
-        );
+        // ToastAndroid.showWithGravity(
+        //     mensaje,
+        //     ToastAndroid.LONG,
+        //     ToastAndroid.CENTER,
+        // );
     };
 
     const deleteIncidentes = async (id, reset) => {
@@ -136,7 +137,7 @@ export const ListadoIncidentes = () => {
             <Icon name={item.icono} type='material-community' />
             <ListItem.Content  >
                 <ListItem.Title>{item.nombre}</ListItem.Title>
-                <ListItem.Subtitle>{format(new Date(item.fecha_reporte), 'dd-MM-yyyy hh:mm:ss aaaa')}{item.enviado}</ListItem.Subtitle>
+                <ListItem.Subtitle>{item.fecha_reporte}{item.enviado}</ListItem.Subtitle>
             </ListItem.Content>
 
             <Icon

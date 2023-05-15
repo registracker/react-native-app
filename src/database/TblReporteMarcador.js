@@ -159,7 +159,6 @@ export const limpiarMarcadoresTable = () => {
       'DELETE FROM tbl_reporte_marcador WHERE date(fecha_reporte) < date(?) AND enviado = 1',
       [now],
       (transaction, res) => {
-        console.log("🚀 ~ file: TblReporteMarcador.js:162 ~ limpiarMarcadoresTable ~ res:", res.rows.raw())
         // console.log('lIMPIEZA DESPLAZAMIENTO');
       },
       error => {

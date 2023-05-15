@@ -8,6 +8,7 @@ import { deleteReporteMarcador, getReporteMarcadorDatabase } from '../database/T
 import { SearchBar } from '@rneui/themed';
 
 import {postReporteMarcador} from '../services/marcadorServices'
+import { format } from 'date-fns';
 
 
 export const ListadoMarcadores = () => {
@@ -127,7 +128,7 @@ export const ListadoMarcadores = () => {
         >
             <Icon name={item.icono} type='material-community' />
             <ListItem.Content  >
-                <ListItem.Title>Registrado: {format(new Date(item.fecha_reporte), 'dd-MM-yyyy hh:mm:ss aaaa')}</ListItem.Title>
+                <ListItem.Title>Registrado: {item.fecha_reporte}</ListItem.Title>
                 <ListItem.Subtitle>Código:{item.codigo}</ListItem.Subtitle>
                 <ListItem.Subtitle>{item.nombre_marcador}</ListItem.Subtitle>
             </ListItem.Content>
