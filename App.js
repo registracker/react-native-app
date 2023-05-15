@@ -21,8 +21,6 @@ function App() {
           <CatalogosProvider>
             <DesplazamientoProvider>
               <MarcadorProvider>
-
-
               <Navigation />
               <Toast />
               </MarcadorProvider>

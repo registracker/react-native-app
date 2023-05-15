@@ -136,7 +136,7 @@ export const ListadoIncidentes = () => {
             <Icon name={item.icono} type='material-community' />
             <ListItem.Content  >
                 <ListItem.Title>{item.nombre}</ListItem.Title>
-                <ListItem.Subtitle>{item.fecha_reporte}{item.enviado}</ListItem.Subtitle>
+                <ListItem.Subtitle>{format(new Date(item.fecha_reporte), 'dd-MM-yyyy hh:mm:ss aaaa')}{item.enviado}</ListItem.Subtitle>
             </ListItem.Content>
 
             <Icon
