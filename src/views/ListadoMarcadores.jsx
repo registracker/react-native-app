@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react'
-import { FlatList, View } from 'react-native'
+import { FlatList, ImageBackground, View } from 'react-native'
 import { Button, Icon, ListItem } from '@rneui/base'
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -7,7 +7,7 @@ import { styles } from '../styles/style';
 import { deleteReporteMarcador, getReporteMarcadorDatabase } from '../database/TblReporteMarcador';
 import { SearchBar } from '@rneui/themed';
 
-import {postReporteMarcador} from '../services/marcadorServices'
+import { postReporteMarcador } from '../services/marcadorServices'
 import { format } from 'date-fns';
 
 
@@ -26,30 +26,30 @@ export const ListadoMarcadores = () => {
     /**
      * Metodo para busqueda con codigo, fecha o nombre del marcador
      */
-    const searchText = async() => {
+    const searchText = async () => {
         const regexCodigo = /^[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}$/;
         const regexFecha = /^\d{2}-\d{2}-\d{4}$/;
 
         let result = null;
         const reportes = await getReporteMarcadorDatabase()
 
-        if(!search){
+        if (!search) {
             items();
-            return;  
+            return;
         }
 
         if (regexCodigo.test(search)) {
-            result = reportes.filter( element => element.codigo === search) 
-        } else if (regexFecha.test(search)){
-            result = reportes.filter( element => {
+            result = reportes.filter(element => element.codigo === search)
+        } else if (regexFecha.test(search)) {
+            result = reportes.filter(element => {
                 const fecha = element.fecha_reporte.split(" ")[0];
-                if(fecha === search) {
+                if (fecha === search) {
                     return element
                 }
                 return;
-            }) 
+            })
         } else {
-            result = reportes.filter(element => element.nombre_marcador.toLowerCase() === search.toLowerCase()) 
+            result = reportes.filter(element => element.nombre_marcador.toLowerCase() === search.toLowerCase())
         }
         setLevantamientos(result)
     }
@@ -152,22 +152,33 @@ export const ListadoMarcadores = () => {
 
     return (
         <View style={styles.container}>
-            <SearchBar
-                placeholder="Buscar por código, fecha o marcador..."
-                onChangeText={updateSearch}
-                value={search}
-                lightTheme
-                onBlur={searchText}
-                onClear={items}
-                // onKeyboardHide={searchText}
-                autoCapitalize='none'
-            />
-            <FlatList
-                data={levantamientos}
-                refreshing={refreshing}
-                onRefresh={onRefresh}
-                renderItem={ItemMarcador}
-            />
+            <ImageBackground
+                source={require('../img/fondo.png')}
+                resizeMode="cover"
+                style={{
+                    flex: 1,
+                    justifyContent: 'center',
+                    tintColor: 'transparent'
+                }}
+            >
+
+                <SearchBar
+                    placeholder="Buscar por código, fecha o marcador..."
+                    onChangeText={updateSearch}
+                    value={search}
+                    lightTheme
+                    onBlur={searchText}
+                    onClear={items}
+                    // onKeyboardHide={searchText}
+                    autoCapitalize='none'
+                />
+                <FlatList
+                    data={levantamientos}
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                    renderItem={ItemMarcador}
+                />
+            </ImageBackground>
         </View>
     )
 }

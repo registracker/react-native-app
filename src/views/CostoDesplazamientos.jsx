@@ -1,4 +1,4 @@
-import { Modal, Pressable, StatusBar, StyleSheet, Text, View } from 'react-native'
+import { ImageBackground, Modal, Pressable, StatusBar, StyleSheet, Text, View } from 'react-native'
 import React, { useEffect } from 'react'
 import { useContext } from 'react'
 
@@ -10,6 +10,7 @@ import { primary, styles } from '../styles/style';
 import { useState } from 'react'
 import { Input } from '@rneui/themed'
 import { useBackHandler } from '@react-native-community/hooks'
+import { color } from 'react-native-reanimated'
 
 
 const CostoDesplazamientos = ({ navigation }) => {
@@ -75,12 +76,12 @@ const CostoDesplazamientos = ({ navigation }) => {
 
         navigation.setOptions({
             headerLeft: () => (
-                <Icon 
-                onPress={() => { enviarDesplazamiento(); navigation.navigate('TabNavegacion'); }} 
-                type="ionicons" 
-                color='white' 
-                name='arrow-back' 
-                style={{marginRight: 5}}
+                <Icon
+                    onPress={() => { enviarDesplazamiento(); navigation.navigate('TabNavegacion'); }}
+                    type="ionicons"
+                    color='white'
+                    name='arrow-back'
+                    style={{ marginRight: 5 }}
                 />
             ),
         });
@@ -89,72 +90,83 @@ const CostoDesplazamientos = ({ navigation }) => {
 
 
     return (
-        <View style={stylesCosto.container}>
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => {
-                    setCantidad()
-                    setMensajeError()
-                    setModalVisible(!modalVisible);
-                }}>
-                <View style={stylesCosto.centeredView}>
-                    <View style={stylesCosto.modalView}>
-                        <Text style={stylesCosto.modalText}>Costo del medio de transporte</Text>
-                        <Input
-                            containerStyle={{}}
-                            disabledInputStyle={{ background: "#ddd" }}
-                            inputContainerStyle={{}}
-                            errorMessage={mensajeError}
-                            errorStyle={{}}
-                            errorProps={{}}
-                            inputStyle={{}}
-                            labelStyle={{}}
-                            labelProps={{}}
-                            leftIconContainerStyle={{}}
-                            rightIcon={<Icon name="close" onPress={() => setCantidad()} size={20} />}
-                            rightIconContainerStyle={{}}
-                            value={cantidad}
-                            onChangeText={setCantidad}
-                            placeholder="$0.00"
-                            label='Ingresar cantidad'
-                            keyboardType='decimal-pad'
-                            onFocus={() => setMensajeError()}
-                        />
-                        <View style={{ flexDirection: 'row' }}>
-
-                            <Button
-                                title='Continuar'
-                                onPress={() => ingresarCosto(cantidad)}
-                                buttonStyle={styles.buttonPrimary}
+        <View style={styles.container}>
+            <ImageBackground
+                source={require('../img/fondo.png')}
+                resizeMode="cover"
+                style={{
+                    flex: 1,
+                    justifyContent: 'center',
+                    tintColor: 'transparent'
+                }}
+            >
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={modalVisible}
+                    onRequestClose={() => {
+                        setCantidad()
+                        setMensajeError()
+                        setModalVisible(!modalVisible);
+                    }}>
+                    <View style={stylesCosto.centeredView}>
+                        <View style={stylesCosto.modalView}>
+                            <Text style={stylesCosto.modalText}>Costo del medio de transporte</Text>
+                            <Input
+                                containerStyle={{}}
+                                disabledInputStyle={{ background: "#ddd" }}
+                                inputContainerStyle={{}}
+                                errorMessage={mensajeError}
+                                errorStyle={{}}
+                                errorProps={{}}
+                                inputStyle={{}}
+                                labelStyle={{}}
+                                labelProps={{}}
+                                leftIconContainerStyle={{}}
+                                rightIcon={<Icon name="close" onPress={() => setCantidad()} size={20} />}
+                                rightIconContainerStyle={{}}
+                                value={cantidad}
+                                onChangeText={setCantidad}
+                                placeholder="$0.00"
+                                label='Ingresar cantidad'
+                                keyboardType='decimal-pad'
+                                onFocus={() => setMensajeError()}
                             />
+                            <View style={{ flexDirection: 'row' }}>
+
+                                <Button
+                                    title='Continuar'
+                                    onPress={() => ingresarCosto(cantidad)}
+                                    buttonStyle={styles.buttonPrimary}
+                                />
+                            </View>
                         </View>
                     </View>
+                </Modal>
+                <View style={styles.body}>
+                    <View style={{ justifyContent: 'center', marginHorizontal: 10, width: '100%' }}>
+                        <Text style={styles.textBlack} >Definir costo de desplazamientos</Text>
+                        <FlatList
+                            data={listMedios}
+                            renderItem={({ item, index }) => <Item data={item} index={index} />}
+                            keyExtractor={item => item.id}
+                        />
+                    </View>
                 </View>
-            </Modal>
-            <View style={stylesCosto.body}>
-                <View style={{ justifyContent: 'center', marginHorizontal: 10 }}>
-                    <Text style={stylesCosto.modalText} >Definir costo de desplazamientos</Text>
-                    <FlatList
-                        data={listMedios}
-                        renderItem={({ item, index }) => <Item data={item} index={index} />}
-                        keyExtractor={item => item.id}
-                    />
-                </View>
-                <View>
-                    <Button
-                        title='Omitir'
-                        buttonStyle={styles.buttonSecondary}
-                        onPress={() => navigation.navigate('TabNavegacion')}
-                    />
-                    <Button
-                        title='Continuar'
-                        buttonStyle={styles.buttonPrimary}
-                        onPress={() => finalizar()}
-                    />
-                </View>
-            </View>
+                    <View>
+                        <Button
+                            title='Omitir'
+                            buttonStyle={styles.buttonSecondary}
+                            onPress={() => navigation.navigate('TabNavegacion')}
+                        />
+                        <Button
+                            title='Continuar'
+                            buttonStyle={styles.buttonPrimary}
+                            onPress={() => finalizar()}
+                        />
+                    </View>
+            </ImageBackground>
+
         </View>
     )
 }
@@ -162,15 +174,8 @@ const CostoDesplazamientos = ({ navigation }) => {
 export default CostoDesplazamientos
 
 const stylesCosto = StyleSheet.create({
-    container: {
-        flex: 1,
-        marginTop: StatusBar.currentHeight || 0,
-        alignContent: 'space-between',
-    },
     body: {
-        flex: 1,
         justifyContent: 'space-around',
-        alignContent: 'center',
         width: '100%',
     },
     item: {
@@ -188,8 +193,10 @@ const stylesCosto = StyleSheet.create({
         alignItems: 'center',
     },
     title: {
-        fontSize: 15,
-        marginHorizontal: 10
+        fontSize: 20,
+        marginHorizontal: 10,
+        color: 'black',
+
     },
     button: {
         marginHorizontal: 10,

@@ -24,6 +24,7 @@ export const MarcadorProvider = ({ children }) => {
     const guardar = async (levantamiento) => {
         await AsyncStorage.removeItem('levantamiento')
         const { data, status } = await getLevantamiento(levantamiento)
+        console.log("🚀 ~ file: marcadorContext.jsx:28 ~ guardar ~ data:", data)
         if(data){
             if (status === 200) {
                 await AsyncStorage.setItem('levantamiento', JSON.stringify(data))

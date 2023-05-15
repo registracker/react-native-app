@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { FlatList, ScrollView, TextInput } from 'react-native-gesture-handler';
 import { Button, Icon } from '@rneui/base';
@@ -63,7 +63,7 @@ const Marcador = ({ navigation }) => {
                 justifyContent: 'center',
                 margin: 10,
                 alignItems: 'center',
-                width: 100, minHeight: 100,
+                minWidth: 100, minHeight: 100,
             }}>
                 <TouchableOpacity
                     onPress={() => setSelected(item)}
@@ -79,7 +79,7 @@ const Marcador = ({ navigation }) => {
                     />
 
                 </TouchableOpacity>
-                <Text adjustsFontSizeToFit style={styles.modalText}>
+                <Text adjustsFontSizeToFit style={styles.text}>
                     {item.nombre}
                 </Text>
             </View>
@@ -119,40 +119,52 @@ const Marcador = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <View style={styles.body}>
-                <Text style={styles.textBlack}>
-                    Seleccione un marcador
-                </Text>
-                <FlatList
-                    data={marcadores}
-                    renderItem={renderItem}
-                    keyExtractor={item => item.id}
-                    numColumns='3'
-                />
-                <Text style={styles.modalTextSubtitle}>
-                    Agregar descripción (Opcional)
-                </Text>
-                <View style={{ flex: 0.4, width: '80%' }}>
-                    <TextInput
-                        multiline={true}
-                        numberOfLines={8}
-                        style={{ borderWidth: 2, borderColor: primary, borderRadius: 5 }}
-                        onChangeText={setDescripcion}
-                        value={descripcion}
+            <ImageBackground
+                source={require('../img/fondo.png')}
+                resizeMode="cover"
+                style={{
+                    flex: 1,
+                    justifyContent: 'center',
+                    tintColor: 'transparent'
+                }}
+            >
+
+
+                <View style={styles.body}>
+                    <Text style={styles.text}>
+                        Seleccione un marcador
+                    </Text>
+                    <FlatList
+                        data={marcadores}
+                        renderItem={renderItem}
+                        keyExtractor={item => item.id}
+                        numColumns='3'
+                    />
+                    <Text style={styles.text}>
+                        Agregar descripción (Opcional)
+                    </Text>
+                    <View style={{ flex: 0.4, width: '80%' }}>
+                        <TextInput
+                            multiline={true}
+                            numberOfLines={8}
+                            style={{ borderWidth: 2, borderColor: primary, borderRadius: 5 }}
+                            onChangeText={setDescripcion}
+                            value={descripcion}
+                        />
+                    </View>
+                    <Button
+                        title={'Enviar'}
+                        onPress={enviarMarcador}
+                        buttonStyle={styles.buttonPrimary}
+                        disabledStyle={styles.buttonPrimaryDisabled}
+                        loading={cargando}
+                        disabled={enviar}
+                        radius="lg"
+                        containerStyle={styles.buttonContainer}
                     />
                 </View>
-                <Button
-                    title={'Enviar'}
-                    onPress={enviarMarcador}
-                    buttonStyle={styles.buttonPrimary}
-                    disabledStyle={styles.buttonPrimaryDisabled}
-                    loading={cargando}
-                    disabled={enviar}
-                    radius="lg"
-                    containerStyle={styles.buttonContainer}
-                />
-            </View>
 
+            </ImageBackground>
         </View>
     )
 }

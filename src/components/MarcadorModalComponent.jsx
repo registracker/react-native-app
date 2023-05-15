@@ -10,7 +10,7 @@ import { useContext } from 'react';
 import { NavigationContext } from '@react-navigation/native';
 
 export const MarcadorModalComponent = ({ open, setOpen }) => {
-    const [levantamiento, setLevantamiento] = useState("89a1-a23a-210a")
+    const [levantamiento, setLevantamiento] = useState()
     const [levantamientoErrors, setLevantamientoErrors] = useState("")
     const [cargando, setCargando] = useState(false)
 
@@ -20,10 +20,15 @@ export const MarcadorModalComponent = ({ open, setOpen }) => {
 
     const unirseLevantamiento = async () => {
         setCargando(true)
-        const continuar = await guardar(levantamiento);
-        if (continuar) {
-            setOpen(!open)
-            navigation.navigate('Marcador')
+        if(levantamiento){
+
+            const continuar = await guardar(levantamiento);
+            if (continuar) {
+                setOpen(!open)
+                navigation.navigate('Marcador')
+            }
+        } else {
+            setLevantamientoErrors('Debe ingresar un código de levantamiento')
         }
         setCargando(false)
     }
@@ -65,7 +70,7 @@ export const MarcadorModalComponent = ({ open, setOpen }) => {
                                     // onBlur={() => isEmail()}
                                     errorMessage={levantamientoErrors}
                                     leftIcon={levantamientoErrors ? <Icon name="information-outline" type='material-community' size={20} color='white' /> : ''}
-                                    errorStyle={levantamientoErrors ? stylesRegistro.errorStyle : null}
+                                    errorStyle={levantamientoErrors ? styles.errorStyle : null}
                                     label="Código de levantamiento"
                                     labelStyle={{ color: 'grey' }}
                                     inputContainerStyle={setLevantamientoErrors ? styles.inputContainerError : styles.inputContainer}

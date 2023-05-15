@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react'
-import { FlatList, ToastAndroid, View } from 'react-native'
-import { Button, Icon, ListItem  } from '@rneui/base'
+import { FlatList, ImageBackground, ToastAndroid, View } from 'react-native'
+import { Button, Icon, ListItem } from '@rneui/base'
 import { useFocusEffect } from '@react-navigation/native';
 
 import { Loading } from '../components/Loading'
@@ -150,22 +150,33 @@ export const ListadoIncidentes = () => {
 
     return (
         <View style={styles.container}>
-            <SearchBar
-                placeholder="Buscar por fecha o incidente..."
-                onChangeText={updateSearch}
-                value={search}
-                lightTheme
-                onBlur={searchText}
-                onClear={items}
-                // onKeyboardHide={searchText}
-                autoCapitalize='none'
-            />
-            <FlatList
-                data={listadoIncidentes}
-                refreshing={refreshing}
-                onRefresh={onRefresh}
-                renderItem={itemIncidente}
-            /> 
+            <ImageBackground
+                source={require('../img/fondo.png')}
+                resizeMode="cover"
+                style={{
+                    flex: 1,
+                    justifyContent: 'center',
+                    tintColor: 'transparent'
+                }}
+            >
+
+                <SearchBar
+                    placeholder="Buscar por fecha o incidente..."
+                    onChangeText={updateSearch}
+                    value={search}
+                    lightTheme
+                    onBlur={searchText}
+                    onClear={items}
+                    // onKeyboardHide={searchText}
+                    autoCapitalize='none'
+                />
+                <FlatList
+                    data={listadoIncidentes}
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                    renderItem={itemIncidente}
+                />
+            </ImageBackground>
         </View>
     )
 }

@@ -1,4 +1,4 @@
-import { ActivityIndicator, Alert, BackHandler, StatusBar, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Alert, BackHandler, ImageBackground, StatusBar, StyleSheet, Text, View } from 'react-native'
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { primary, styles } from '../styles/style';
 import { FlatList } from 'react-native-gesture-handler';
@@ -63,25 +63,26 @@ const ListadoRutaTransporte = ({ navigation }) => {
         <TouchableOpacity
             style={seleted?.id === data.id ? stylesRegistro.seleted : stylesRegistro.item}
             onPress={() => seleccionarRuta(data)}
+            onLongPress={() =>seleccionarRuta(data)}
             activeOpacity={0.4}
         >
             <View style={stylesRegistro.elements}>
-                <Icon name='bus' type='material-community' size={25} color={seleted?.id === data.id ? primary : 'grey'} />
+                <Icon name='bus' type='material-community' size={30} color={primary} />
                 <View>
-                    <Text style={stylesRegistro.title}>Ruta:{data.ruta}</Text>
-                    <Text style={stylesRegistro.title}>{data.codigo_ruta}</Text>
+                    <Text style={styles.textBlack}>Ruta:{data.ruta}</Text>
+                    <Text style={styles.textBlack}>{data.codigo_ruta}</Text>
                 </View>
             </View>
             <View style={stylesRegistro.elements}>
                 <Text
-                    style={stylesRegistro.title}
+                    style={styles.textBlack}
                 >$ {parseFloat(data.tarifa_autorizada, 10).toFixed(2)}</Text>
             </View>
         </TouchableOpacity>
     );
 
     const EmptyList = () => (
-        <Text color='black' style={{ textAlign: 'center' }}>NO HAY DATOS</Text>
+        <Text color='black' style={styles.textBlack}>NO HAY DATOS</Text>
     )
     const ListEndLoader = () => {
         if (loading) {
@@ -96,51 +97,60 @@ const ListadoRutaTransporte = ({ navigation }) => {
             alignContent: 'center',
             width: '100%',
         }}>
+            <ImageBackground
+                source={require('../img/fondo.png')}
+                resizeMode="cover"
+                style={{
+                    flex: 1,
+                    justifyContent: 'center',
+                    tintColor: 'transparent'
+                }}
+            >
+                <View style={styles.body}>
+                    <View style={{ justifyContent: 'center', marginHorizontal: 10, width: '100%' }}>
 
-            <View style={styles.body}>
-                <View style={{ justifyContent: 'center', marginHorizontal: 10, width: '100%' }}>
+                        <Input
+                            onChangeText={setRuta}
+                            value={ruta}
+                            autoCapitalize='none'
+                            placeholder={rutaErrors ? rutaErrors : "Buscar por ruta, código o departamento"}
+                            inputMode="text"
+                            textAlign='center'
+                            label='Búsqueda'
+                            style={{ ...styles.input, color: 'black' }}
+                            errorMessage={rutaErrors}
+                            leftIcon={rutaErrors ? <Icon name="information-outline" type='material-community' size={20} color={primary} /> : ''}
+                            errorStyle={rutaErrors ? stylesRegistro.errorStyle : null}
+                            labelStyle={{ color: 'grey' }}
+                            inputContainerStyle={setRutaErrors ? styles.inputContainerError : styles.inputContainer}
+                            onFocus={() => { setRutaErrors("") }}
+                        />
 
-                    <Input
-                        onChangeText={setRuta}
-                        value={ruta}
-                        autoCapitalize='none'
-                        placeholder={rutaErrors ? rutaErrors : "Buscar por ruta, código o departamento"}
-                        inputMode="text"
-                        textAlign='center'
-                        label='Búsqueda'
-                        style={{ ...styles.input, color: 'black' }}
-                        errorMessage={rutaErrors}
-                        leftIcon={rutaErrors ? <Icon name="information-outline" type='material-community' size={20} color={primary} /> : ''}
-                        errorStyle={rutaErrors ? stylesRegistro.errorStyle : null}
-                        labelStyle={{ color: 'grey' }}
-                        inputContainerStyle={setRutaErrors ? styles.inputContainerError : styles.inputContainer}
-                        onFocus={() => { setRutaErrors("") }}
+                        <FlatList
+                            data={resultado}
+                            renderItem={({ item, index }) => <Item data={item} index={index} />}
+                            keyExtractor={item => item.id}
+                            onEndReached={buscarSiguiente}
+                            onEndReachedThreshold={0.01}
+                            ListFooterComponent={ListEndLoader}
+                            ListEmptyComponent={<EmptyList />}
+                        />
+                    </View>
+                </View>
+                <View>
+                    <Button
+                        title='Buscar'
+                        buttonStyle={styles.buttonSearch}
+                        onPress={() => buscar()}
+                        disabled={loading}
                     />
-
-                    <FlatList
-                        data={resultado}
-                        renderItem={({ item, index }) => <Item data={item} index={index} />}
-                        keyExtractor={item => item.id}
-                        onEndReached={buscarSiguiente}
-                        onEndReachedThreshold={0.1}
-                        ListFooterComponent={ListEndLoader}
-                        ListEmptyComponent={<EmptyList />}
+                    <Button
+                        title={seleted ? 'Guardar' : 'Omitir'}
+                        buttonStyle={seleted ? styles.buttonPrimary : styles.buttonSecondary}
+                        onPress={() => navigation.navigate('TabNavegacion')}
                     />
                 </View>
-            </View>
-            <View>
-                <Button
-                    title='Buscar'
-                    buttonStyle={styles.buttonSearch}
-                    onPress={() => buscar()}
-                    disabled={loading}
-                />
-                <Button
-                    title={seleted ? 'Guardar' : 'Omitir'}
-                    buttonStyle={seleted ? styles.buttonPrimary : styles.buttonSecondary}
-                    onPress={() => navigation.navigate('TabNavegacion')}
-                />
-            </View>
+            </ImageBackground>
         </View>
     )
 }

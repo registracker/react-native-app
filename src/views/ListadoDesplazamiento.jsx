@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react'
-import { FlatList, ToastAndroid, View } from 'react-native'
-import { Button, Icon, ListItem} from '@rneui/base'
+import { FlatList, ImageBackground, ToastAndroid, View } from 'react-native'
+import { Button, Icon, ListItem } from '@rneui/base'
 import { useFocusEffect } from '@react-navigation/native';
 
 import { getDesplazamientos, removeDesplazamiento, sendDesplazamiento } from '../database/TblDesplazamientos'
@@ -22,7 +22,7 @@ export const ListadoDesplazamiento = () => {
     setSearch(search);
   };
 
-  const searchText = async ()  => {
+  const searchText = async () => {
     const regex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
     const regexFecha = /^\d{2}-\d{2}-\d{4}$/;
     const desplazamientos = await getDesplazamientos();
@@ -30,13 +30,13 @@ export const ListadoDesplazamiento = () => {
 
     let result = null;
     if (regex.test(search)) {
-      result = desplazamientos.filter(element => element.uuid === search) 
+      result = desplazamientos.filter(element => element.uuid === search)
     } else if (regexFecha.test(search)) {
       result = desplazamientos.filter(element => {
         const fecha = element.fecha_registro.split(" ")[0];
         if (fecha === search) {
           return element
-        } 
+        }
         return;
       })
     } else {
@@ -150,22 +150,33 @@ export const ListadoDesplazamiento = () => {
 
   return (
     <View style={styles.container}>
-      <SearchBar
-        placeholder="Buscar por identificador o fecha ..."
-        onChangeText={updateSearch}
-        value={search}
-        lightTheme
-        onBlur={searchText}
-        onClear={items}
-        // onKeyboardHide={searchText}
-        autoCapitalize='none'
-      />
-          <FlatList
-            data={listadoDesplazamientos}
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            renderItem={ItemDesplazamiento}
-          />
+      <ImageBackground
+        source={require('../img/fondo.png')}
+        resizeMode="cover"
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          tintColor: 'transparent'
+        }}
+      >
+        <SearchBar
+          placeholder="Buscar por identificador o fecha ..."
+
+          onChangeText={updateSearch}
+          value={search}
+          lightTheme
+          onBlur={searchText}
+          onClear={items}
+          // onKeyboardHide={searchText}
+          autoCapitalize='none'
+        />
+        <FlatList
+          data={listadoDesplazamientos}
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          renderItem={ItemDesplazamiento}
+        />
+      </ImageBackground>
     </View>
   )
 }
