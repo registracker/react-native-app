@@ -15,8 +15,8 @@ import { ListadoMarcadores } from '../views/ListadoMarcadores';
 import CostoDesplazamientos from '../views/CostoDesplazamientos';
 import ListadoRutaTransporte from '../views/ListadoRutaTransporte';
 import Marcador from '../views/Marcador';
+import { limpiarRegistros } from '../utils/functions';
 
-import { limpiarDesplazamientoDatatable } from '../database/TblDesplazamientos';
 
 
 const Stack = createNativeStackNavigator();
@@ -61,7 +61,7 @@ export const Navigation = () => {
 
     useEffect(() => {
         checkLocationPermission()
-        limpiarDesplazamientoDatatable()
+        limpiarRegistros()
     }, [])
 
 

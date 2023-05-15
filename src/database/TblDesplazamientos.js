@@ -1,5 +1,5 @@
-import { format, subDays } from 'date-fns';
-import { db } from '../config/database';
+import {format, subDays} from 'date-fns';
+import {db} from '../config/database';
 
 export const createTableDesplazamiento = () => {
   db.transaction(tx => {
@@ -13,15 +13,13 @@ export const createTableDesplazamiento = () => {
         fecha_registro TEXT
         );`,
       [],
-      (sqlTxn, result) => {
-      },
-      error => {
-      },
+      (sqlTxn, result) => {},
+      error => {},
     );
   });
 };
 
-export const addItemDesplazamiento = (data) => {
+export const addItemDesplazamiento = data => {
   if (!data) {
     alert('Enter Data');
     return;
@@ -32,17 +30,25 @@ export const addItemDesplazamiento = (data) => {
     desplazamiento: JSON.stringify(data.desplazamiento, null),
     costos: JSON.stringify(data.costos, null),
     fecha_registro: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
-  }
-
+  };
 
   db.transaction(tx => {
     tx.executeSql(
-      `INSERT INTO tbl_desplazamiento (uuid, desplazamiento, costos, enviado, activo, fecha_registro) VALUES (?, ?, ?, ?, ?, ?);`,
-      [registro.uuid, registro.desplazamiento, registro.costos, registro?.enviado || 0, 1, registro.fecha_registro],
-      (sqlTxn, result) => {
-      },
+      'INSERT INTO tbl_desplazamiento (uuid, desplazamiento, costos, enviado, activo, fecha_registro) VALUES (?, ?, ?, ?, ?, ?);',
+      [
+        registro.uuid,
+        registro.desplazamiento,
+        registro.costos,
+        registro?.enviado || 0,
+        1,
+        registro.fecha_registro,
+      ],
+      (sqlTxn, result) => {},
       error => {
-        console.log("🚀 ~ file: TblDesplazamientos.jsx:48 ~ addItemDesplazamiento ~ error:", error)
+        console.log(
+          '🚀 ~ file: TblDesplazamientos.jsx:48 ~ addItemDesplazamiento ~ error:',
+          error,
+        );
       },
     );
   });
@@ -52,7 +58,7 @@ export const getDesplazamientos = () => {
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
-        `SELECT * FROM tbl_desplazamiento ORDER BY fecha_registro DESC LIMIT 15;`,
+        'SELECT * FROM tbl_desplazamiento ORDER BY fecha_registro DESC LIMIT 15;',
         [],
         (transaction, res) => {
           let len = res.rows.length;
@@ -71,12 +77,11 @@ export const getDesplazamientos = () => {
   });
 };
 
-
-export const removeDesplazamiento = (uuid) => {
+export const removeDesplazamiento = uuid => {
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
-        `DELETE FROM tbl_desplazamiento WHERE uuid = ?;`,
+        'DELETE FROM tbl_desplazamiento WHERE uuid = ?;',
         [uuid],
         (transaction, res) => {
           resolve(res);
@@ -89,8 +94,7 @@ export const removeDesplazamiento = (uuid) => {
   });
 };
 
-
-export const sendDesplazamiento = (uuid) => {
+export const sendDesplazamiento = uuid => {
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
@@ -113,7 +117,7 @@ export const getLastDesplazamiento = () => {
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
-        `SELECT * FROM tbl_desplazamiento ORDER BY fecha_registro DESC LIMIT 1`,
+        'SELECT * FROM tbl_desplazamiento ORDER BY fecha_registro DESC LIMIT 1',
         [],
         (transaction, res) => {
           resolve(res);
@@ -130,7 +134,7 @@ export const removeDesplazamientos = () => {
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
-        `DELETE FROM tbl_desplazamiento;`,
+        'DELETE FROM tbl_desplazamiento;',
         [],
         (transaction, res) => {
           resolve(res);
@@ -143,19 +147,21 @@ export const removeDesplazamientos = () => {
   });
 };
 
-export const limpiarDesplazamientoDatatable = async() => {
-
-  const now = format(subDays(new Date(), 3), 'yyyy-MM-dd hh:mm:ss' )
-    db.transaction(tx => {
-      tx.executeSql(
-        `DELETE FROM tbl_desplazamiento WHERE date(fecha_registro) < date(?) AND enviado = 1`,
-        [now],
-        (transaction, res) => {
-          console.log('lIMPIEZA DESPLAZAMIENTO');
-        },
-        (error) => {
-          console.log("🚀 ~ file: TblDesplazamientos.jsx:163 ~ limpiarDesplazamientoDatatable ~ error:", error)
-        },
-      );
-    });
-}
+export const limpiarDesplazamientoTable = async () => {
+  const now = format(subDays(new Date(), 3), 'yyyy-MM-dd hh:mm:ss');
+  db.transaction(tx => {
+    tx.executeSql(
+      'DELETE FROM tbl_desplazamiento WHERE date(fecha_registro) < date(?) AND enviado = 1',
+      [now],
+      (transaction, res) => {
+        // console.log('lIMPIEZA DESPLAZAMIENTO');
+      },
+      error => {
+        console.log(
+          '🚀 ~ file: TblDesplazamientos.jsx:163 ~ limpiarDesplazamientoDatatable ~ error:',
+          error,
+        );
+      },
+    );
+  });
+};

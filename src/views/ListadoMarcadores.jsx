@@ -5,8 +5,9 @@ import { useFocusEffect } from '@react-navigation/native';
 
 import { styles } from '../styles/style';
 import { deleteReporteMarcador, getReporteMarcadorDatabase } from '../database/TblReporteMarcador';
-import { postLevantamiento } from '../services/levantamientoServices'
 import { SearchBar } from '@rneui/themed';
+
+import {postReporteMarcador} from '../services/marcadorServices'
 
 
 export const ListadoMarcadores = () => {
@@ -70,7 +71,7 @@ export const ListadoMarcadores = () => {
     const enviarReporteMarcador = async (item, reset) => {
         try {
             setCargando(true)
-            await postLevantamiento(item, false)
+            await postReporteMarcador(item, false)
             items();
         } catch (error) {
         } finally {
@@ -105,7 +106,7 @@ export const ListadoMarcadores = () => {
                     {
                         item.enviado === 1 ?
                             <Button
-                                // onPress={() => enviarReporteMarcador(item, reset)}
+                                onPress={() => enviarReporteMarcador(item, reset)}
                                 icon={{ name: 'information', color: 'white' }}
                                 buttonStyle={{ minHeight: '100%', backgroundColor: 'gray' }}
                             />

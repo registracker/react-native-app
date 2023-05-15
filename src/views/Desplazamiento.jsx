@@ -118,7 +118,8 @@ export const Desplazamiento = () => {
       longitud: position.coords.longitude,
       latitud: position.coords.latitude,
       altitud: position.coords.altitude,
-      fecha_reporte: format(new Date(), 'dd-MM-yyyy hh:mm:ss'),
+      fecha_reporte: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
+      // fecha_reporte: '2022-01-02 00:00:00',
     };
     if (uuid) data.desplazamiento_id = uuid;
 

@@ -1,5 +1,4 @@
 /* eslint-disable prettier/prettier */
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { http_axios } from '../config/axios';
 
 const getLevantamiento = async codigo => {
