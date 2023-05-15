@@ -1,6 +1,6 @@
 import { Text, StyleSheet, View, TouchableOpacity, ImageBackground } from 'react-native'
 import React, { Component } from 'react'
-import { primary } from '../styles/style'
+import { primary, styles } from '../styles/style'
 import { Icon } from '@rneui/base'
 import { useNavigation } from '@react-navigation/native'
 
@@ -8,17 +8,17 @@ const menu = [
     {
         toGo: 'ListadoDesplazamiento',
         icon: 'map-check-outline',
-        title: 'desplazamientos'
+        title: 'Desplazamientos'
     },
     {
         toGo: 'ListadoIncidentes',
         icon: 'car-cog',
-        title: 'incidentes'
+        title: 'Incidentes'
     },
     {
         toGo: 'ListadoMarcadores',
         icon: 'traffic-light',
-        title: 'marcadores'
+        title: 'Marcadores'
     },
 ]
 
@@ -51,10 +51,10 @@ export const Registros = () => {
                                 name={item.icon}
                                 type='material-community'
                                 color='white'
-                                size={20}
+                                size={26}
                             />
                             <View>
-                                <Text style={stylesRegistros.cardText}>{item.title}</Text>
+                                <Text style={styles.text}>{item.title}</Text>
                             </View>
                         </TouchableOpacity>
 

@@ -3,6 +3,7 @@ import uuid from 'react-native-uuid';
 import { desplazamientoReducer } from './desplazamientoReducer';
 
 import { postDesplazamiento } from '../../services/desplazamientoServices.js';
+import { limpiarDesplazamientoDatatable } from '../../database/TblDesplazamientos';
 
 export const DesplazamientoContext = createContext();
 
@@ -108,6 +109,12 @@ export const DesplazamientoProvider = ({ children }) => {
         dispatch({ type: 'actualizar_costo', payload: { listado: desplazamientoState.listMedios } })
     }
 
+    /**
+     * METODOS PARA LIMPIAR REGISTROS DE DESPLAZAMIENTOS
+     */
+    // const limpiarDesplazamientos = () => {
+    //     limpiarDesplazamientoDatatable()
+    // }
     return (
         <DesplazamientoContext.Provider
             value={{

@@ -1,4 +1,4 @@
-import { format } from 'date-fns';
+import { format, subDays } from 'date-fns';
 import { db } from '../config/database';
 
 export const createTableDesplazamiento = () => {
@@ -31,7 +31,7 @@ export const addItemDesplazamiento = (data) => {
     ...data,
     desplazamiento: JSON.stringify(data.desplazamiento, null),
     costos: JSON.stringify(data.costos, null),
-    fecha_registro: format(new Date(), 'dd-MM-yyyy hh:mm:ss aaaa'),
+    fecha_registro: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
   }
 
 
@@ -142,3 +142,20 @@ export const removeDesplazamientos = () => {
     });
   });
 };
+
+export const limpiarDesplazamientoDatatable = async() => {
+
+  const now = format(subDays(new Date(), 3), 'yyyy-MM-dd hh:mm:ss' )
+    db.transaction(tx => {
+      tx.executeSql(
+        `DELETE FROM tbl_desplazamiento WHERE date(fecha_registro) < date(?) AND enviado = 1`,
+        [now],
+        (transaction, res) => {
+          console.log('lIMPIEZA DESPLAZAMIENTO');
+        },
+        (error) => {
+          console.log("🚀 ~ file: TblDesplazamientos.jsx:163 ~ limpiarDesplazamientoDatatable ~ error:", error)
+        },
+      );
+    });
+}

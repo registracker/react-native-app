@@ -14,6 +14,10 @@ import { ListadoIncidentes } from '../views/ListadoIncidentes';
 import { ListadoMarcadores } from '../views/ListadoMarcadores';
 import CostoDesplazamientos from '../views/CostoDesplazamientos';
 import ListadoRutaTransporte from '../views/ListadoRutaTransporte';
+import Marcador from '../views/Marcador';
+
+import { limpiarDesplazamientoDatatable } from '../database/TblDesplazamientos';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -57,6 +61,7 @@ export const Navigation = () => {
 
     useEffect(() => {
         checkLocationPermission()
+        limpiarDesplazamientoDatatable()
     }, [])
 
 
@@ -90,6 +95,10 @@ export const Navigation = () => {
                                     }} />
                                     <Stack.Screen name='ListadoRutaTransporte' component={ListadoRutaTransporte} options={{
                                         title: 'Listado de ruta de transporte',
+                                        ...optionsView
+                                    }} />
+                                    <Stack.Screen name='Marcador' component={Marcador} options={{
+                                        title: 'Registrar marcador',
                                         ...optionsView
                                     }} />
                                 </Stack.Group>

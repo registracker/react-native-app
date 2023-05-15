@@ -35,7 +35,7 @@ export const MediosDesplazamientosComponentes = ({ selected, cambiarMedio, medio
                     />
 
                 </TouchableOpacity>
-                <Text adjustsFontSizeToFit style={styles.modalText}>
+                <Text adjustsFontSizeToFit style={styles.text}>
                     {item.nombre}
                 </Text>
             </View>

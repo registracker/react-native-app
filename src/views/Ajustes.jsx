@@ -193,7 +193,7 @@ export const Ajustes = () => {
             title="Cerrar sesión"
             type="clear"
             onPress={() => { setModalVisible(true) }}
-            titleStyle={{ color: styles.primary }}
+            titleStyle={{ color: styles.primary, fontSize: 20, fontWeight:'bold' }}
             icon={
               <Icon
                 name="logout"
@@ -206,8 +206,8 @@ export const Ajustes = () => {
           />
           <View style={{ marginTop: 10, justifyContent: 'center', alignContent: 'center' }}>
 
-            <Text style={{ color: 'gray', fontSize: 14, fontWeight: 'normal', textAlign: 'center' }}>© {fecha} Universidad de El Salvador.</Text>
-            <Text style={{ color: 'gray', fontSize: 14, fontWeight: 'normal', textAlign: 'center' }}>Todos los derechos reservados</Text>
+            <Text style={styles.text}>© {fecha} Universidad de El Salvador.</Text>
+            <Text style={styles.text}>Todos los derechos reservados</Text>
           </View>
 
         </View>
@@ -222,15 +222,15 @@ export const Ajustes = () => {
         >
           <View style={stylesAjustes.centeredView}>
             <View style={stylesAjustes.modalView}>
-              <Text style={{ ...styles.titleText, color: primary, fontSize: 20 }}>Cerrar sesión</Text>
-              <Text style={{ ...styles.titleText, color: 'gray', fontSize: 16, fontWeight: 'normal' }}>¿Seguro de cerrar sesión?</Text>
+              {/* <Text style={{ ...styles.titleText, color: primary, fontSize: 20 }}>Cerrar sesión</Text> */}
+              <Text style={{ ...styles.titleText, color: primary, fontSize: 20, fontWeight: 'bold' }}>¿Seguro de cerrar sesión?</Text>
               <Text style={{ ...styles.titleText, color: 'gray', fontSize: 14, fontWeight: 'normal' }}>Cualquier registros no sincronizado se perderá</Text>
               <View style={{
                 flexDirection: 'row'
               }}>
                 {
                   loading ? (
-                    <ActivityIndicator size="large" color={styles.primary} />
+                    <ActivityIndicator size="large" color={primary} />
                   ) : (
                     <>
                       <Button title="Sí, seguro" type="clear" titleStyle={{ color: primary }} onPress={() => { cerrarSesion() }} />

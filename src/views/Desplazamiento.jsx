@@ -170,11 +170,10 @@ export const Desplazamiento = () => {
     }
   }, [viajeIniciado])
 
-  const image = { uri: 'https://reactjs.org/logo-og.png' };
 
   return (
     <View style={styles.container}>
-      <ImageBackground 
+      <ImageBackground
         source={require('../img/fondo.png')}
         resizeMode="cover"
         style={{
@@ -184,29 +183,29 @@ export const Desplazamiento = () => {
         }}
       >
 
-      <KeepAwake />
-      <ModalComponent
-        modalVisible={modalIncidentes}
-        setModalVisible={setModalIncidentes}
-        setItem={setIncidenteSelected}
-        data={ctl_incidentes.data}
-        enviar={enviarIncidenteModal}
-        uuid={uuidDesplazamiento}
-      />
-      <MarcadorModalComponent
-        open={modalMarcador}
-        setOpen={setModalMarcador}
-        getUbicacion={getUbicacionActual}
-      />
-      <RutaTransporteModalComponent
-        open={medioTransporteModal}
-        setOpen={setMedioTransporteModal}
-      />
-      <CostoDesplazamientoModalComponent
-        open={costoDesplazamientoModal}
-        setOpen={setCostoDesplazamientoModal}
-      />
-      {/* <View style={{ flex: 1, marginHorizontal: '12%' }}>
+        <KeepAwake />
+        <MarcadorModalComponent
+          open={modalMarcador}
+          setOpen={setModalMarcador}
+          getUbicacion={getUbicacionActual}
+        />
+        <ModalComponent
+          modalVisible={modalIncidentes}
+          setModalVisible={setModalIncidentes}
+          setItem={setIncidenteSelected}
+          data={ctl_incidentes.data}
+          enviar={enviarIncidenteModal}
+          uuid={uuidDesplazamiento}
+        />
+        <RutaTransporteModalComponent
+          open={medioTransporteModal}
+          setOpen={setMedioTransporteModal}
+        />
+        <CostoDesplazamientoModalComponent
+          open={costoDesplazamientoModal}
+          setOpen={setCostoDesplazamientoModal}
+        />
+        {/* <View style={{ flex: 1, marginHorizontal: '12%' }}>
         {
           viajeIniciado ? (
             <View style={stylesDesplazamiento.panel}>
@@ -256,66 +255,68 @@ export const Desplazamiento = () => {
           )
         }
       </View> */}
-      <View style={styles.body}>
-        <Text style={styles.subtitleText}>
-          Elige tu medio de desplazamientos
-        </Text>
-        <MediosDesplazamientosComponentes
-          selected={medio}
-          cambiarMedio={setMedio}
-          mediosDesplazamientos={ctl_medios_desplazamientos.data}
-          open={medioTransporteModal}
-          setOpen={setMedioTransporteModal}
-        />
-      </View>
-      <View style={styles.foobar}>
-        {/* Deja un espacio vació entre los medios de desplazamientos y los botones de FAB */}
-      </View>
-      <>
-        {viajeIniciado ? (
-          <FAB
-            visible={viajeIniciado}
-            onPress={stopLocationObserving}
-            title="Detener viaje"
-            placement="left"
-            upperCase
-            icon={stylesDesplazamiento.iconoTerminarViaje}
-            style={{ marginBottom: 20 }}
+        <View style={styles.body}>
+          <Text style={styles.text}>
+            Elige tu medio de desplazamientos
+          </Text>
+          <MediosDesplazamientosComponentes
+            selected={medio}
+            cambiarMedio={setMedio}
+            mediosDesplazamientos={ctl_medios_desplazamientos.data}
+            open={medioTransporteModal}
+            setOpen={setMedioTransporteModal}
+          />
+        </View>
+        <View style={styles.foobar}>
+          {/* Deja un espacio vació entre los medios de desplazamientos y los botones de FAB */}
+        </View>
+        <>
+          {viajeIniciado ? (
+            <FAB
+              visible={viajeIniciado}
+              onPress={stopLocationObserving}
+              title="Detener viaje"
+              placement="left"
+              upperCase
+              icon={stylesDesplazamiento.iconoTerminarViaje}
+              style={{ marginBottom: 20 }}
+              color={styles.primary}
+            />
+          ) : (
+            <FAB
+              visible
+              onPress={getLocationObservation}
+              title="Comenzar el viaje"
+              placement="left"
+              upperCase
+              icon={stylesDesplazamiento.iconoComenzarViaje}
+              style={{ marginBottom: 20 }}
+              color="green"
+            />
+          )}
+        </>
+        <SpeedDial
+          isOpen={open}
+          icon={stylesDesplazamiento.iconoFAB}
+          openIcon={stylesDesplazamiento.iconoFABClose}
+          onOpen={() => setOpen(!open)}
+          onClose={() => setOpen(!open)}
+          color={styles.primary}>
+          <SpeedDial.Action
+            title="Marcador"
+            icon={stylesDesplazamiento.iconoMarcador}
             color={styles.primary}
+            onPress={openModalMarcadores}
+            titleStyle={styles.textBlack}
           />
-        ) : (
-          <FAB
-            visible
-            onPress={getLocationObservation}
-            title="Comenzar el viaje"
-            placement="left"
-            upperCase
-            icon={stylesDesplazamiento.iconoComenzarViaje}
-            style={{ marginBottom: 20 }}
-            color="green"
+          <SpeedDial.Action
+            title="Incidente"
+            icon={stylesDesplazamiento.iconoIncidente}
+            color={styles.primary}
+            onPress={openModalIncidentes}
+            titleStyle={styles.textBlack}
           />
-        )}
-      </>
-      <SpeedDial
-        isOpen={open}
-        icon={stylesDesplazamiento.iconoFAB}
-        openIcon={stylesDesplazamiento.iconoFABClose}
-        onOpen={() => setOpen(!open)}
-        onClose={() => setOpen(!open)}
-        color={styles.primary}>
-        <SpeedDial.Action
-          title="Marcador"
-          icon={stylesDesplazamiento.iconoMarcador}
-          color={styles.primary}
-          onPress={openModalMarcadores}
-        />
-        <SpeedDial.Action
-          title="Incidente"
-          icon={stylesDesplazamiento.iconoIncidente}
-          color={styles.primary}
-          onPress={openModalIncidentes}
-        />
-      </SpeedDial>
+        </SpeedDial>
       </ImageBackground>
     </View>
   );

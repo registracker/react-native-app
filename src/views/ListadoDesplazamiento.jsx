@@ -8,6 +8,7 @@ import { postDesplazamiento } from '../services/desplazamientoServices'
 import { Loading } from '../components/Loading'
 import { styles } from '../styles/style';
 import { SearchBar } from '@rneui/themed';
+import { format } from 'date-fns';
 
 export const ListadoDesplazamiento = () => {
 
@@ -137,7 +138,8 @@ export const ListadoDesplazamiento = () => {
     >
       <Icon name="run" type='material-community' />
       <ListItem.Content  >
-        <ListItem.Title>Registrado: {item.fecha_registro}</ListItem.Title>
+        {/* <ListItem.Title>Registrado: {format(item.fecha_registro, 'dd-MM-yyyy hh:mm:ss aaaa')}</ListItem.Title> */}
+        <ListItem.Title>Registrado: {format(new Date(item.fecha_registro), 'dd-MM-yyyy hh:mm:ss aaaa')}</ListItem.Title>
         <ListItem.Subtitle>{item.uuid}</ListItem.Subtitle>
       </ListItem.Content>
 

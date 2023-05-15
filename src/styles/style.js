@@ -42,14 +42,8 @@ export const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginVertical: 10,
-    // fontStyle: 'italic',
+    marginVertical: 5,
     color: 'white',
-    // borderWidth: 4,
-    // borderColor: '#20232a',
-    // borderRadius: 10,
-    // paddingVertical: 8,
-    // paddingHorizontal:10
   },
   subtitleText: {
     fontSize: 15,
@@ -159,16 +153,22 @@ export const styles = StyleSheet.create({
     // backgroundColor: 'rgba(0, 0, 0, 0.8)',
     backgroundColor: 'white',
   },
-  textStyle: {
+  textBlack: {
     color: 'black',
-    fontWeight: 'bold',
     textAlign: 'center',
+    fontSize: 18,
+    marginBottom:5
+  },
+  text: {
+    color: 'white',
+    textAlign: 'center',
+    fontSize: 18,
+    marginBottom: 5
   },
   modalText: {
     color: 'black',
     textAlign: 'center',
-    width: '100%'
-
+    width: '100%',
   },
   modalTextTitle: {
     fontSize: 30,
