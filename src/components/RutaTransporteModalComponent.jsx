@@ -23,7 +23,7 @@ export default function RutaTransporteModalComponent({ open, setOpen }) {
         }}>
         <View style={styleTransporte.centeredView}>
           <View style={styleTransporte.modalView}>
-            <Text>¿Deseas agregar la ruta de transporte?</Text>
+            <Text style={styles.textBlack}>¿Deseas agregar la ruta de transporte?</Text>
             <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
               <Button title="Omitir" type="clear" titleStyle={{ color: 'gray' }} onPress={() => { setOpen(!open) }} />
               <Button title="Sí, seguro" type="clear" titleStyle={{ color: primary }} onPress={() => { 

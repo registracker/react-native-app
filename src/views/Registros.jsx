@@ -53,9 +53,7 @@ export const Registros = () => {
                                 color='white'
                                 size={26}
                             />
-                            <View>
                                 <Text style={styles.text}>{item.title}</Text>
-                            </View>
                         </TouchableOpacity>
 
                     ))
@@ -76,12 +74,12 @@ const stylesRegistros = StyleSheet.create({
     },
     card: {
         borderRadius: 5,
-        justifyContent: 'flex-start',
-        alignItems: 'flex-start',
+        justifyContent: 'center',
+        alignItems: 'center',
         padding: 5,
         margin: 10,
-        width: 140,
-        height: 80,
+        width: '90%',
+        height: '10%',
         backgroundColor: primary
     },
     cardText: {
