@@ -13,6 +13,7 @@ import { CatalogosProvider } from './src/context/store/CatalogosContext';
 import { DesplazamientoProvider } from './src/context/tracking/DesplazamientoContext';
 import { MarcadorProvider } from './src/context/levantamiento/MarcadorContext';
 import { NetworkProvider } from './src/context/network/NetworkContext';
+import { ContadorProvider } from './src/context/levantamiento/ContadorContext';
 
 function App() {
   return (
@@ -24,8 +25,10 @@ function App() {
             <CatalogosProvider>
               <DesplazamientoProvider>
                 <MarcadorProvider>
-                  <Navigation />
-                  <Toast />
+                  <ContadorProvider>
+                    <Navigation />
+                    <Toast />
+                  </ContadorProvider>
                 </MarcadorProvider>
               </DesplazamientoProvider>
             </CatalogosProvider>

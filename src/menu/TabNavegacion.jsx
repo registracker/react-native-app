@@ -9,6 +9,7 @@ import { useEffect } from 'react';
 import { useNetInfo } from '@react-native-community/netinfo';
 import { NetworkContext } from '../context/network/NetworkContext';
 import { DesplazamientoContext } from '../context/tracking/DesplazamientoContext';
+import Contador from '../views/Contador';
 
 const Tab = createBottomTabNavigator();
 
@@ -49,6 +50,19 @@ export const TabNavegacion = () => {
                     title: 'Desplazamiento',
                     tabBarIcon: ({ color, size }) => (
                         <Icon name="map-marker-account" type='material-community' color={color} size={size} />
+                    ),
+                    tabBarLabelPosition: 'below-icon',
+                    // tabBarBadge: ''
+                    tabBarActiveTintColor: styles.primary
+                }}
+            />
+            <Tab.Screen
+                name="Contador"
+                component={Contador}
+                options={{
+                    title: 'Contador vehicular',
+                    tabBarIcon: ({ color, size }) => (
+                        <Icon name="car-3-plus" type='material-community' color={color} size={size} />
                     ),
                     tabBarLabelPosition: 'below-icon',
                     // tabBarBadge: ''

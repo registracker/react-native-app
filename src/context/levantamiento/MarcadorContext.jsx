@@ -6,7 +6,7 @@ import { createContext } from 'react'
 import { useReducer } from 'react'
 import { marcadorReducer } from './marcadoreReducer'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { getLevantamiento } from '../../services/levantamientoServices'
+import { getLevantamientoMarcador } from '../../services/levantamientoServices'
 import { compareAsc } from 'date-fns'
 
 export const MarcadorContext = createContext()
@@ -23,8 +23,7 @@ export const MarcadorProvider = ({ children }) => {
 
     const guardar = async (levantamiento) => {
         await AsyncStorage.removeItem('levantamiento')
-        const { data, status } = await getLevantamiento(levantamiento)
-        console.log("🚀 ~ file: marcadorContext.jsx:28 ~ guardar ~ data:", data)
+        const { data, status } = await getLevantamientoMarcador(levantamiento)
         if(data){
             if (status === 200) {
                 await AsyncStorage.setItem('levantamiento', JSON.stringify(data))
