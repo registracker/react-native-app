@@ -4,12 +4,16 @@ import { contadorReducer } from "./contadorReducer";
 
 import { getLevantamientoContador } from '../../services/levantamientoServices'
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { compareAsc } from "date-fns";
+import { compareAsc, format } from "date-fns";
+
+import { getVehiculos, enviarReporte } from '../../services/vehiculos';
 
 export const ContadorContext = createContext()
 
 const contadorInicial = {
-    contador: 0,
+    contador: [],
+    listado: [],
+    vehiculos:[],
     levantamiento: undefined,
     fecha_vencimiento: undefined,
     activo: undefined,
@@ -34,9 +38,23 @@ export const ContadorProvider = ({children}) => {
         }
         return true
     }
+
+    const obtenerVehiculos = async () => {
+        const data = await getVehiculos()
+        if (data) {
+            data.forEach(element => {
+                element.contador = 0
+            });
+            dispatch({ type: 'listado', payload: { data}})
+        }
+        else {
+            await obtenerVehiculos()
+        }
+    }
     
     const verificar = async() => {
         const previo = await AsyncStorage.getItem('levantamiento-contador')
+        console.log("🚀 ~ file: ContadorContext.jsx:41 ~ verificar ~ previo:", previo)
         if (previo) {
             const levantamiento = JSON.parse(previo);
             const { periodo_fin } = levantamiento
@@ -49,6 +67,7 @@ export const ContadorProvider = ({children}) => {
                 await restablecer()
             }
         }
+        await obtenerVehiculos();
 
     }
 
@@ -57,9 +76,31 @@ export const ContadorProvider = ({children}) => {
         dispatch({ type: 'restablecer' })
     }
 
-    const agregarVehiculo = () => {
-        console.log("object");
-        dispatch({type: 'agregar'})
+    const sumar = (index) => {   
+        contadorState.listado[index].contador = contadorState.listado[index].contador + 1
+        const vehiculo = contadorState.listado[index]
+
+        const registro = {
+            id_levantamiento_contador: contadorState.levantamiento.id,
+            id_vehiculo: vehiculo.id,
+            registrado: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
+        }
+        
+        dispatch({type: 'sumar', payload: { data: contadorState.listado}})
+        dispatch({type: 'registrar', payload: { registro }})
+    }
+
+    const enviar = async() => {
+        const data = {
+            resources: contadorState.vehiculos
+        }
+        console.log("🚀 ~ file: ContadorContext.jsx:97 ~ enviar ~ data:", data)
+        await enviarReporte(data)
+        contadorState.listado.forEach(element => {
+            element.contador = 0
+        });
+        dispatch({ type: 'listado', payload: { data: contadorState.listado  } })
+
     }
 
     return (
@@ -67,8 +108,9 @@ export const ContadorProvider = ({children}) => {
             ...contadorState,
             guardar,
             verificar,
-            agregarVehiculo,
             restablecer,
+            sumar,
+            enviar,
         }} >
             {children}
         </ContadorContext.Provider>

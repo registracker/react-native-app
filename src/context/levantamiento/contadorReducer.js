@@ -7,13 +7,31 @@ export const contadorReducer = (state, action) => {
         fecha_vencimiento: action.payload.fecha_vencimiento,
         activo: true,
       };
-      case 'restablecer':
+    case 'listado':
       return {
         ...state,
+        listado: action.payload.data,
+      };
+    case 'restablecer':
+      return {
+        ...state,
+        contador: [],
+        listado: [],
+        vehiculos: [],
         levantamiento: undefined,
         fecha_vencimiento: undefined,
-        activo: false,
-      }
+        activo: undefined,
+      };
+    case 'sumar':
+      return {
+        ...state,
+        listado: action.payload.data,
+      };
+    case 'registrar':
+      return {
+        ...state,
+        vehiculos: [...state.vehiculos, action.payload.registro],
+      };
     default:
       return state;
   }
