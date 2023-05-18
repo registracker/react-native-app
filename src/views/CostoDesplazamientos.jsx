@@ -52,12 +52,12 @@ const CostoDesplazamientos = ({ navigation }) => {
                 <Text style={stylesCosto.title}>{data.nombre}</Text>
             </View>
             <View style={stylesCosto.elements}>
-                <Icon name='arrow-up-drop-circle' type='material-community' size={25} color={primary} onPress={() => aumentarCostoDesplazamiento(index, aumento)} />
+                <Icon name='arrow-down-drop-circle' type='material-community' size={25} color={primary} onPress={() => reducirCostoDesplazamiento(index, reducir)} />
                 <Text
                     style={stylesCosto.title}
                     onPress={() => editarCosto(index, aumento)}
                 >$ {parseFloat(data.costo, 10).toFixed(2)}</Text>
-                <Icon name='arrow-down-drop-circle' type='material-community' size={25} color={primary} onPress={() => reducirCostoDesplazamiento(index, reducir)} />
+                <Icon name='arrow-up-drop-circle' type='material-community' size={25} color={primary} onPress={() => aumentarCostoDesplazamiento(index, aumento)} />
             </View>
         </View>
     );
@@ -111,7 +111,7 @@ const CostoDesplazamientos = ({ navigation }) => {
                     }}>
                     <View style={stylesCosto.centeredView}>
                         <View style={stylesCosto.modalView}>
-                            <Text style={stylesCosto.modalText}>Costo del medio de transporte</Text>
+                            <Text style={styles.text}>Costo del medio de transporte</Text>
                             <Input
                                 containerStyle={{}}
                                 disabledInputStyle={{ background: "#ddd" }}
@@ -145,7 +145,8 @@ const CostoDesplazamientos = ({ navigation }) => {
                 </Modal>
                 <View style={styles.body}>
                     <View style={{ justifyContent: 'center', marginHorizontal: 10, width: '100%' }}>
-                        <Text style={styles.textBlack} >Definir costo de desplazamientos</Text>
+                        {/* <Text style={styles.textBlack} >Definir costo de desplazamientos</Text> */}
+                        <Text style={{ ...styles.text, borderWidth: 2, borderColor: 'white', padding: 5, backgroundColor: primary, borderRadius: 5 }}>Definir costo de desplazamientos</Text>
                         <FlatList
                             data={listMedios}
                             renderItem={({ item, index }) => <Item data={item} index={index} />}
@@ -154,11 +155,7 @@ const CostoDesplazamientos = ({ navigation }) => {
                     </View>
                 </View>
                     <View>
-                        <Button
-                            title='Omitir'
-                            buttonStyle={styles.buttonSecondary}
-                            onPress={() => navigation.navigate('TabNavegacion')}
-                        />
+                        
                         <Button
                             title='Continuar'
                             buttonStyle={styles.buttonPrimary}

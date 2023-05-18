@@ -63,7 +63,7 @@ const ListadoRutaTransporte = ({ navigation }) => {
         <TouchableOpacity
             style={seleted?.id === data.id ? stylesRegistro.seleted : stylesRegistro.item}
             onPress={() => seleccionarRuta(data)}
-            onLongPress={() =>seleccionarRuta(data)}
+            onLongPress={() => seleccionarRuta(data)}
             activeOpacity={0.4}
         >
             <View style={stylesRegistro.elements}>
@@ -82,7 +82,8 @@ const ListadoRutaTransporte = ({ navigation }) => {
     );
 
     const EmptyList = () => (
-        <Text color='black' style={styles.textBlack}>NO HAY DATOS</Text>
+        <Text style={{ ...styles.text, borderWidth: 2, borderColor: 'white', padding: 5, backgroundColor: '#474747', borderRadius: 5 }}>No hay datos</Text>
+
     )
     const ListEndLoader = () => {
         if (loading) {
@@ -107,8 +108,8 @@ const ListadoRutaTransporte = ({ navigation }) => {
                 }}
             >
                 <View style={styles.body}>
-                    <View style={{ justifyContent: 'center', marginHorizontal: 10, width: '100%' }}>
-
+                    <View style={{ justifyContent: 'center', alignItems:'center', marginHorizontal: 10, width: '100%' }}>
+                        <Text style={{ ...styles.text, borderWidth: 2, borderColor: 'white', padding: 5, backgroundColor: primary, borderRadius: 5, width: '80%', alignItems:'center' }}>Buscar</Text>
                         <Input
                             onChangeText={setRuta}
                             value={ruta}
@@ -116,12 +117,12 @@ const ListadoRutaTransporte = ({ navigation }) => {
                             placeholder={rutaErrors ? rutaErrors : "Buscar por ruta, código o departamento"}
                             inputMode="text"
                             textAlign='center'
-                            label='Búsqueda'
-                            style={{ ...styles.input, color: 'black' }}
+                            // label='Búsqueda'
+                            style={{ ...styles.input, color: 'white' }}
                             errorMessage={rutaErrors}
                             leftIcon={rutaErrors ? <Icon name="information-outline" type='material-community' size={20} color={primary} /> : ''}
                             errorStyle={rutaErrors ? stylesRegistro.errorStyle : null}
-                            labelStyle={{ color: 'grey' }}
+                            labelStyle={{ color: 'white', fontSize: 18 }}
                             inputContainerStyle={setRutaErrors ? styles.inputContainerError : styles.inputContainer}
                             onFocus={() => { setRutaErrors("") }}
                         />
@@ -134,19 +135,20 @@ const ListadoRutaTransporte = ({ navigation }) => {
                             onEndReachedThreshold={0.01}
                             ListFooterComponent={ListEndLoader}
                             ListEmptyComponent={<EmptyList />}
+                            style={{width: '100%'}}
                         />
                     </View>
                 </View>
-                <View>
+                <View style={{flexDirection:'row', justifyContent: 'center', alignItems: 'center', margin: 15}}>
                     <Button
                         title='Buscar'
-                        buttonStyle={styles.buttonSearch}
+                        buttonStyle={{...styles.buttonSearch , width: '90%'}}
                         onPress={() => buscar()}
                         disabled={loading}
                     />
                     <Button
                         title={seleted ? 'Guardar' : 'Omitir'}
-                        buttonStyle={seleted ? styles.buttonPrimary : styles.buttonSecondary}
+                        buttonStyle={seleted ? { ...styles.buttonPrimary, width: '90%' } : { ...styles.buttonSecondary, width: '100%' }}
                         onPress={() => navigation.navigate('TabNavegacion')}
                     />
                 </View>

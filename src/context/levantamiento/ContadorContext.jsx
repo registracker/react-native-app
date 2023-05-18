@@ -54,13 +54,14 @@ export const ContadorProvider = ({children}) => {
     
     const verificar = async() => {
         const previo = await AsyncStorage.getItem('levantamiento-contador')
-        console.log("🚀 ~ file: ContadorContext.jsx:41 ~ verificar ~ previo:", previo)
         if (previo) {
             const levantamiento = JSON.parse(previo);
             const { periodo_fin } = levantamiento
+            console.log("🚀 ~ file: ContadorContext.jsx:60 ~ verificar ~ periodo_fin:", periodo_fin)
             const [year, month, day] = periodo_fin.split('-');
             const fecha = new Date(year, month - 1, day);
             const valido = compareAsc(fecha, new Date())
+            console.log("🚀 ~ file: ContadorContext.jsx:64 ~ verificar ~ valido:", valido)
             if (valido === 1) {
                 dispatch({ type: 'guardar', payload: { levantamiento, fecha_vencimiento: periodo_fin } })
             } else {
@@ -85,21 +86,30 @@ export const ContadorProvider = ({children}) => {
             id_vehiculo: vehiculo.id,
             registrado: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
         }
-        
-        dispatch({type: 'sumar', payload: { data: contadorState.listado}})
-        dispatch({type: 'registrar', payload: { registro }})
+        dispatch({type: 'sumar', payload: { data: contadorState.listado, registro}})
     }
 
-    const enviar = async() => {
+    const restar = (index) => {   
+        contadorState.listado[index].contador = contadorState.listado[index].contador - 1
+        const vehiculo = contadorState.listado[index]
+
+        const ultimo = contadorState.vehiculos.pop()
+        console.log("🚀 ~ file: ContadorContext.jsx:97 ~ restar ~ ultimo:", ultimo)
+
+        if(ultimo?.id_vehiculo === vehiculo.id) {
+            dispatch({type: 'sumar', payload: { data: contadorState.listado, registro: contadorState.vehiculos}})
+        }
+
+    }
+
+    const enviar = () => {
         const data = {
             resources: contadorState.vehiculos
         }
-        console.log("🚀 ~ file: ContadorContext.jsx:97 ~ enviar ~ data:", data)
-        await enviarReporte(data)
-        contadorState.listado.forEach(element => {
-            element.contador = 0
-        });
-        dispatch({ type: 'listado', payload: { data: contadorState.listado  } })
+        console.log("🚀 ~ file: ContadorContext.jsx:95 ~ enviar ~ data.contadorState:", contadorState.vehiculos)
+        // await enviarReporte(data)
+
+        dispatch({ type: 'restablecer' })
 
     }
 
@@ -110,6 +120,7 @@ export const ContadorProvider = ({children}) => {
             verificar,
             restablecer,
             sumar,
+            restar,
             enviar,
         }} >
             {children}

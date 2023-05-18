@@ -10,7 +10,7 @@ import { useContext } from 'react';
 import { NavigationContext } from '@react-navigation/native';
 
 export const MarcadorModalComponent = ({ open, setOpen }) => {
-    const [levantamiento, setLevantamiento] = useState()
+    const [levantamiento, setLevantamiento] = useState("89a1-a23a-210a")
     const [levantamientoErrors, setLevantamientoErrors] = useState("")
     const [cargando, setCargando] = useState(false)
 

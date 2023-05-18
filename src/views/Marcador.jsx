@@ -60,10 +60,11 @@ const Marcador = ({ navigation }) => {
     const renderItem = ({ item }) => {
         return (
             <View style={{
-                justifyContent: 'center',
+                justifyContent: 'flex-start',
                 margin: 10,
                 alignItems: 'center',
-                minWidth: 100, minHeight: 100,
+                width: 150, 
+                minHeight: 100,
             }}>
                 <TouchableOpacity
                     onPress={() => setSelected(item)}
@@ -103,7 +104,7 @@ const Marcador = ({ navigation }) => {
 
         navigation.setOptions({
             headerRight: () => (
-                <TouchableOpacity onPress={cerrarLevantamiento} style={{ width: 80, alignItems: 'center', flexDirection: 'row' }}>
+                <TouchableOpacity onPress={cerrarLevantamiento} style={{ width: 80, alignItems: 'center', flexDirection: 'row', marginRight:10 }}>
                     <Text style={styles.text}> Finalizar </Text>
                     <Icon
                         name='chain-broken'
@@ -131,18 +132,15 @@ const Marcador = ({ navigation }) => {
 
 
                 <View style={styles.body}>
-                    <Text style={styles.text}>
-                        Seleccione un marcador
-                    </Text>
+                    <Text style={{ ...styles.text, borderWidth: 2, borderColor: 'white', padding: 5, backgroundColor: primary, borderRadius: 5 }}>Seleccione un marcador</Text>
                     <FlatList
                         data={marcadores}
                         renderItem={renderItem}
                         keyExtractor={item => item.id}
-                        numColumns='3'
+                        numColumns='2'
                     />
-                    <Text style={styles.text}>
-                        Agregar descripción (Opcional)
-                    </Text>
+                    <Text style={{ ...styles.text, borderWidth: 2, borderColor: 'white', padding: 5, backgroundColor: '#474747', borderRadius: 5 }}>Agregar una descripción (opcional)</Text>
+
                     <View style={{ flex: 0.4, width: '80%' }}>
                         <TextInput
                             multiline={true}
