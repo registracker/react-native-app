@@ -63,7 +63,7 @@ const Marcador = ({ navigation }) => {
                 justifyContent: 'flex-start',
                 margin: 10,
                 alignItems: 'center',
-                width: 150, 
+                width: 150,
                 minHeight: 100,
             }}>
                 <TouchableOpacity
@@ -104,7 +104,7 @@ const Marcador = ({ navigation }) => {
 
         navigation.setOptions({
             headerRight: () => (
-                <TouchableOpacity onPress={cerrarLevantamiento} style={{ width: 80, alignItems: 'center', flexDirection: 'row', marginRight:10 }}>
+                <TouchableOpacity onPress={cerrarLevantamiento} style={{ width: 80, alignItems: 'center', flexDirection: 'row', marginRight: 10 }}>
                     <Text style={styles.text}> Finalizar </Text>
                     <Icon
                         name='chain-broken'
@@ -129,27 +129,22 @@ const Marcador = ({ navigation }) => {
                     tintColor: 'transparent'
                 }}
             >
-
-
                 <View style={styles.body}>
-                    <Text style={{ ...styles.text, borderWidth: 2, borderColor: 'white', padding: 5, backgroundColor: primary, borderRadius: 5 }}>Seleccione un marcador</Text>
+                    <Text style={styles.chip}>Seleccione un marcador</Text>
                     <FlatList
                         data={marcadores}
                         renderItem={renderItem}
                         keyExtractor={item => item.id}
                         numColumns='2'
                     />
-                    <Text style={{ ...styles.text, borderWidth: 2, borderColor: 'white', padding: 5, backgroundColor: '#474747', borderRadius: 5 }}>Agregar una descripción (opcional)</Text>
-
-                    <View style={{ flex: 0.4, width: '80%' }}>
-                        <TextInput
-                            multiline={true}
-                            numberOfLines={8}
-                            style={{ borderWidth: 2, borderColor: primary, borderRadius: 5 }}
-                            onChangeText={setDescripcion}
-                            value={descripcion}
-                        />
-                    </View>
+                    <Text style={styles.text}>Agregar una descripción (opcional)</Text>
+                    <TextInput
+                        multiline={true}
+                        numberOfLines={6}
+                        style={{ borderWidth: 2, borderRadius: 10, width: '90%', backgroundColor: 'white', borderColor: primary, color: 'black' }}
+                        onChangeText={setDescripcion}
+                        value={descripcion}
+                    />
                     <Button
                         title={'Enviar'}
                         onPress={enviarMarcador}
@@ -168,31 +163,3 @@ const Marcador = ({ navigation }) => {
 }
 
 export default Marcador
-
-const stylesMarcador = StyleSheet.create({
-    head: {
-        flex: 0.1,
-        width: '90%',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingVertical: 20,
-    },
-    footer: {
-        flex: 0.3,
-        width: '100%',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    body: {
-        width: '100%',
-        justifyContent: 'center',
-        alignItems: 'center',
-        flex: 2,
-    },
-    modal: {
-        flex: 1,
-        alignItems: 'center',
-        backgroundColor: 'white',
-
-    },
-});

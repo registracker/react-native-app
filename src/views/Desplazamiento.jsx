@@ -1,6 +1,6 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, Modal, ImageBackground } from 'react-native';
-import { FAB, Icon, SpeedDial } from '@rneui/base';
+import React, { useContext, useEffect, useState } from 'react';
+import { View, Text, StyleSheet, ImageBackground } from 'react-native';
+import { FAB,  SpeedDial } from '@rneui/base';
 import { format } from 'date-fns';
 import Geolocation from 'react-native-geolocation-service';
 import BackgroundService from 'react-native-background-actions';
@@ -13,51 +13,33 @@ import { Toast } from 'react-native-toast-message/lib/src/Toast';
 import { primary, styles } from '../styles/style';
 import { MediosDesplazamientosComponentes } from '../components/MediosDesplazamientosComponentes';
 import { ModalComponent } from '../components/ModalComponent';
-//Base de datos 
-import { createTableMediosDesplazamiento } from '../database/TblMediosDesplazamientos';
-import { createTableIncidentes, createTableReporteIncidentes, storeReporteIncidente, enviarIncidente } from '../database/TblIncidentes';
-import { addItemDesplazamiento, createTableDesplazamiento, sendDesplazamiento } from '../database/TblDesplazamientos';
+import { MarcadorModalComponent } from '../components/MarcadorModalComponent';
+import RutaTransporteModalComponent from '../components/RutaTransporteModalComponent';
+import CostoDesplazamientoModalComponent from '../components/CostoDesplazamientoModalComponent';
 
 //Servicios
-import { postDesplazamiento } from '../services/desplazamientoServices'
 import { postIncidente } from '../services/incidenteServices'
 
 //Context
 import { CatalogosContext } from '../context/store/CatalogosContext'
-import { MarcadorModalComponent } from '../components/MarcadorModalComponent';
-import { createTableMarcadores } from '../database/TblMarcadores';
-import { createTableReporteMarcador } from '../database/TblReporteMarcador';
-import { createTables, getUbicacionActual } from '../utils/functions';
-import RutaTransporteModalComponent from '../components/RutaTransporteModalComponent';
-import CostoDesplazamientoModalComponent from '../components/CostoDesplazamientoModalComponent';
 import { DesplazamientoContext } from '../context/tracking/DesplazamientoContext';
+
+import { getUbicacionActual } from '../utils/functions';
 
 
 export const Desplazamiento = () => {
-  const [data, setData] = useState([]);
-  const [puntos, setPuntos] = useState([]);
   const [position, setPosition] = useState();
   const [watchId, setWatchId] = useState();
   const [viajeIniciado, setViajeIniciado] = useState(false);
   const [open, setOpen] = useState(false);
-  const [uuidDesplazamiento, setUuidDesplazamiento] = useState();
   const [medio, setMedio] = useState({ id: 1, nombre: 'Caminando', icono: 'walk' });
-  const [horaInciado, setHoraInciado] = useState();
-  const [fechaInciado, setFechaInciado] = useState();
   const [modalIncidentes, setModalIncidentes] = useState(false);
   const [, setIncidenteSelected] = useState();
-  const [contadorMedio, setContadorMedio] = useState(0);
-  const [fechaUltimoDesplazamiento, setFechaUltimoDesplazamiento] = useState()
   const [modalMarcador, setModalMarcador] = useState(false);
-  const [listaMediosTransporte, setlistaMediosTransporte] = useState([])
-
   const [medioTransporteModal, setMedioTransporteModal] = useState(false)
-  const [ultimoMedio, setUltimoMedio] = useState()
-
   const [costoDesplazamientoModal, setCostoDesplazamientoModal] = useState(false)
 
   const { ctl_medios_desplazamientos, ctl_incidentes, obtenerMediosDesplazamientos, obtenerIncidentes } = useContext(CatalogosContext)
-
   const { agregarMedioDesplazamiento, iniciarDesplazamiento, registrarDesplazamiento } = useContext(DesplazamientoContext)
 
   const created = async () => {
@@ -133,9 +115,9 @@ export const Desplazamiento = () => {
         await enviarIncidente(response.insertId)
       }
 
-      const mensaje = 'Incidente registrado';
-      const subtitulo = `${data.nombre} registrado la fecha de ${data.fecha_reporte}`;
-      notificacion(mensaje, subtitulo);
+      // const mensaje = 'Incidente registrado';
+      // const subtitulo = `${data.nombre} registrado la fecha de ${data.fecha_reporte}`;
+      // notificacion(mensaje, subtitulo);
     }
   };
 
@@ -150,7 +132,6 @@ export const Desplazamiento = () => {
   };
 
   useEffect(() => {
-    createTables()
     created();
   }, []);
 
@@ -177,13 +158,8 @@ export const Desplazamiento = () => {
       <ImageBackground
         source={require('../img/fondo.png')}
         resizeMode="cover"
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          tintColor: 'transparent'
-        }}
+        style={styles.imageBackground}
       >
-
         <KeepAwake />
         <MarcadorModalComponent
           open={modalMarcador}
@@ -196,7 +172,6 @@ export const Desplazamiento = () => {
           setItem={setIncidenteSelected}
           data={ctl_incidentes.data}
           enviar={enviarIncidenteModal}
-          uuid={uuidDesplazamiento}
         />
         <RutaTransporteModalComponent
           open={medioTransporteModal}
@@ -257,7 +232,7 @@ export const Desplazamiento = () => {
         }
       </View> */}
         <View style={styles.body}>
-          <Text style={styles.text}>
+          <Text style={styles.title}>
             Elige tu medio de desplazamientos
           </Text>
           <MediosDesplazamientosComponentes
@@ -267,9 +242,6 @@ export const Desplazamiento = () => {
             open={medioTransporteModal}
             setOpen={setMedioTransporteModal}
           />
-        </View>
-        <View style={styles.foobar}>
-          {/* Deja un espacio vació entre los medios de desplazamientos y los botones de FAB */}
         </View>
         <>
           {viajeIniciado ? (

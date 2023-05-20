@@ -30,7 +30,7 @@ export const styles = StyleSheet.create({
   },
   image: {
     resizeMode: 'contain',
-    width: '60%', 
+    width: '60%',
     height: '60%',
     marginVertical: 10,
   },
@@ -152,7 +152,7 @@ export const styles = StyleSheet.create({
     color: 'black',
     textAlign: 'center',
     fontSize: 18,
-    marginBottom:5
+    marginBottom: 5
   },
   text: {
     color: 'white',
@@ -202,12 +202,19 @@ export const styles = StyleSheet.create({
     borderColor: primary,
     borderWidth: 3,
   },
-  title:{
+  title: {
     fontSize: 25,
     fontWeight: 'bold',
     textAlign: 'center',
     marginVertical: 10,
     color: 'white',
+  },
+  titleBlack: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginVertical: 5,
+    color: 'black',
   },
   buttonPrimary: {
     backgroundColor: primary,
@@ -220,7 +227,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     width: '100%',
   },
-  customButtom:{
+  customButtom: {
     alignItems: 'center',
     padding: 20,
     justifyContent: 'center',
@@ -235,7 +242,7 @@ export const styles = StyleSheet.create({
     marginHorizontal: '5%',
     marginBottom: 0,
   },
-  customButtomDisabled:{
+  customButtomDisabled: {
     alignItems: 'center',
     padding: 20,
     justifyContent: 'center',
@@ -250,10 +257,23 @@ export const styles = StyleSheet.create({
     marginHorizontal: '5%',
     marginBottom: 0,
   },
-  row:{
+  row: {
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
-    margin: 10,
+    margin: 5,
+  },
+  chip: {
+    borderWidth: 2,
+    borderColor: 'white',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    backgroundColor: primary,
+    borderRadius: 25,
+    fontSize: 25,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginVertical: 10,
+    color: 'white',
   },
 });

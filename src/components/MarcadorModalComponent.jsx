@@ -1,6 +1,6 @@
 import { Button, Icon } from '@rneui/base';
 import React, { useEffect, useState } from 'react'
-import {  Modal, StyleSheet, Text, View } from 'react-native'
+import { Modal, StyleSheet, Text, View } from 'react-native'
 import { primary, styles } from '../styles/style';
 import { Input } from '@rneui/themed';
 import { MarcadorContext } from '../context/levantamiento/MarcadorContext'
@@ -10,7 +10,7 @@ import { useContext } from 'react';
 import { NavigationContext } from '@react-navigation/native';
 
 export const MarcadorModalComponent = ({ open, setOpen }) => {
-    const [levantamiento, setLevantamiento] = useState("89a1-a23a-210a")
+    const [levantamiento, setLevantamiento] = useState("6396-ede4-6b69")
     const [levantamientoErrors, setLevantamientoErrors] = useState("")
     const [cargando, setCargando] = useState(false)
 
@@ -20,8 +20,7 @@ export const MarcadorModalComponent = ({ open, setOpen }) => {
 
     const unirseLevantamiento = async () => {
         setCargando(true)
-        if(levantamiento){
-
+        if (levantamiento) {
             const continuar = await guardar(levantamiento);
             if (continuar) {
                 setOpen(!open)
@@ -50,6 +49,7 @@ export const MarcadorModalComponent = ({ open, setOpen }) => {
             >
                 <View style={stylesMarcador.centeredView}>
                     <View style={stylesMarcador.modalView}>
+                        <Text style={styles.titleBlack}>Código de levantamiento</Text>
                         <Text style={styles.textBlack}>El código de levantamiento sera proporcionado por el usuario investigador</Text>
                         {
                             valido ?
@@ -67,7 +67,6 @@ export const MarcadorModalComponent = ({ open, setOpen }) => {
                                     inputMode="text"
                                     textAlign='center'
                                     style={{ ...styles.input, color: 'black' }}
-                                    // onBlur={() => isEmail()}
                                     errorMessage={levantamientoErrors}
                                     leftIcon={levantamientoErrors ? <Icon name="information-outline" type='material-community' size={20} color='white' /> : ''}
                                     errorStyle={levantamientoErrors ? styles.errorStyle : null}
@@ -77,8 +76,7 @@ export const MarcadorModalComponent = ({ open, setOpen }) => {
                                     onFocus={() => { setLevantamientoErrors("") }}
                                 />
                         }
-                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-
+                        <View style={styles.row}>
                             <Button
                                 title={valido ? 'Restablecer' : 'Omitir'}
                                 type="clear"
@@ -93,7 +91,6 @@ export const MarcadorModalComponent = ({ open, setOpen }) => {
                                 type="clear"
                                 titleStyle={{ color: primary }}
                             />
-
                         </View>
                     </View>
                 </View >
@@ -131,10 +128,10 @@ const stylesMarcador = StyleSheet.create({
     centeredView: {
         flex: 1,
         justifyContent: 'center',
+        alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.3)',
     },
     modalView: {
-        margin: 10,
         backgroundColor: 'white',
         borderRadius: 20,
         padding: 15,
@@ -147,5 +144,8 @@ const stylesMarcador = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 5,
+        width: '80%',
+        borderColor: primary,
+        borderWidth: 3
     },
 });

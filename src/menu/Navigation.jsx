@@ -15,7 +15,7 @@ import { ListadoMarcadores } from '../views/ListadoMarcadores';
 import CostoDesplazamientos from '../views/CostoDesplazamientos';
 import ListadoRutaTransporte from '../views/ListadoRutaTransporte';
 import Marcador from '../views/Marcador';
-import { limpiarRegistros } from '../utils/functions';
+import { createTables, limpiarRegistros } from '../utils/functions';
 
 import NetInfo from "@react-native-community/netinfo";
 
@@ -66,6 +66,7 @@ export const Navigation = () => {
 
 
     useEffect(() => {
+        createTables()
         checkLocationPermission()
         limpiarRegistros()
 

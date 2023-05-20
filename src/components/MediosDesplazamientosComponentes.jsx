@@ -7,13 +7,7 @@ import { Loading } from './Loading';
 
 
 export const MediosDesplazamientosComponentes = ({ selected, cambiarMedio, mediosDesplazamientos }) => {
-
-
-
     if (!mediosDesplazamientos) return <Loading />
-
-
-
     const renderItem = ({ item }) => {
         return (
             <View style={{
@@ -41,7 +35,6 @@ export const MediosDesplazamientosComponentes = ({ selected, cambiarMedio, medio
             </View>
         );
     };
-
 
     return (
         <View style={styles.modalView}>
