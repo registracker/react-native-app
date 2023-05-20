@@ -30,8 +30,8 @@ export const styles = StyleSheet.create({
   },
   image: {
     resizeMode: 'contain',
-    height: 200,
-    width: 400,
+    width: '60%', 
+    height: '60%',
     marginVertical: 10,
   },
   imageBackground: {
@@ -92,11 +92,6 @@ export const styles = StyleSheet.create({
   },
   buttonSearch: {
     backgroundColor: 'green',
-    borderRadius: 3,
-    margin: 5
-  },
-  buttonPrimary: {
-    backgroundColor: primary,
     borderRadius: 3,
     margin: 5
   },
@@ -206,5 +201,18 @@ export const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderColor: primary,
     borderWidth: 3,
-  }
+  },
+  title:{
+    fontSize: 25,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginVertical: 10,
+    color: 'white',
+  },
+  buttonPrimary: {
+    backgroundColor: primary,
+    borderRadius: 3,
+    margin: 5,
+    padding: 10
+  },
 });
