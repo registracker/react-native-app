@@ -26,7 +26,7 @@ export const FormularioRegistro = ({ route, navigation }) => {
   const [emailErrorMessage, setEmailErrorMessage] = useState();
   const [formInvalid, setFormInvalid] = useState(true);
   const [cargando, setCargando] = useState(false);
-  const [rol, setRol] = useState();
+  const [rol, setRol] = useState({ id: 2 });
   const [selectionRol, setSelectionRol] = useState(false);
 
   const [checked, setChecked] = React.useState(false);
@@ -181,221 +181,155 @@ export const FormularioRegistro = ({ route, navigation }) => {
     if (rol) setSelectionRol(false);
   }, [rol]);
 
-  const Item = ({ title }) => (
-    <View style={{ color: 'white', fontSize: 12 }}>
-      <Text style={styles.title}>{title}</Text>
-    </View>
-  );
-
   return (
-    <View style={styles.container}>
-      <ImageBackground
-        source={require('../img/loginBackground.jpg')}
-        resizeMode="cover"
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-        }}>
-        <ScrollView>
-          <Text style={styles.titleText}>Registro de usuario</Text>
-          <Text style={{ color: 'white', textAlign: 'center', size: 14, marginTop: 20 }}>Elige un rol para tu usuario</Text>
+      <ScrollView contentContainerStyle={styles.container}>
 
-          <View
-            style={{
-              ...styles.body,
-              paddingTop: 10,
-              flex: 1,
-              flexDirection: 'row',
-              justifyContent: 'center',
-            }}>
+        <ImageBackground
+          source={require('../img/loginBackground.jpg')}
+          resizeMode="cover"
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+          }}>
+          <View style={styles.body}>
 
-            <TouchableHighlight
-              style={{
-                alignItems: 'center',
-                padding: 20,
-                justifyContent: 'center',
-                borderWidth: 2,
-                borderRadius: 20,
-                width: 130,
-                height: 160,
-                backgroundColor: '#111d4a',
-                borderColor: 'white',
-                borderWidth: rol?.id === 2 ? 2 : 0,
-                paddingTop: 0,
-                paddingHorizontal: 0,
-                marginHorizontal: '5%',
-                marginBottom: 0,
-              }}
-              onPress={() => setRol(participante)}>
-              <View
-                style={{
-                  flex: 1,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <Icon
-                  name="map-marker-distance"
-                  type="material-community"
-                  size={36}
-                  color="white"
-                />
-
-                <Text
-                  style={{
-                    color: 'white',
-                    fontSize: rol?.id === 2 ? 20 : 16,
-                  }}>
-                  Participante
-                </Text>
-              </View>
-            </TouchableHighlight>
-            <TouchableHighlight
-              style={{
-                alignItems: 'center',
-                padding: 20,
-                justifyContent: 'center',
-                borderWidth: 2,
-                borderRadius: 20,
-                width: 130,
-                height: 160,
-                backgroundColor: '#A31621',
-                paddingHorizontal: 0,
-                paddingTop: 0,
-                marginHorizontal: '5%',
-                marginBottom: 0,
-                borderColor: 'white',
-                borderWidth: rol?.id === 3 ? 2 : 0,
-              }}
-              onPress={() => setRol(investigador)}>
-              <View
-                style={{
-                  flex: 1,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <Icon
-                  name="account-hard-hat"
-                  type="material-community"
-                  size={36}
-                  color="white"
-                />
-                <Text
-                  style={{
-                    color: 'white',
-                    fontSize: rol?.id === 3 ? 20 : 16,
-                  }}>
-                  Investigador
-                </Text>
-              </View>
-            </TouchableHighlight>
-
-          </View>
-          <View style={{ alignItems: 'center' }}>
-            {selectionRol && (
-              <Text style={{ color: 'white', fontSize: 14 }}>
-                Debe seleccionar un rol
-              </Text>
-            )}
-          </View>
-
-          <View style={{ ...styles.foobar, flex: 3, marginTop: 10 }}>
-            <Input
-              onChangeText={setEmail}
-              value={email}
-              autoCapitalize='none'
-              label="Correo electrónico"
-              placeholder="Correo electrónico"
-              keyboardType="email-address"
-              inputMode="email"
-              textAlign="center"
-              onFocus={() => { setEmailErrorMessage() }}
-              style={styles.input}
-              inputContainerStyle={emailErrorMessage ? styles.inputContainerError : styles.inputContainer}
-              leftIcon={emailErrorMessage ? <Icon name="information-outline" type='material-community' size={20} color='white' /> : ''}
-              ref={inputEmail}
-              errorMessage={emailErrorMessage}
-              onBlur={() => isEmail()}
-              labelStyle={{ marginTop: 10, color: 'white' }}
-              errorStyle={emailErrorMessage ? stylesRegistro.errorStyle : null}
-            />
-            <Input
-              onChangeText={setPassword}
-              onFocus={() => { setPasswordErrorMessage() }}
-
-              value={password}
-              style={styles.input}
-              label="Contraseña"
-              labelStyle={{ marginTop: 10, color: 'white' }}
-              textAlign="center"
-              placeholder="**********"
-              autoCapitalize="none"
-              autoCorrect={false}
-              textContentType="newPassword"
-              secureTextEntry
-              enablesReturnKeyAutomatically
-              inputContainerStyle={passwordErrorMessage ? styles.inputContainerError : styles.inputContainer}
-              leftIcon={passwordErrorMessage ? <Icon name="information-outline" type='material-community' size={20} color='white' /> : ''}
-              errorMessage={passwordErrorMessage}
-              errorStyle={
-                passwordErrorMessage ? stylesRegistro.errorStyle : null
-              }
-              ref={inputPassword}
-              onBlur={isPasswordSecure}
-            />
-            <Input
-              onChangeText={setPasswordConfirm}
-              onFocus={() => { setPasswordConfirmErrorMessage("") }}
-
-              value={passwordConfirm}
-              style={styles.input}
-              label="Confirmar contraseña"
-              labelStyle={{ marginTop: 10, color: 'white' }}
-              textAlign="center"
-              placeholder=" *********"
-              autoCapitalize="none"
-              autoCorrect={false}
-              textContentType="newPassword"
-              secureTextEntry
-              enablesReturnKeyAutomatically
-              inputContainerStyle={passwordConfirmErrorMessage ? styles.inputContainerError : styles.inputContainer}
-              leftIcon={passwordConfirmErrorMessage ? <Icon name="information-outline" type='material-community' size={20} color='white' /> : ''}
-
-              errorMessage={passwordConfirmErrorMessage}
-              errorStyle={
-                passwordConfirmErrorMessage ? stylesRegistro.errorStyle : null
-              }
-              ref={inputPasswordConfirm}
-              onBlur={matchPassword}
-            />
-            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-
-              <CheckBox
-                checked={checked}
-                onPress={viewTerminosCondiciones}
-                onIconPress={toggleCheckbox}
-                iconType="material-community"
-                checkedIcon="checkbox-marked"
-                uncheckedIcon={'checkbox-blank-outline'}
-                checkedColor='white'
-                // title="He leído, y acepto los términos y condiciones."
-                containerStyle={{
-                  borderRadius: 3,
-                  backgroundColor: 'transparent',
-                }}
-              />
-              <Text
-                style={{
-                  textAlign: 'center',
-                  color: 'white',
-                  fontSize: 14,
-                  textDecorationLine: 'underline'
-                }}
-                onPress={() => setModalVisible(true)}
-              >
-                He leído, acepto los
-                términos y condiciones
-              </Text>
+            <Text style={styles.title}>Registro de usuario</Text>
+            <Text style={styles.text}>Elige un rol para tu usuario</Text>
+            <View style={styles.row}>
+              <TouchableHighlight
+                style={rol.id == 2 ? styles.customButtom : styles.customButtomDisabled}
+                onPress={() => setRol(participante)}>
+                <View
+                  style={styles.center}>
+                  <Icon
+                    name="map-marker-distance"
+                    type="material-community"
+                    size={36}
+                    color="white"
+                  />
+                  <Text style={styles.text}>
+                    Participante
+                  </Text>
+                </View>
+              </TouchableHighlight>
+              <TouchableHighlight
+                style={rol.id == 3 ? styles.customButtom : styles.customButtomDisabled}
+                onPress={() => setRol(investigador)}>
+                <View
+                  style={styles.center}>
+                  <Icon
+                    name="account-hard-hat"
+                    type="material-community"
+                    size={36}
+                    color="white"
+                  />
+                  <Text style={styles.text}>
+                    Investigador
+                  </Text>
+                </View>
+              </TouchableHighlight>
             </View>
+
+            <View style={styles.center} >
+              <Input
+                onChangeText={setEmail}
+                value={email}
+                autoCapitalize='none'
+                label="Correo electrónico"
+                placeholder="Correo electrónico"
+                keyboardType="email-address"
+                inputMode="email"
+                textAlign="center"
+                onFocus={() => { setEmailErrorMessage() }}
+                style={styles.input}
+                inputContainerStyle={emailErrorMessage ? styles.inputContainerError : styles.inputContainer}
+                leftIcon={emailErrorMessage ? <Icon name="information-outline" type='material-community' size={20} color='white' /> : ''}
+                ref={inputEmail}
+                errorMessage={emailErrorMessage}
+                onBlur={() => isEmail()}
+                labelStyle={{ marginTop: 10, color: 'white' }}
+                errorStyle={emailErrorMessage ? stylesRegistro.errorStyle : null}
+              />
+              <Input
+                onChangeText={setPassword}
+                onFocus={() => { setPasswordErrorMessage() }}
+
+                value={password}
+                style={styles.input}
+                label="Contraseña"
+                labelStyle={{ marginTop: 10, color: 'white' }}
+                textAlign="center"
+                placeholder="**********"
+                autoCapitalize="none"
+                autoCorrect={false}
+                textContentType="newPassword"
+                secureTextEntry
+                enablesReturnKeyAutomatically
+                inputContainerStyle={passwordErrorMessage ? styles.inputContainerError : styles.inputContainer}
+                leftIcon={passwordErrorMessage ? <Icon name="information-outline" type='material-community' size={20} color='white' /> : ''}
+                errorMessage={passwordErrorMessage}
+                errorStyle={
+                  passwordErrorMessage ? stylesRegistro.errorStyle : null
+                }
+                ref={inputPassword}
+                onBlur={isPasswordSecure}
+              />
+              <Input
+                onChangeText={setPasswordConfirm}
+                onFocus={() => { setPasswordConfirmErrorMessage("") }}
+                value={passwordConfirm}
+                style={styles.input}
+                label="Confirmar contraseña"
+                labelStyle={{ marginTop: 10, color: 'white' }}
+                textAlign="center"
+                placeholder=" *********"
+                autoCapitalize="none"
+                autoCorrect={false}
+                textContentType="newPassword"
+                secureTextEntry
+                enablesReturnKeyAutomatically
+                inputContainerStyle={passwordConfirmErrorMessage ? styles.inputContainerError : styles.inputContainer}
+                leftIcon={passwordConfirmErrorMessage ? <Icon name="information-outline" type='material-community' size={20} color='white' /> : ''}
+                errorMessage={passwordConfirmErrorMessage}
+                errorStyle={
+                  passwordConfirmErrorMessage ? stylesRegistro.errorStyle : null
+                }
+                ref={inputPasswordConfirm}
+                onBlur={matchPassword}
+              />
+              {/* TODO: Mostrar el texto de términos y condiciones */}
+              {/* <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                <CheckBox
+                  checked={checked}
+                  onPress={viewTerminosCondiciones}
+                  onIconPress={toggleCheckbox}
+                  iconType="material-community"
+                  checkedIcon="checkbox-marked"
+                  uncheckedIcon={'checkbox-blank-outline'}
+                  checkedColor='white'
+                  // title="He leído, y acepto los términos y condiciones."
+                  containerStyle={{
+                    borderRadius: 3,
+                    backgroundColor: 'transparent',
+                  }}
+                />
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    color: 'white',
+                    fontSize: 14,
+                    textDecorationLine: 'underline'
+                  }}
+                  onPress={() => setModalVisible(true)}
+                >
+                  He leído, acepto los
+                  términos y condiciones
+                </Text>
+              </View> */}
+            </View>
+          </View>
+
+          <View style={styles.foobar}>
             <Button
               title="Registrarse"
               onPress={registrar}
@@ -407,6 +341,7 @@ export const FormularioRegistro = ({ route, navigation }) => {
               containerStyle={styles.buttonContainer}
             />
           </View>
+
           <Modal
             animationType="slide"
             transparent={true}
@@ -439,9 +374,8 @@ export const FormularioRegistro = ({ route, navigation }) => {
               </View>
             </View>
           </Modal>
-        </ScrollView>
-      </ImageBackground>
-    </View>
+        </ImageBackground>
+      </ScrollView>
   );
 };
 
