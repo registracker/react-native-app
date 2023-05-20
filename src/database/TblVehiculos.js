@@ -1,13 +1,11 @@
-import { format, subDays } from 'date-fns';
 import {db} from '../config/database';
 
-export const createTableMarcadores = () => {
+export const createTableVehiculos = () => {
   db.transaction(tx => {
     tx.executeSql(
-      `CREATE TABLE IF NOT EXISTS tbl_marcadores (
+      `CREATE TABLE IF NOT EXISTS tbl_vehiculos (
             id INTEGER PRIMARY KEY,
             nombre TEXT, 
-            icono TEXT
             );`,
       [],
       (sqlTxn, result) => {},
@@ -16,11 +14,11 @@ export const createTableMarcadores = () => {
   });
 };
 
-export const getMarcadoresDatabase = () => {
+export const getVehiculosDatabase = () => {
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
-        'SELECT * FROM tbl_marcadores;',
+        'SELECT * FROM tbl_vehiculos;',
         [],
         (transaction, res) => {
           let len = res.rows.length;
@@ -39,13 +37,13 @@ export const getMarcadoresDatabase = () => {
   });
 };
 
-export const storeCatalogoMarcadores = marcadores => {
-  const sql = marcadores.substring(0, marcadores.length - 1);
+export const storeVehiculosDatabase = vehiculos => {
+  const sql = vehiculos.substring(0, vehiculos.length - 1);
 
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
-        `INSERT INTO tbl_marcadores (id, nombre, icono) VALUES ${sql} ;`,
+        `INSERT INTO tbl_vehiculos (id, nombre) VALUES ${sql} ;`,
         [],
         (sqlTxn, result) => {
           resolve(result);

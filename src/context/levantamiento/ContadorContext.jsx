@@ -7,6 +7,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { compareAsc, format } from "date-fns";
 
 import { getVehiculos, enviarReporte } from '../../services/vehiculos';
+import { useContext } from "react";
+import { CatalogosContext } from "../store/CatalogosContext";
 
 export const ContadorContext = createContext()
 
@@ -23,13 +25,22 @@ export const ContadorProvider = ({children}) => {
 
     const [contadorState, dispatch] = useReducer(contadorReducer, contadorInicial)
 
+    const {clt_vehiculos} = useContext(CatalogosContext)
+
     const guardar = async(levantamiento) => {
         await AsyncStorage.removeItem('levantamiento-contador')
         const { data, status } = await getLevantamientoContador(levantamiento)
         if (data) {
             if (status === 200) {
                 await AsyncStorage.setItem('levantamiento-contador', JSON.stringify(data))
-                dispatch({ type: 'guardar', payload: { fecha_vencimiento: data.fecha_vencimiento, levantamiento: data}})
+                dispatch({ 
+                    type: 'guardar', 
+                    payload: { 
+                        fecha_vencimiento: data.fecha_vencimiento, 
+                        levantamiento: data, 
+                        listado: clt_vehiculos.data
+                    }
+                })
                 return true
             }
             return false
@@ -39,18 +50,6 @@ export const ContadorProvider = ({children}) => {
         return true
     }
 
-    const obtenerVehiculos = async () => {
-        const data = await getVehiculos()
-        if (data) {
-            data.forEach(element => {
-                element.contador = 0
-            });
-            dispatch({ type: 'listado', payload: { data}})
-        }
-        else {
-            await obtenerVehiculos()
-        }
-    }
     
     const verificar = async() => {
         const previo = await AsyncStorage.getItem('levantamiento-contador')
@@ -68,7 +67,7 @@ export const ContadorProvider = ({children}) => {
                 await restablecer()
             }
         }
-        await obtenerVehiculos();
+        // await obtenerVehiculos();
 
     }
 
@@ -78,7 +77,7 @@ export const ContadorProvider = ({children}) => {
     }
 
     const sumar = (index) => {   
-        contadorState.listado[index].contador = contadorState.listado[index].contador + 1
+        contadorState.listado[index].contador = clt_vehiculos.data[index].contador + 1
         const vehiculo = contadorState.listado[index]
 
         const registro = {

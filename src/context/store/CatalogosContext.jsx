@@ -4,6 +4,7 @@ import { catalogosReducer } from './catalogosReducer';
 import { getMediosDesplazamientos } from '../../services/mediosDesplazamientoServices';
 import { getIncidentes } from '../../services/incidenteServices';
 import { getMarcadores } from '../../services/marcadorServices';
+import { getVehiculos } from '../../services/vehiculos';
 import { getIncidentesDatabase } from '../../database/TblIncidentes';
 import { format } from 'date-fns';
 
@@ -55,11 +56,22 @@ export const CatalogosProvider = ({ children }) => {
         }
     }
 
-    const obtenerVehiculos = async () => {
-        console.log("vehiculos");
-        return true
 
+    const obtenerVehiculos = async () => {
+        const data = await getVehiculos()
+        if (data || data !== undefined) {
+            data.forEach(element => {
+                element.contador = 0
+            });
+            console.log("🚀 ~ file: CatalogosContext.jsx:62 ~ obtenerVehiculos ~ data:", data)
+            dispatch({ type: 'ctl_vehiculos', payload: { data, update: format(new Date(), 'dd-MM-yyyy HH:mm:ss') } })
+            return true
+        }
+        else {
+            await obtenerVehiculos()
+        }
     }
+
 
     const getCatalogos = async () => {
         try {
@@ -70,7 +82,7 @@ export const CatalogosProvider = ({ children }) => {
                 obtenerVehiculos
             ])
 
-            console.log("response", await incidente());
+            console.log("response", await vehiculo());
 
         } catch (error) {
             console.log("🚀 ~ file: CatalogosContext.jsx:47 ~ getCatalogos ~ error:", error)
@@ -84,6 +96,7 @@ export const CatalogosProvider = ({ children }) => {
                 ...catalogosState,
                 obtenerMediosDesplazamientos,
                 obtenerIncidentes,
+                obtenerVehiculos,
                 getCatalogos,
             }}
         >

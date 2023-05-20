@@ -5,6 +5,8 @@ export const contadorReducer = (state, action) => {
         ...state,
         levantamiento: action.payload.levantamiento,
         fecha_vencimiento: action.payload.fecha_vencimiento,
+        listado: action.payload.listado,
+        contador: action.payload.listado,
         activo: true,
       };
     case 'listado':

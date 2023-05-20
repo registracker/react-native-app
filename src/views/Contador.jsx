@@ -4,19 +4,28 @@ import { primary, styles } from '../styles/style'
 import { Button, Icon, Input } from '@rneui/base'
 import { ContadorContext } from '../context/levantamiento/ContadorContext'
 import { FlatList, ScrollView } from 'react-native-gesture-handler'
+import { CatalogosContext } from '../context/store/CatalogosContext'
 
 const Contador = ({ navigation }) => {
 
     const [levantamiento, setLevantamiento] = useState("90dd-3e07-2cad")
     const [levantamientoErrors, setLevantamientoErrors] = useState()
     const [cargando, setCargando] = useState(false)
-    const [vehiculos, setVehiculos] = useState()
 
-    const { guardar, verificar, activo, levantamiento: levantamientoActivo, restablecer, sumar, restar, contador, enviar } = useContext(ContadorContext)
-    const agregarVehiculo = (vehiculo) => {
-        // console.log(vehiculo);
-        sumar(vehiculo)
-    }
+    const { 
+        contador,
+        guardar, 
+        verificar, 
+        activo, 
+        levantamiento: levantamientoActivo, 
+        restablecer, 
+        sumar, 
+        restar, 
+        enviar 
+    } = useContext(ContadorContext)
+    
+    const {ctl_vehiculos} = useContext(CatalogosContext)
+
 
     const unirseLevantamiento = async () => {
         setCargando(true)
@@ -82,7 +91,7 @@ const Contador = ({ navigation }) => {
                 <View
                     style={{ width: '20%', height: '100%', margin: 5, borderRadius: 5, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center' }}
                     activeOpacity={0.4}
-                    onPress={() => agregarVehiculo(index)}
+                    onPress={() => sumar(index)}
                 >
                     <Text style={styles.textBlack}>{data.contador}</Text>
                 </View>
