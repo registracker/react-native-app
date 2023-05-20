@@ -1,5 +1,3 @@
-import {format} from 'date-fns';
-
 export const catalogosReducer = (state, action) => {
   switch (action.type) {
     case 'medios_desplazamientos':
@@ -7,7 +5,9 @@ export const catalogosReducer = (state, action) => {
         ...state,
         ctl_medios_desplazamientos: {
           data: action.payload.data,
-          lastUpdated: format(new Date(), 'dd-MM-yyyy HH:mm:ss'),
+          lastUpdated: action.payload?.update
+            ? action.payload.update
+            : state.ctl_medios_desplazamientos.lastUpdated,
         },
       };
     case 'ctl_incidentes':
@@ -15,7 +15,9 @@ export const catalogosReducer = (state, action) => {
         ...state,
         ctl_incidentes: {
           data: action.payload.data,
-          lastUpdated: format(new Date(), 'dd-MM-yyyy HH:mm:ss'),
+          lastUpdated: action.payload?.update
+            ? action.payload.update
+            : state.ctl_medios_desplazamientos.lastUpdated,
         },
       };
     default:

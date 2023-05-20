@@ -143,10 +143,10 @@ export const styles = StyleSheet.create({
   },
   centeredView: {
     flex: 1,
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
-    // backgroundColor: 'rgba(0, 0, 0, 0.8)',
-    backgroundColor: 'white',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    // backgroundColor: 'white',
   },
   textBlack: {
     color: 'black',
@@ -178,9 +178,21 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   modalView: {
-    flex: 2,
-    marginHorizontal: 20,
-    justifyContent: 'center',
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 15,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    width: '80%',
+    borderColor: primary,
+    borderWidth: 3
   },
   modalItems: { flex: 2, justifyContent: 'center', alignContent: 'center' },
   iconos: {

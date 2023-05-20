@@ -37,13 +37,11 @@ export const MediosDesplazamientosComponentes = ({ selected, cambiarMedio, medio
     };
 
     return (
-        <View style={styles.modalView}>
-            <FlatList
-                data={mediosDesplazamientos}
-                renderItem={renderItem}
-                keyExtractor={item => item.id}
-                numColumns='3'
-            />
-        </View>
+        <FlatList
+            data={mediosDesplazamientos}
+            renderItem={renderItem}
+            keyExtractor={item => item.id}
+            numColumns='3'
+        />
     )
 }

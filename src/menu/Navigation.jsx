@@ -19,8 +19,9 @@ import { createTables, limpiarRegistros } from '../utils/functions';
 
 import NetInfo from "@react-native-community/netinfo";
 
-import {NetworkContext} from '../context/network/NetworkContext';
+import { NetworkContext } from '../context/network/NetworkContext';
 import { DesplazamientoContext } from '../context/tracking/DesplazamientoContext';
+import { CatalogosContext } from '../context/store/CatalogosContext'
 
 const Stack = createNativeStackNavigator();
 
@@ -51,7 +52,7 @@ const optionsView = {
     headerBackTitleVisible: false,
     //   cardOverlayEnabled: true
     headerShown: true,
-    headerTitleStyle:{
+    headerTitleStyle: {
         fontSize: 22
     }
 }
@@ -62,17 +63,19 @@ export const Navigation = () => {
     const { permissions, checkLocationPermission } = useContext(PermissionContext);
     const { autenticado } = useContext(AuthContext);
     const { saveStatus } = useContext(NetworkContext)
+    const { getCatalogos } = useContext(CatalogosContext)
     const { envioAutomaticoDesplazamientos } = useContext(DesplazamientoContext)
 
 
     useEffect(() => {
-        createTables()
         checkLocationPermission()
+        createTables()
         limpiarRegistros()
+        getCatalogos()
 
         const unsubscribe = NetInfo.addEventListener(state => {
             saveStatus(state)
-            
+
         });
 
         return () => {

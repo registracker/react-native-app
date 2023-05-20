@@ -90,36 +90,6 @@ export const Desplazamiento = () => {
     setOpen(false);
   };
 
-  const enviarIncidenteModal = async (incidente, uuid = null) => {
-    const position = await getUbicacionActual();
-
-    const data = {
-      id_incidente: incidente.id,
-      icono: incidente.icono,
-      nombre: incidente.nombre,
-      longitud: position.coords.longitude,
-      latitud: position.coords.latitude,
-      altitud: position.coords.altitude,
-      fecha_reporte: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
-      // fecha_reporte: '2022-01-02 00:00:00',
-    };
-    if (uuid) data.desplazamiento_id = uuid;
-
-
-    const response = await storeReporteIncidente(data);
-    if (response.rowsAffected === 1) {
-
-      const optionIncidente = await AsyncStorage.getItem('opcion-incidente');
-      if (optionIncidente === 'activo') {
-        await postIncidente(data)
-        await enviarIncidente(response.insertId)
-      }
-
-      // const mensaje = 'Incidente registrado';
-      // const subtitulo = `${data.nombre} registrado la fecha de ${data.fecha_reporte}`;
-      // notificacion(mensaje, subtitulo);
-    }
-  };
 
   const notificacion = (mensaje, subtitulo = '') => {
     Toast.show({
@@ -169,9 +139,6 @@ export const Desplazamiento = () => {
         <ModalComponent
           modalVisible={modalIncidentes}
           setModalVisible={setModalIncidentes}
-          setItem={setIncidenteSelected}
-          data={ctl_incidentes.data}
-          enviar={enviarIncidenteModal}
         />
         <RutaTransporteModalComponent
           open={medioTransporteModal}

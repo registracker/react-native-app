@@ -2,19 +2,20 @@ import { Button, Icon } from '@rneui/base';
 import React, { useState } from 'react'
 import { FlatList, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { primary, styles } from '../styles/style';
-import { Loading } from './Loading';
+import { useContext } from 'react';
+import { CatalogosContext } from '../context/store/CatalogosContext';
+import { IncidenteContext } from '../context/levantamiento/IncidenteContext';
 
-export const ModalComponent = ({ modalVisible, setModalVisible, data, setItem, enviar, uuid }) => {
+export const ModalComponent = ({ modalVisible, setModalVisible, enviar }) => {
 
     const [selected, setSelected] = useState()
-
-    if (!data) return <Loading />
-
+    const {ctl_incidentes} = useContext(CatalogosContext)
+    const {enviarIncidente} = useContext(IncidenteContext)
 
     const reportarIncidente = async () => {
         setModalVisible(!modalVisible)
         setSelected()
-        await enviar(selected, uuid );
+        await enviarIncidente(selected);
     }
 
     const renderItem = ({ item }) => {
@@ -34,7 +35,7 @@ export const ModalComponent = ({ modalVisible, setModalVisible, data, setItem, e
                         color={selected?.id === item.id ? primary : 'grey'}
                         reverseColor={primary}
                         solid
-                        size={selected?.id === item.id ?50: 40}
+                        size={selected?.id === item.id ? 50 : 40}
                     />
 
                 </TouchableOpacity>
@@ -46,15 +47,17 @@ export const ModalComponent = ({ modalVisible, setModalVisible, data, setItem, e
     };
 
     return (
-        <>
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => {
-                    setModalVisible(!modalVisible);
-                }}>
-                <View style={styles.centeredView} >
+        <Modal
+            animationType="fade"
+            transparent={true}
+            statusBarTranslucent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+                setModalVisible(!modalVisible);
+            }}>
+            <View style={styles.centeredView} >
+                <View style={styles.modalView}>
+                    <Text style={{color:'black'}}>{JSON.stringify(ctl_incidentes)}</Text>
                     <Icon
                         color="white"
                         name="close"
@@ -68,14 +71,12 @@ export const ModalComponent = ({ modalVisible, setModalVisible, data, setItem, e
                         <Text style={styles.modalTextTitle}>Reportar incidente</Text>
                         <Text style={styles.modalTextSubtitle}>Los incidentes vehiculares son eventos que involucran vehículos y pueden tener distintas causas, puedes reportarlos en cualquier momento. </Text>
                     </View>
-                    <View style={styles.modalItems} >
-                        <FlatList
-                            data={data}
-                            renderItem={renderItem}
-                            keyExtractor={item => item.id}
-                            numColumns='3'
-                        />
-                    </View>
+                    <FlatList
+                        data={ctl_incidentes.data}
+                        renderItem={renderItem}
+                        keyExtractor={item => item.id}
+                        numColumns='3'
+                    />
                     <Button
                         title="Reportar"
                         onPress={() => reportarIncidente()}
@@ -84,7 +85,7 @@ export const ModalComponent = ({ modalVisible, setModalVisible, data, setItem, e
                         containerStyle={styles.buttonContainer}
                     />
                 </View>
-            </Modal>
-        </>
+            </View>
+        </Modal>
     )
 }

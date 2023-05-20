@@ -14,6 +14,7 @@ import { DesplazamientoProvider } from './src/context/tracking/DesplazamientoCon
 import { MarcadorProvider } from './src/context/levantamiento/MarcadorContext';
 import { NetworkProvider } from './src/context/network/NetworkContext';
 import { ContadorProvider } from './src/context/levantamiento/ContadorContext';
+import { IncidenteProvider } from './src/context/levantamiento/IncidenteContext';
 
 function App() {
   return (
@@ -24,12 +25,14 @@ function App() {
           <AuthProvider>
             <CatalogosProvider>
               <DesplazamientoProvider>
-                <MarcadorProvider>
-                  <ContadorProvider>
-                    <Navigation />
-                    <Toast />
-                  </ContadorProvider>
-                </MarcadorProvider>
+                <IncidenteProvider>
+                  <MarcadorProvider>
+                    <ContadorProvider>
+                      <Navigation />
+                      <Toast />
+                    </ContadorProvider>
+                  </MarcadorProvider>
+                </IncidenteProvider>
               </DesplazamientoProvider>
             </CatalogosProvider>
           </AuthProvider>

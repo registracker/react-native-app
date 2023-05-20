@@ -1,11 +1,11 @@
 /* eslint-disable prettier/prettier */
-import { http_axios } from '../config/axios';
+import { http_axios, instance } from '../config/axios';
 import {
   getIncidentesDatabase,
   storeCatalogoIncidentes,
 } from '../database/TblIncidentes';
 
-const getIncidentes = async () => {
+const getIncidentesOld = async () => {
   // GET DATA OF SQLITE
   const incidentes = await getIncidentesDatabase();
   if (incidentes.length > 0) {
@@ -30,6 +30,12 @@ const getIncidentes = async () => {
 
   return data;
 };
+
+const getIncidentes = async() => {
+  const response = await instance('/api/incidentes');
+  const { data } = response.data;
+  return data
+}
 
 const postIncidente = async data => {
   await http_axios('/api/reporte-incidente', null, 'post', data);
