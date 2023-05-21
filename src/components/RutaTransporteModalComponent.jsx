@@ -9,8 +9,7 @@ import { useContext } from 'react';
 export default function RutaTransporteModalComponent({ open, setOpen }) {
 
   const navigation = useContext(NavigationContext)
-
-
+  
   return (
     <View>
       <Modal
@@ -21,8 +20,8 @@ export default function RutaTransporteModalComponent({ open, setOpen }) {
         onRequestClose={() => {
           setOpen(!open);
         }}>
-        <View style={styleTransporte.centeredView}>
-          <View style={styleTransporte.modalView}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
             <Text style={styles.textBlack}>¿Deseas agregar la ruta de transporte?</Text>
             <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
               <Button title="Omitir" type="clear" titleStyle={{ color: 'gray' }} onPress={() => { setOpen(!open) }} />

@@ -47,8 +47,8 @@ export const MarcadorModalComponent = ({ open, setOpen }) => {
                     setOpen(!open);
                 }}
             >
-                <View style={stylesMarcador.centeredView}>
-                    <View style={stylesMarcador.modalView}>
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
                         <Text style={styles.titleBlack}>Código de levantamiento</Text>
                         <Text style={styles.textBlack}>El código de levantamiento sera proporcionado por el usuario investigador</Text>
                         {

@@ -57,7 +57,6 @@ export const ModalComponent = ({ modalVisible, setModalVisible, enviar }) => {
             }}>
             <View style={styles.centeredView} >
                 <View style={styles.modalView}>
-                    <Text style={{color:'black'}}>{JSON.stringify(ctl_incidentes)}</Text>
                     <Icon
                         color="white"
                         name="close"
