@@ -25,6 +25,7 @@ import { CatalogosContext } from '../context/store/CatalogosContext'
 import { DesplazamientoContext } from '../context/tracking/DesplazamientoContext';
 
 import { getUbicacionActual } from '../utils/functions';
+import { NetworkContext } from '../context/network/NetworkContext';
 
 
 export const Desplazamiento = () => {
@@ -41,6 +42,7 @@ export const Desplazamiento = () => {
 
   const { ctl_medios_desplazamientos, ctl_incidentes, obtenerMediosDesplazamientos, obtenerIncidentes } = useContext(CatalogosContext)
   const { agregarMedioDesplazamiento, iniciarDesplazamiento, registrarDesplazamiento } = useContext(DesplazamientoContext)
+  const { isConnected } = useContext(NetworkContext)
 
   const created = async () => {
     await obtenerMediosDesplazamientos()
@@ -111,14 +113,14 @@ export const Desplazamiento = () => {
 
 
   useEffect(() => {
-    if (medio.nombre === 'Autobús' && viajeIniciado) setMedioTransporteModal(true)
+    if (medio.nombre === 'Autobús' && viajeIniciado && isConnected) setMedioTransporteModal(true)
   }, [medio]);
 
   useEffect(() => {
     if (viajeIniciado) {
       iniciarDesplazamiento()
       agregarMedioDesplazamiento(medio)
-      if (medio.nombre === 'Autobús') setMedioTransporteModal(true)
+      if (medio.nombre === 'Autobús' && isConnected) setMedioTransporteModal(true)
     }
   }, [viajeIniciado])
 
