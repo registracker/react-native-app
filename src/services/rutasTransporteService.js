@@ -7,21 +7,13 @@ const getRutasTransporte = async () => {
 };
 
 const postBuscarRutasTransporte = async (dato = {}, page) => {
-  const params = {
-    limit: 1000,
-  }
-  const body = {
-    search: {
-      value: dato,
-      case_insensitive: false,
-    },
-  }
+
   try {
     const response = await http_axios(
       `/api/rutas-transporte/search${page ? `?${page}` : ''}`,
-      params,
+      null,
       'post',
-      body
+      null,
     );
     const {data, links} = response.data;
     return {data, links};
@@ -32,16 +24,27 @@ const postBuscarRutasTransporte = async (dato = {}, page) => {
 };
 
 const postBuscarRutasTransporteInstance = async (dato, page) => {
+  const params = {
+    limit: 1000,
+  };
+  const body = {
+    search: {
+      value: dato,
+      case_insensitive: false,
+    },
+    filters: [
+      {
+        field: 'departamento.id',
+        operator: '=',
+        value: 6,
+      },
+    ],
+  };
   const {data} = await instance(
     `/api/rutas-transporte/search${page ? `?${page}` : ''}`,
-    null,
+    params,
     'post',
-    {
-      search: {
-        value: dato,
-        case_insensitive: false,
-      },
-    },
+    body
   );
 
   if (data === undefined) {
