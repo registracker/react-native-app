@@ -10,7 +10,6 @@ import { primary, styles } from '../styles/style';
 import { useState } from 'react'
 import { Input } from '@rneui/themed'
 import { useBackHandler } from '@react-native-community/hooks'
-import { color } from 'react-native-reanimated'
 
 
 const CostoDesplazamientos = ({ navigation }) => {
@@ -101,7 +100,7 @@ const CostoDesplazamientos = ({ navigation }) => {
                 }}
             >
                 <Modal
-                    animationType="slide"
+                    animationType="fade"
                     transparent={true}
                     visible={modalVisible}
                     onRequestClose={() => {
@@ -109,8 +108,8 @@ const CostoDesplazamientos = ({ navigation }) => {
                         setMensajeError()
                         setModalVisible(!modalVisible);
                     }}>
-                    <View style={stylesCosto.centeredView}>
-                        <View style={stylesCosto.modalView}>
+                    <View style={styles.centeredView}>
+                        <View style={styles.modalView}>
                             <Text style={styles.text}>Costo del medio de transporte</Text>
                             <Input
                                 containerStyle={{}}
@@ -133,20 +132,19 @@ const CostoDesplazamientos = ({ navigation }) => {
                                 onFocus={() => setMensajeError()}
                             />
                             <View style={{ flexDirection: 'row' }}>
-
                                 <Button
                                     title='Continuar'
+                                    type='clear'
                                     onPress={() => ingresarCosto(cantidad)}
-                                    buttonStyle={styles.buttonPrimary}
+                                    titleStyle={{ color: primary }}
                                 />
                             </View>
                         </View>
                     </View>
                 </Modal>
                 <View style={styles.body}>
+                    <Text style={styles.chip}>Definir costo de desplazamientos</Text>
                     <View style={{ justifyContent: 'center', marginHorizontal: 10, width: '100%' }}>
-                        {/* <Text style={styles.textBlack} >Definir costo de desplazamientos</Text> */}
-                        <Text style={{ ...styles.text, borderWidth: 2, borderColor: 'white', padding: 5, backgroundColor: primary, borderRadius: 5 }}>Definir costo de desplazamientos</Text>
                         <FlatList
                             data={listMedios}
                             renderItem={({ item, index }) => <Item data={item} index={index} />}
@@ -154,14 +152,14 @@ const CostoDesplazamientos = ({ navigation }) => {
                         />
                     </View>
                 </View>
-                    <View>
-                        
-                        <Button
-                            title='Continuar'
-                            buttonStyle={styles.buttonPrimary}
-                            onPress={() => finalizar()}
-                        />
-                    </View>
+                <View style={styles.foobar}>
+                    <Button
+                        title='Continuar'
+                        buttonStyle={styles.buttonPrimary}
+                        containerStyle={styles.buttonContainer}
+                        onPress={() => finalizar()}
+                    />
+                </View>
             </ImageBackground>
 
         </View>

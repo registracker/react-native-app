@@ -23,8 +23,8 @@ export default CostoDesplazamientoModalComponent = ({ open, setOpen }) => {
                     enviarDesplazamiento()
                     setOpen(!open);
                 }}>
-                <View style={costoStyles.centeredView}>
-                    <View style={costoStyles.modalView}>
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
                         <Text style={styles.textBlack}>¿Deseas agregar la el costo del desplazamientos?</Text>
                         <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                             <Button title="Omitir" type="clear" titleStyle={{ color: 'gray' }} onPress={() => { enviarDesplazamiento(); setOpen(!open); }} />

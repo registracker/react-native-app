@@ -27,6 +27,8 @@ export const styles = StyleSheet.create({
   foobar: {
     flex: 2,
     alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
   },
   image: {
     resizeMode: 'contain',
@@ -230,9 +232,9 @@ export const styles = StyleSheet.create({
   },
   buttonPrimary: {
     backgroundColor: primary,
-    borderRadius: 3,
+    borderRadius: 5,
     margin: 5,
-    padding: 10
+    padding: 10,
   },
   center: {
     alignItems: 'center',
