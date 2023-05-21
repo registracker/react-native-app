@@ -58,8 +58,7 @@ export const styles = StyleSheet.create({
   input: {
     height: 60,
     width: '80%',
-    paddingBottom: 8,
-    color: 'white',
+    color: 'black',
   },
   inputContainer: {
     borderWidth: 2,
@@ -69,6 +68,7 @@ export const styles = StyleSheet.create({
     borderColor: 'white',
     color: 'white',
     alignItems: 'center',
+    backgroundColor: 'white',
   },
   inputContainerError: {
     borderWidth: 2,
@@ -78,6 +78,8 @@ export const styles = StyleSheet.create({
     borderColor: primary,
     color: 'white',
     alignItems: 'center',
+    backgroundColor: 'white',
+
   },
   inputError: {
     borderWidth: 3,
@@ -100,11 +102,6 @@ export const styles = StyleSheet.create({
   buttonPrimaryDisabled: {
     backgroundColor: primaryDisabled,
     borderRadius: 3,
-  },
-  buttonSecondary: {
-    backgroundColor: secondary,
-    borderRadius: 3,
-    margin: 5
   },
   buttonSecondaryDisabled: {
     backgroundColor: 'rgb(180, 173, 255)',
@@ -194,7 +191,8 @@ export const styles = StyleSheet.create({
     elevation: 5,
     width: '80%',
     borderColor: primary,
-    borderWidth: 3
+    borderWidth: 3,
+    margin:5
   },
   modalItems: { flex: 2, justifyContent: 'center', alignContent: 'center' },
   iconos: {
@@ -233,7 +231,13 @@ export const styles = StyleSheet.create({
   buttonPrimary: {
     backgroundColor: primary,
     borderRadius: 5,
-    margin: 5,
+    marginHorizontal: 5,
+    padding: 10,
+  },
+  buttonSecondary: {
+    backgroundColor: secondary,
+    borderRadius: 5,
+    marginHorizontal: 5,
     padding: 10,
   },
   center: {
@@ -284,7 +288,20 @@ export const styles = StyleSheet.create({
     paddingVertical: 5,
     backgroundColor: primary,
     borderRadius: 25,
-    fontSize: 25,
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginVertical: 10,
+    color: 'white',
+  },
+  card: {
+    borderWidth: 2,
+    borderColor: 'white',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    backgroundColor: 'white',
+    borderRadius: 25,
+    fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center',
     marginVertical: 10,

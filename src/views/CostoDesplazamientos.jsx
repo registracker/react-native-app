@@ -110,7 +110,7 @@ const CostoDesplazamientos = ({ navigation }) => {
                     }}>
                     <View style={styles.centeredView}>
                         <View style={styles.modalView}>
-                            <Text style={styles.text}>Costo del medio de transporte</Text>
+                            <Text style={styles.textBlack}>Costo del medio de transporte</Text>
                             <Input
                                 containerStyle={{}}
                                 disabledInputStyle={{ background: "#ddd" }}

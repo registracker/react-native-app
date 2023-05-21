@@ -43,7 +43,7 @@ export const http_axios = async (url, params, method = 'get', data) => {
             resolve({ data: response.data, status: response.status, links: response.links });
           })
           .catch(err => {
-            console.log(err);
+            console.log(JSON.stringify(err, null, 2));
             reject(err);
           });
 

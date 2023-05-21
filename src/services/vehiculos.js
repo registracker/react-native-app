@@ -7,17 +7,18 @@ const getVehiculos = async () => {
 };
 
 const enviarReporte = async datos => {
-  const response = await instance(
-    '/api/reporte-contador/batch',
-    null,
-    'post',
-    datos,
-  );
-  console.log(
-    '🚀 ~ file: vehiculos.js:11 ~ enviarReporte ~ response:',
-    response,
-  );
-  return response;
+
+  const body = {
+    resources: datos
+  }
+
+  // const response = await instance(
+  //   '/api/reporte-contador/batch',
+  //   null,
+  //   'post',
+  //   body,
+  // );
+  // return response;
 };
 
 module.exports = {

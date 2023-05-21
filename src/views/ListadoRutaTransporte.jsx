@@ -1,4 +1,4 @@
-import { ActivityIndicator, Alert, BackHandler, ImageBackground, StatusBar, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Alert, BackHandler, ImageBackground, Keyboard, Modal, StatusBar, StyleSheet, Text, View } from 'react-native'
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { primary, styles } from '../styles/style';
 import { FlatList } from 'react-native-gesture-handler';
@@ -21,18 +21,20 @@ const ListadoRutaTransporte = ({ navigation }) => {
     const [resultado, setResultado] = useState()
     const [siguiente, setSiguiente] = useState()
     const [loading, setLoading] = useState(false)
+    const [modalVisible, setModalVisible] = useState(false)
 
     const [seleted, setSeleted] = useState()
 
     const { actualizarMedioDesplazamiento } = useContext(DesplazamientoContext)
 
     const seleccionarRuta = (item) => {
+        setModalVisible(true)
         setSeleted(item)
-        actualizarMedioDesplazamiento(item)
     }
 
     const buscar = async () => {
         setLoading(true)
+        Keyboard.dismiss();
         if (!ruta) {
             setRutaErrors('Campo de busqueda esta vacio')
             setLoading(false)
@@ -52,6 +54,17 @@ const ListadoRutaTransporte = ({ navigation }) => {
         setLoading(false)
     }
 
+    const restaurar = () => {
+        setResultado([])
+        setSeleted()
+    }
+
+    const actualizarMedio = () => {
+        actualizarMedioDesplazamiento(seleted)
+        restaurar()
+        navigation.navigate('TabNavegacion')
+    }
+
     const buscarSiguiente = async () => {
         if (siguiente == null || siguiente === undefined) {
             return;
@@ -61,7 +74,7 @@ const ListadoRutaTransporte = ({ navigation }) => {
 
     const Item = ({ data, index }) => (
         <TouchableOpacity
-            style={seleted?.id === data.id ? stylesRegistro.seleted : stylesRegistro.item}
+            style={stylesRegistro.item}
             onPress={() => seleccionarRuta(data)}
             onLongPress={() => seleccionarRuta(data)}
             activeOpacity={0.4}
@@ -81,77 +94,98 @@ const ListadoRutaTransporte = ({ navigation }) => {
         </TouchableOpacity>
     );
 
-    const EmptyList = () => (
-        <Text style={{ ...styles.text, borderWidth: 2, borderColor: 'white', padding: 5, backgroundColor: '#474747', borderRadius: 5 }}>No hay datos</Text>
+    const EmptyList = () => {
+        return <Text style={styles.text}>Sin datos</Text>
+    }
 
-    )
-    const ListEndLoader = () => {
-        if (loading) {
-            return <ActivityIndicator size={'large'} color={primary} />;
-        }
-    };
+    const FooterList = () => {
+        <TouchableOpacity
+            style={stylesRegistro.item}
+            onPress={() => buscarSiguiente()}
+            activeOpacity={0.4}
+            >
+            <View style={stylesRegistro.elements}>
+                <View>
+                    <Text style={styles.textBlack}>Buscar</Text>
+                </View>
+            </View>
+        </TouchableOpacity>
+    }
+
 
     return (
-        <View style={{
-            flex: 1,
-            justifyContent: 'space-around',
-            alignContent: 'center',
-            width: '100%',
-        }}>
+        <View style={styles.container}>
             <ImageBackground
                 source={require('../img/fondo.png')}
                 resizeMode="cover"
-                style={{
-                    flex: 1,
-                    justifyContent: 'center',
-                    tintColor: 'transparent'
-                }}
+                style={styles.imageBackground}
             >
                 <View style={styles.body}>
-                    <View style={{ justifyContent: 'center', alignItems:'center', marginHorizontal: 10, width: '100%' }}>
-                        <Text style={{ ...styles.text, borderWidth: 2, borderColor: 'white', padding: 5, backgroundColor: primary, borderRadius: 5, width: '80%', alignItems:'center' }}>Buscar</Text>
-                        <Input
-                            onChangeText={setRuta}
-                            value={ruta}
-                            autoCapitalize='none'
-                            placeholder={rutaErrors ? rutaErrors : "Buscar por ruta, código o departamento"}
-                            inputMode="text"
-                            textAlign='center'
-                            // label='Búsqueda'
-                            style={{ ...styles.input, color: 'white' }}
-                            errorMessage={rutaErrors}
-                            leftIcon={rutaErrors ? <Icon name="information-outline" type='material-community' size={20} color={primary} /> : ''}
-                            errorStyle={rutaErrors ? stylesRegistro.errorStyle : null}
-                            labelStyle={{ color: 'white', fontSize: 18 }}
-                            inputContainerStyle={setRutaErrors ? styles.inputContainerError : styles.inputContainer}
-                            onFocus={() => { setRutaErrors("") }}
-                        />
+                    <View style={{ justifyContent: 'center', alignItems: 'center', width: '100%', margin: 20 }}>
+                        <View style={{ flexDirection: 'row', paddingHorizontal: 10 }}>
+                            <Input
+                                onChangeText={setRuta}
+                                value={ruta}
+                                autoCapitalize='none'
+                                placeholder={rutaErrors ? rutaErrors : "Ruta, código o departamento"}
+                                inputMode="text"
+                                textAlign='center'
+                                style={{ ...styles.input, width: '50%' }}
+                                errorMessage={rutaErrors}
+                                leftIcon={rutaErrors ? <Icon name="information-outline" type='material-community' size={20} color={primary} /> : <Icon name="search" type='ionicons' size={20} color={primary} />}
+                                errorStyle={rutaErrors ? stylesRegistro.errorStyle : null}
+                                inputContainerStyle={setRutaErrors ? styles.inputContainerError : styles.inputContainer}
+                                onFocus={() => { setRutaErrors() }}
+                            />
+                            <Icon name="search" type='ionicons' size={35} color={primary} onPress={buscar} />
+                        </View>
+                        {
+                            loading ?
+                                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                    <ActivityIndicator size="large" color={primary} />
+                                </View>
+                                : <FlatList
+                                    data={resultado}
+                                    renderItem={({ item, index }) => <Item data={item} index={index} />}
+                                    keyExtractor={item => item.id}
+                                    ListEmptyComponent={<EmptyList />}
+                                    ListFooterComponent={<FooterList />}
+                                    style={{ width: '100%' }}
+                                />
+                        }
+                        <Modal
+                            animationType="fade"
+                            visible={modalVisible}
+                            transparent={true}
+                            statusBarTranslucent={true}
+                            onRequestClose={() => {
+                                setModalVisible(!modalVisible);
+                            }}
+                        >
+                            <View style={styles.centeredView}>
+                                <View style={styles.modalView}>
+                                    <Text style={styles.textBlack}>Ruta: {seleted?.ruta} - Código: {seleted?.codigo_ruta}</Text>
+                                    <Text style={styles.textBlack}>Denominación: {seleted?.denominacion}</Text>
+                                    <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'center' }}>
+                                        <Button
+                                            title={'Cerrar'}
+                                            buttonStyle={styles.buttonSecondary}
+                                            onPress={() => setModalVisible(false)}
+                                        />
+                                        <Button
+                                            title={'Guardar'}
+                                            disabled={!seleted}
+                                            buttonStyle={styles.buttonPrimary}
+                                            onPress={() => actualizarMedio()}
+                                        />
 
-                        <FlatList
-                            data={resultado}
-                            renderItem={({ item, index }) => <Item data={item} index={index} />}
-                            keyExtractor={item => item.id}
-                            onEndReached={buscarSiguiente}
-                            onEndReachedThreshold={0.01}
-                            ListFooterComponent={ListEndLoader}
-                            ListEmptyComponent={<EmptyList />}
-                            style={{width: '100%'}}
-                        />
+                                    </View>
+                                </View>
+                            </View>
+                        </Modal>
                     </View>
                 </View>
-                <View style={{flexDirection:'row', justifyContent: 'center', alignItems: 'center', margin: 15}}>
-                    <Button
-                        title='Buscar'
-                        buttonStyle={{...styles.buttonSearch , width: '90%'}}
-                        onPress={() => buscar()}
-                        disabled={loading}
-                    />
-                    <Button
-                        title={seleted ? 'Guardar' : 'Omitir'}
-                        buttonStyle={seleted ? { ...styles.buttonPrimary, width: '90%' } : { ...styles.buttonSecondary, width: '100%' }}
-                        onPress={() => navigation.navigate('TabNavegacion')}
-                    />
-                </View>
+
             </ImageBackground>
         </View>
     )
