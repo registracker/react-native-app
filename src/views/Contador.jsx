@@ -8,24 +8,20 @@ import { CatalogosContext } from '../context/store/CatalogosContext'
 
 const Contador = ({ navigation }) => {
 
-    const [levantamiento, setLevantamiento] = useState("90dd-3e07-2cad")
+    const [levantamiento, setLevantamiento] = useState("dfd2-2359-57ff")
     const [levantamientoErrors, setLevantamientoErrors] = useState()
     const [cargando, setCargando] = useState(false)
 
-    const { 
+    const {
         contador,
-        guardar, 
-        verificar, 
-        activo, 
-        levantamiento: levantamientoActivo, 
-        restablecer, 
-        sumar, 
-        restar, 
-        enviar 
+        guardar,
+        verificar,
+        activo,
+        levantamiento: levantamientoActivo,
+        sumar,
+        restar,
+        enviar
     } = useContext(ContadorContext)
-    
-    const {ctl_vehiculos} = useContext(CatalogosContext)
-
 
     const unirseLevantamiento = async () => {
         setCargando(true)
@@ -42,13 +38,8 @@ const Contador = ({ navigation }) => {
         setCargando(false)
     }
 
-    const omitir = () => {
-        console.log("object");
-    }
-
     useEffect(() => {
         verificar()
-
     }, [])
 
     useEffect(() => {
@@ -75,31 +66,26 @@ const Contador = ({ navigation }) => {
 
 
     const Item = ({ data, index }) => (
-        <View style={{ width: '100%', marginBottom:20 }} >
-
+        <View style={{ width: '100%', marginBottom: 20 }} >
             <Text style={{ ...styles.text, borderWidth: 2, borderColor: 'white', padding: 5, backgroundColor: '#474747', borderRadius: 5 }}>{data.nombre}</Text>
-
-
             <View style={{ flexDirection: 'row', width: '100%', padding: 5, height: 80, justifyContent: 'center', alignItems: 'center' }}>
                 <TouchableOpacity
                     style={{ width: '40%', height: '100%', margin: 5, borderRadius: 5, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center' }}
                     onPress={() => restar(index)}
+                    activeOpacity={0}
                 >
                     <Icon type='material-community' name='minus-thick' color={primary} />
                 </TouchableOpacity>
-
                 <View
                     style={{ width: '20%', height: '100%', margin: 5, borderRadius: 5, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center' }}
-                    activeOpacity={0.4}
-                    onPress={() => sumar(index)}
                 >
                     <Text style={styles.textBlack}>{data.contador}</Text>
                 </View>
-
-
                 <TouchableOpacity
                     style={{ width: '40%', height: '100%', margin: 5, borderRadius: 5, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center' }}
                     onPress={() => sumar(index)}
+                    delayPressIn={0}
+                    activeOpacity={0}
                 >
                     <Icon type='ionicons' name='add' color={primary} />
                 </TouchableOpacity>
@@ -123,15 +109,11 @@ const Contador = ({ navigation }) => {
                     tintColor: 'transparent'
                 }}
             >
-
                 <View style={styles.body}>
                     {
                         activo ?
                             <View style={{ width: '100%', borderRadius: 5, justifyContent: 'center', alignItems: 'center', }}>
-                                <Text style={{ ...styles.text, borderWidth: 2, borderColor: 'white', padding: 5, backgroundColor: '#474747', borderRadius: 5 }}>Actualmente tiene un código activo de levantamiento</Text>
-                                <View style={{ flexDirection: 'row', backgroundColor: primary, justifyContent: 'center', alignItems: 'center', borderRadius: 5, padding: 5, width: '80%', marginBottom: 10 }}>
-                                    <Text style={styles.text}>Código:{levantamientoActivo.codigo}</Text>
-                                </View>
+                                <Text style={styles.chip}>Conteo vehicular - código: {levantamientoActivo.codigo}</Text>
                                 <FlatList
                                     data={contador}
                                     renderItem={({ item, index }) => <Item data={item} index={index} />}
@@ -139,10 +121,9 @@ const Contador = ({ navigation }) => {
                                     style={{ width: '100%' }}
                                     ListEmptyComponent={<EmptyList />}
                                 />
-
                             </View> :
-                            <View style={{ width: '90%', backgroundColor: '#f5f5f5', borderRadius: 5, justifyContent: 'center', alignItems: 'center', padding: 15 }}>
-                                <Text style={styles.textBlack}>Contador</Text>
+                            <View style={styles.modalView}>
+                                <Text style={styles.chip}>Contador</Text>
                                 <Text style={styles.textBlack}>Código de levantamiento</Text>
                                 <Input
                                     onChangeText={setLevantamiento}
@@ -152,36 +133,25 @@ const Contador = ({ navigation }) => {
                                     inputMode="text"
                                     textAlign='center'
                                     style={{ ...styles.input, color: 'black' }}
-                                    // onBlur={() => isEmail()}
                                     errorMessage={levantamientoErrors}
                                     leftIcon={levantamientoErrors ? <Icon name="information-outline" type='material-community' size={20} color='white' /> : ''}
                                     errorStyle={levantamientoErrors ? styles.errorStyle : null}
-                                    // label="Código de levantamiento"
-                                    // labelStyle={{ color: 'grey' }}
                                     inputContainerStyle={setLevantamientoErrors ? styles.inputContainerError : styles.inputContainer}
                                     onFocus={() => { setLevantamientoErrors("") }}
                                 />
-                                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                                <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
                                     <Button
-                                        title={activo ? 'Restablecer' : 'Omitir'}
-                                        type="clear"
-                                        titleStyle={{ color: 'gray' }}
-                                        onPress={() => { activo ? restablecer() : omitir() }}
-                                    />
-                                    <Button
-                                        title='Continuar'
+                                        title='Unirse'
                                         onPress={unirseLevantamiento}
                                         disabledStyle={styles.buttonPrimaryDisabled}
                                         loading={cargando}
                                         type="clear"
                                         titleStyle={{ color: primary }}
                                     />
-
                                 </View>
                             </View>
                     }
                 </View>
-
             </ImageBackground >
         </View >
     )

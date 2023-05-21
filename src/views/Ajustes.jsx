@@ -172,15 +172,6 @@ export const Ajustes = () => {
 
   return (
     <View style={styles.container}>
-      <ImageBackground
-        source={require('../img/fondo.png')}
-        resizeMode="cover"
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          tintColor: 'transparent'
-        }}
-      >
 
         <View style={{ flex: 10 }}>
           <SincronizarList />
@@ -206,8 +197,8 @@ export const Ajustes = () => {
           />
           <View style={{ marginTop: 10, justifyContent: 'center', alignContent: 'center' }}>
 
-            <Text style={styles.text}>© {fecha} Universidad de El Salvador.</Text>
-            <Text style={styles.text}>Todos los derechos reservados</Text>
+            <Text style={styles.textBlack}>© {fecha} Universidad de El Salvador.</Text>
+            <Text style={styles.textBlack}>Todos los derechos reservados</Text>
           </View>
 
         </View>
@@ -242,7 +233,6 @@ export const Ajustes = () => {
             </View>
           </View>
         </Modal>
-      </ImageBackground>
 
     </View>
   )

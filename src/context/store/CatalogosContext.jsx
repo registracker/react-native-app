@@ -63,7 +63,6 @@ export const CatalogosProvider = ({ children }) => {
             data.forEach(element => {
                 element.contador = 0
             });
-            console.log("🚀 ~ file: CatalogosContext.jsx:62 ~ obtenerVehiculos ~ data:", data)
             dispatch({ type: 'ctl_vehiculos', payload: { data, update: format(new Date(), 'dd-MM-yyyy HH:mm:ss') } })
             return true
         }

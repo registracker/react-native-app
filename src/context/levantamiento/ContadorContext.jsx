@@ -56,18 +56,15 @@ export const ContadorProvider = ({children}) => {
         if (previo) {
             const levantamiento = JSON.parse(previo);
             const { periodo_fin } = levantamiento
-            console.log("🚀 ~ file: ContadorContext.jsx:60 ~ verificar ~ periodo_fin:", periodo_fin)
             const [year, month, day] = periodo_fin.split('-');
             const fecha = new Date(year, month - 1, day);
+            console.log("🚀 ~ file: ContadorContext.jsx:62 ~ verificar ~ fecha:", fecha, new Date() )
             const valido = compareAsc(fecha, new Date())
-            console.log("🚀 ~ file: ContadorContext.jsx:64 ~ verificar ~ valido:", valido)
+            console.log("🚀 ~ file: ContadorContext.jsx:63 ~ verificar ~ valido:", valido)
             if (valido === 1) {
-                dispatch({ type: 'guardar', payload: { levantamiento, fecha_vencimiento: periodo_fin } })
-            } else {
-                await restablecer()
+                dispatch({ type: 'guardar', payload: { levantamiento, fecha_vencimiento: periodo_fin, listado: clt_vehiculos.data  } })
             }
         }
-        // await obtenerVehiculos();
 
     }
 
@@ -106,9 +103,8 @@ export const ContadorProvider = ({children}) => {
             resources: contadorState.vehiculos
         }
         console.log("🚀 ~ file: ContadorContext.jsx:95 ~ enviar ~ data.contadorState:", contadorState.vehiculos)
-        // await enviarReporte(data)
 
-        dispatch({ type: 'restablecer' })
+        // dispatch({ type: 'restablecer' })
 
     }
 
