@@ -112,9 +112,7 @@ export const CatalogosProvider = ({ children }) => {
                 obtenerMarcadores,
                 obtenerVehiculos
             ])
-            console.log(await vehiculo());
         } catch (error) {
-            console.log("🚀 ~ file: CatalogosContext.jsx:47 ~ getCatalogos ~ error:", error)
 
         }
     }
