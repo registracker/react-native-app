@@ -39,7 +39,6 @@ export const getMediosDesplazamientosDatabase = () => {
 };
 
 export const storeCatalogoMediosDesplazamientos = medios_desplazamiento => {
-  console.log("🚀 ~ file: TblMediosDesplazamientos.js:42 ~ storeCatalogoMediosDesplazamientos ~ medios_desplazamiento:", medios_desplazamiento)
   const inserting_incidentes = medios_desplazamiento.map(item => {
     return `(${item.id}, '${item.nombre}', '${item.icono}}'),`;
   });
@@ -56,7 +55,6 @@ export const storeCatalogoMediosDesplazamientos = medios_desplazamiento => {
           resolve(result);
         },
         error => {
-          console.log("🚀 ~ file: TblMediosDesplazamientos.js:60 ~ returnnewPromise ~ error:", error)
           reject(error);
         },
       );

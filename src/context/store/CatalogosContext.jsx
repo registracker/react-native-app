@@ -12,8 +12,9 @@ import { getVehiculosDatabase, storeVehiculosDatabase } from '../../database/Tbl
 import { NetworkContext } from '../network/NetworkContext';
 import { getMarcadoresDatabase } from '../../database/TblMarcadores';
 import { dropMediosDesplazamientos, getMediosDesplazamientosDatabase } from '../../database/TblMediosDesplazamientos';
-import { getBitacota } from '../../database/TblBitacora';
+import { getBitacotaDatabase, storeBitacoraDatabase } from '../../database/TblBitacora';
 import { storeCatalogoMediosDesplazamientos } from '../../database/TblMediosDesplazamientos';
+import { getBitacota } from '../../services/bitacoraServices';
 
 
 export const CatalogosContext = createContext();
@@ -34,18 +35,19 @@ export const CatalogosProvider = ({ children }) => {
     const obtenerMediosDesplazamientos = async () => {
         if (isConnected) {
             const data = await getMediosDesplazamientos()
-            console.log("🚀 ~ file: CatalogosContext.jsx:37 ~ obtenerMediosDesplazamientos ~ data:", data)
             if (data) {
-                const {rows}  = await getBitacota('medios_deplazamiento')
-                if (rows.raw().length > 0){
-                    console.log("object2");
+                const {rows}  = await getBitacotaDatabase('medios_deplazamiento')
+                const bitacora = rows.raw() 
+                if (bitacora.length > 0){
+
+
                     
                 } else {
-                    console.log("🚀 ~ file: CatalogosContext.jsx:39 ~ obtenerMediosDesplazamientos ~ data:", data)
-                    console.log("object");
-                    // await dropMediosDesplazamientos()
+                    
                     // await storeCatalogoMediosDesplazamientos(data)
-                    // const data = await getMediosDesplazamientosDatabase()
+                    // const response = await getMediosDesplazamientosDatabase()
+                    await obtenerBitacora()
+
                 }
                 dispatch({ type: 'medios_desplazamientos', payload: { data, update: format(new Date(), 'dd-MM-yyyy HH:mm:ss') } })
                 // actualizarBitacora()
@@ -130,6 +132,14 @@ export const CatalogosProvider = ({ children }) => {
         } catch (error) {
 
         }
+    }
+
+    const obtenerBitacora = async() => {
+        const bitacora = await getBitacota()
+        console.log("🚀 ~ file: CatalogosContext.jsx:137 ~ getBitacora ~ bitacora:", bitacora)
+        await storeBitacoraDatabase(bitacora)
+        
+
     }
 
     return (

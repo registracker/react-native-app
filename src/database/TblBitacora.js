@@ -6,7 +6,7 @@ export const createTableBitacora = () => {
       `CREATE TABLE IF NOT EXISTS tbl_bitacora (
         id INTEGER,
         tabla TEXT,
-        fecha_creado TEXT
+        fecha_actualizado TEXT
         );`,
       [],
       (sqlTxn, result) => {},
@@ -15,14 +15,14 @@ export const createTableBitacora = () => {
   });
 };
 
-export const getBitacota = tabla => {
+export const getBitacotaDatabase = tabla => {
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
         'SELECT * FROM tbl_bitacora WHERE tabla = ?;',
         [tabla],
         (transaction, res) => {
-            console.log(res);
+          console.log(res);
           resolve(res);
         },
         () => {
@@ -32,12 +32,36 @@ export const getBitacota = tabla => {
     });
   });
 };
+
 export const actualizarBitacora = (tabla, fecha) => {
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
         'UPDATE tbl_bitacora SET fecha = ? WHERE tabla = ?;',
         [fecha, tabla],
+        (transaction, res) => {
+          resolve(res);
+        },
+        () => {
+          reject(false);
+        },
+      );
+    });
+  });
+};
+
+export const storeBitacora = data => {
+  const inserting_incidentes = data.map(item => {
+    return `(${item.id}, '${item.nombre_tabla}', '${item.actualizado}'),`;
+  });
+  const values = inserting_incidentes.join(' ');
+  const sql = values.substring(0, values.length - 1);
+
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        `INSERT INTO tbl_incidente (id, tabla, fecha_actualizado) VALUES ${sql} ;`,
+        [],
         (transaction, res) => {
           resolve(res);
         },
