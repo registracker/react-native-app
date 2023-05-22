@@ -40,7 +40,12 @@ export const getIncidentesDatabase = () => {
 };
 
 export const storeCatalogoIncidentes = incidentes => {
-  const sql = incidentes.substring(0, incidentes.length - 1);
+
+  const inserting_incidentes = incidentes.map(item => {
+    return `(${item.id}, '${item.nombre}', '${item.icono}'),`;
+  });
+  const values = inserting_incidentes.join(' ');
+  const sql = values.substring(0, values.length - 1);
 
   return new Promise((resolve, reject) => {
     db.transaction(tx => {

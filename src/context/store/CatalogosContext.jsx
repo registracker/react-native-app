@@ -7,7 +7,7 @@ import { getMarcadores } from '../../services/marcadorServices';
 import { getVehiculos } from '../../services/vehiculos';
 import { format } from 'date-fns';
 
-import { getIncidentesDatabase } from '../../database/TblIncidentes';
+import { dropIncidentes, getIncidentesDatabase, storeCatalogoIncidentes } from '../../database/TblIncidentes';
 import { getVehiculosDatabase } from '../../database/TblVehiculos';
 import { NetworkContext } from '../network/NetworkContext';
 import { getMarcadoresDatabase } from '../../database/TblMarcadores';
@@ -47,18 +47,21 @@ export const CatalogosProvider = ({ children }) => {
 
     const obtenerIncidentes = async () => {
 
-        const incidentes = await getIncidentesDatabase();
-        if (incidentes) {
+        if (isConnected) {
+            const data = await getIncidentes()
+            if (data) {
+                dispatch({ type: 'ctl_incidentes', payload: { data, update: format(new Date(), 'dd-MM-yyyy HH:mm:ss') } })
+                return true
+            } else {
+                obtenerIncidentes()
+            }
+        } else {
+            const incidentes = await getIncidentesDatabase();
             dispatch({ type: 'ctl_incidentes', payload: { data: incidentes } })
             return true
+
         }
-        const data = await getIncidentes()
-        if (data) {
-            dispatch({ type: 'ctl_incidentes', payload: { data, update: format(new Date(), 'dd-MM-yyyy HH:mm:ss') } })
-            return true
-        } else {
-            obtenerIncidentes()
-        }
+
     }
 
     const obtenerMarcadores = async () => {
@@ -71,7 +74,6 @@ export const CatalogosProvider = ({ children }) => {
                 await obtenerMarcadores();
             }
         } else {
-            console.log("Disconnect");
             const data = await getMarcadoresDatabase();
             dispatch({ type: 'clt_marcadores', payload: { data } })
             return true
@@ -111,9 +113,6 @@ export const CatalogosProvider = ({ children }) => {
                 obtenerMarcadores,
                 obtenerVehiculos
             ])
-
-            console.log("response", await marcador());
-
         } catch (error) {
             console.log("🚀 ~ file: CatalogosContext.jsx:47 ~ getCatalogos ~ error:", error)
 
