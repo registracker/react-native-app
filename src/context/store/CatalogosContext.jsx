@@ -11,7 +11,9 @@ import { dropIncidentes, getIncidentesDatabase, storeCatalogoIncidentes } from '
 import { getVehiculosDatabase, storeVehiculosDatabase } from '../../database/TblVehiculos';
 import { NetworkContext } from '../network/NetworkContext';
 import { getMarcadoresDatabase } from '../../database/TblMarcadores';
-import { getMediosDesplazamientosDatabase } from '../../database/TblMediosDesplazamientos';
+import { dropMediosDesplazamientos, getMediosDesplazamientosDatabase } from '../../database/TblMediosDesplazamientos';
+import { getBitacota } from '../../database/TblBitacora';
+import { storeCatalogoMediosDesplazamientos } from '../../database/TblMediosDesplazamientos';
 
 
 export const CatalogosContext = createContext();
@@ -32,8 +34,21 @@ export const CatalogosProvider = ({ children }) => {
     const obtenerMediosDesplazamientos = async () => {
         if (isConnected) {
             const data = await getMediosDesplazamientos()
+            console.log("🚀 ~ file: CatalogosContext.jsx:37 ~ obtenerMediosDesplazamientos ~ data:", data)
             if (data) {
+                const {rows}  = await getBitacota('medios_deplazamiento')
+                if (rows.raw().length > 0){
+                    console.log("object2");
+                    
+                } else {
+                    console.log("🚀 ~ file: CatalogosContext.jsx:39 ~ obtenerMediosDesplazamientos ~ data:", data)
+                    console.log("object");
+                    // await dropMediosDesplazamientos()
+                    // await storeCatalogoMediosDesplazamientos(data)
+                    // const data = await getMediosDesplazamientosDatabase()
+                }
                 dispatch({ type: 'medios_desplazamientos', payload: { data, update: format(new Date(), 'dd-MM-yyyy HH:mm:ss') } })
+                // actualizarBitacora()
                 return true
             } else {
                 obtenerMediosDesplazamientos()

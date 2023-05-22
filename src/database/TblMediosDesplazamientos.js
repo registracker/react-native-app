@@ -1,4 +1,4 @@
-import {db} from '../config/database';
+import { db } from '../config/database';
 
 export const createTableMediosDesplazamiento = () => {
   db.transaction(tx => {
@@ -9,8 +9,8 @@ export const createTableMediosDesplazamiento = () => {
             icono TEXT
             );`,
       [],
-      (sqlTxn, result) => {},
-      error => {},
+      (sqlTxn, result) => { },
+      error => { },
     );
   });
 };
@@ -39,10 +39,13 @@ export const getMediosDesplazamientosDatabase = () => {
 };
 
 export const storeCatalogoMediosDesplazamientos = medios_desplazamiento => {
-  const sql = medios_desplazamiento.substring(
-    0,
-    medios_desplazamiento.length - 1,
-  );
+  console.log("🚀 ~ file: TblMediosDesplazamientos.js:42 ~ storeCatalogoMediosDesplazamientos ~ medios_desplazamiento:", medios_desplazamiento)
+  const inserting_incidentes = medios_desplazamiento.map(item => {
+    return `(${item.id}, '${item.nombre}', '${item.icono}}'),`;
+  });
+
+  const items = inserting_incidentes.join(' ');
+  const sql = items.substring(0, items.length - 1);
 
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
@@ -53,6 +56,7 @@ export const storeCatalogoMediosDesplazamientos = medios_desplazamiento => {
           resolve(result);
         },
         error => {
+          console.log("🚀 ~ file: TblMediosDesplazamientos.js:60 ~ returnnewPromise ~ error:", error)
           reject(error);
         },
       );

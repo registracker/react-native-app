@@ -15,6 +15,7 @@ import {
   limpiarMarcadoresTable,
 } from '../database/TblReporteMarcador';
 import {createTableVehiculos} from '../database/TblVehiculos';
+import {createTableBitacora} from '../database/TblBitacora';
 
 export const getUbicacionActual = () => {
   return new Promise((resolve, reject) => {
@@ -41,6 +42,7 @@ export const createTables = () => {
   createTableMarcadores();
   createTableReporteMarcador();
   createTableVehiculos();
+  createTableBitacora();
 };
 
 export const limpiarRegistros = () => {
