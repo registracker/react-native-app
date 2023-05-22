@@ -12,7 +12,7 @@ import { NetworkContext } from '../context/network/NetworkContext'
 
 const Contador = ({ navigation }) => {
 
-    const [levantamiento, setLevantamiento] = useState("dfd2-2359-57ff")
+    const [levantamiento, setLevantamiento] = useState()
     const [levantamientoErrors, setLevantamientoErrors] = useState()
     const [cargando, setCargando] = useState(false)
 
