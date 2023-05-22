@@ -28,7 +28,7 @@ export const ContadorProvider = ({ children }) => {
     const guardar = async (levantamiento) => {
         const { data, status } = await getLevantamientoContador(levantamiento)
         if (data) {
-            // if (status === 200) {
+            if (status === 200) {
                 await AsyncStorage.setItem('levantamiento-contador', JSON.stringify(data))
                 dispatch({
                     type: 'guardar',
@@ -39,7 +39,7 @@ export const ContadorProvider = ({ children }) => {
                     }
                 })
                 return clt_vehiculos.data
-// /*  */            }
+           }
             // console.log("🚀 ~ file: ContadorContext.jsx:48 ~ guardar")
             // return []
         } else {
@@ -49,7 +49,7 @@ export const ContadorProvider = ({ children }) => {
 
 
     const restablecer = async () => {
-        // await AsyncStorage.removeItem('levantamiento-contador')
+        await AsyncStorage.removeItem('levantamiento-contador')
         dispatch({ type: 'restablecer' })
     }
 

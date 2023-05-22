@@ -8,11 +8,14 @@ import { MarcadorContext } from '../context/levantamiento/MarcadorContext'
 // Import services
 import { useContext } from 'react';
 import { NavigationContext } from '@react-navigation/native';
+import { NetworkContext } from '../context/network/NetworkContext';
 
 export const MarcadorModalComponent = ({ open, setOpen }) => {
     const [levantamiento, setLevantamiento] = useState("6396-ede4-6b69")
     const [levantamientoErrors, setLevantamientoErrors] = useState("")
     const [cargando, setCargando] = useState(false)
+
+    const { isConnected } = useContext(NetworkContext)
 
 
     const navigation = useContext(NavigationContext)
@@ -23,13 +26,17 @@ export const MarcadorModalComponent = ({ open, setOpen }) => {
         if (levantamiento) {
             const continuar = await guardar(levantamiento);
             if (continuar) {
-                setOpen(!open)
-                navigation.navigate('Marcador')
+                abrirMarcador()
             }
         } else {
             setLevantamientoErrors('Debe ingresar un código de levantamiento')
         }
         setCargando(false)
+    }
+
+    const abrirMarcador = () => {
+        setOpen(!open)
+        navigation.navigate('Marcador')
     }
 
     useEffect(() => {
@@ -83,14 +90,25 @@ export const MarcadorModalComponent = ({ open, setOpen }) => {
                                 titleStyle={{ color: 'gray' }}
                                 onPress={() => { valido ? restablecer() : setOpen(!open) }}
                             />
-                            <Button
-                                title='Unirse'
-                                onPress={unirseLevantamiento}
-                                disabledStyle={styles.buttonPrimaryDisabled}
-                                loading={cargando}
-                                type="clear"
-                                titleStyle={{ color: primary }}
-                            />
+                            {
+                                isConnected ?
+                                    <Button
+                                        title='Unirse'
+                                        onPress={unirseLevantamiento}
+                                        disabledStyle={styles.buttonPrimaryDisabled}
+                                        loading={cargando}
+                                        type="clear"
+                                        titleStyle={{ color: primary }}
+                                    />
+                                    : <Button
+                                        title='Unirse sin conexion'
+                                        onPress={abrirMarcador}
+                                        disabledStyle={styles.buttonPrimaryDisabled}
+                                        type="clear"
+                                        titleStyle={{ color: 'grey' }}
+                                    />
+
+                            }
                         </View>
                     </View>
                 </View >

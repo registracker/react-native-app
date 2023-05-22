@@ -10,7 +10,11 @@ import {
   limpiarIncidenteTable,
 } from '../database/TblIncidentes';
 import {createTableMarcadores} from '../database/TblMarcadores';
-import {createTableReporteMarcador, limpiarMarcadoresTable} from '../database/TblReporteMarcador';
+import {
+  createTableReporteMarcador,
+  limpiarMarcadoresTable,
+} from '../database/TblReporteMarcador';
+import {createTableVehiculos} from '../database/TblVehiculos';
 
 export const getUbicacionActual = () => {
   return new Promise((resolve, reject) => {
@@ -36,6 +40,8 @@ export const createTables = () => {
   createTableReporteIncidentes();
   createTableMarcadores();
   createTableReporteMarcador();
+  createTableVehiculos();
+  console.log('CREATED TABLES');
 };
 
 export const limpiarRegistros = () => {

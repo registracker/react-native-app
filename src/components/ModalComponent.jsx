@@ -9,8 +9,8 @@ import { IncidenteContext } from '../context/levantamiento/IncidenteContext';
 export const ModalComponent = ({ modalVisible, setModalVisible, enviar }) => {
 
     const [selected, setSelected] = useState()
-    const {ctl_incidentes} = useContext(CatalogosContext)
-    const {enviarIncidente} = useContext(IncidenteContext)
+    const { ctl_incidentes } = useContext(CatalogosContext)
+    const { enviarIncidente } = useContext(IncidenteContext)
 
     const reportarIncidente = async () => {
         setModalVisible(!modalVisible)
@@ -21,8 +21,6 @@ export const ModalComponent = ({ modalVisible, setModalVisible, enviar }) => {
     const renderItem = ({ item }) => {
         return (
             <View style={{
-                margin: 10,
-                justifyContent: 'center',
                 alignItems: 'center',
             }}>
                 <TouchableOpacity
@@ -39,9 +37,11 @@ export const ModalComponent = ({ modalVisible, setModalVisible, enviar }) => {
                     />
 
                 </TouchableOpacity>
-                <Text adjustsFontSizeToFit style={styles.modalText}>
-                    {item.nombre}
-                </Text>
+                <View style={{width: 80}}>
+                    <Text style={styles.modalText}>
+                        {item.nombre}
+                    </Text>
+                </View>
             </View>
         );
     };
@@ -65,7 +65,7 @@ export const ModalComponent = ({ modalVisible, setModalVisible, enviar }) => {
 
                     />
 
-                    <View style={styles.modalView}>
+                    <View style={styles.card}>
 
                         <Text style={styles.modalTextTitle}>Reportar incidente</Text>
                         <Text style={styles.modalTextSubtitle}>Los incidentes vehiculares son eventos que involucran vehículos y pueden tener distintas causas, puedes reportarlos en cualquier momento. </Text>

@@ -1,4 +1,4 @@
-import { ImageBackground, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, ImageBackground, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { primary, styles } from '../styles/style'
 import { Button, Icon, Input } from '@rneui/base'
@@ -8,6 +8,7 @@ import { CatalogosContext } from '../context/store/CatalogosContext'
 import { compareAsc, format } from 'date-fns'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useFocusEffect } from '@react-navigation/native'
+import { NetworkContext } from '../context/network/NetworkContext'
 
 const Contador = ({ navigation }) => {
 
@@ -24,9 +25,14 @@ const Contador = ({ navigation }) => {
         enviar
     } = useContext(ContadorContext)
 
+    const { isConnected } = useContext(NetworkContext)
+
+
     const [vehiculos, setVehiculos] = useState()
     const [contadorVehicular, setContadorVehicular] = useState([])
     const [modalVisible, setModalVisible] = useState(false)
+    const [loading, setLoading] = useState(false)
+
 
     const unirseLevantamiento = async () => {
         setCargando(true)
@@ -63,19 +69,29 @@ const Contador = ({ navigation }) => {
     }
 
     const verificar = async () => {
+        setLoading(true)
+        // await AsyncStorage.removeItem('levantamiento-contador')
         const previo = await AsyncStorage.getItem('levantamiento-contador')
         if (previo) {
             const levantamiento = JSON.parse(previo);
             const { periodo_fin } = levantamiento
-            const [year, month, day] = periodo_fin.split('-');
+            const [year, month, day] = periodo_fin?.split('-');
             const fecha = new Date(year, month - 1, day);
             const valido = compareAsc(fecha, new Date())
             if (valido === 1) {
-                await guardar(levantamiento.codigo);
+                if (isConnected){
+                    await guardar(levantamiento.codigo);
+                } else {
+                    setVehiculos(listado)
+                }
             } else {
                 await restablecer()
             }
+        } else {
+            console.log("restablecer");
+            await restablecer()
         }
+        setLoading(false)
     }
 
     const sumar = (index) => {
@@ -85,7 +101,7 @@ const Contador = ({ navigation }) => {
         agregarRegistro(contador[index].id);
     }
 
-    const agregarRegistro= (id) => {
+    const agregarRegistro = (id) => {
         const registro = {
             id_levantamiento_contador: levantamientoActivo.id,
             id_vehiculo: id,
@@ -111,17 +127,17 @@ const Contador = ({ navigation }) => {
     }
 
     const SaveIcon = useCallback(
-      () => {
-        
-        return (
-            <View style={{ position: 'absolute', top: 10, right: 10 }}>
-                <Icon onPress={guardarRegistros} type='material-community' name='content-save' color={primary} size={40} />
-            </View>
-        )
-      },
-      [contadorVehicular],
+        () => {
+
+            return (
+                <View style={{ position: 'absolute', top: 10, right: 10 }}>
+                    <Icon onPress={guardarRegistros} type='material-community' name='content-save' color={primary} size={40} />
+                </View>
+            )
+        },
+        [contadorVehicular],
     )
-    
+
 
     const restablecerContador = () => {
         listado.forEach(element => {
@@ -236,6 +252,7 @@ const Contador = ({ navigation }) => {
         <Text color='black' style={styles.textBlack}>NO HAY DATOS</Text>
     )
 
+
     return (
         <View style={styles.container}>
             <ImageBackground
@@ -256,32 +273,40 @@ const Contador = ({ navigation }) => {
                                 <SaveIcon />
                             </View> :
                             <View style={styles.modalView}>
-                                <Text style={styles.chip}>Contador</Text>
-                                <Text style={styles.textBlack}>Código de levantamiento</Text>
-                                <Input
-                                    onChangeText={setLevantamiento}
-                                    value={levantamiento}
-                                    autoCapitalize='none'
-                                    placeholder={levantamientoErrors ? levantamientoErrors : "XXXX-XXXX-XXXX"}
-                                    inputMode="text"
-                                    textAlign='center'
-                                    style={{ ...styles.input, color: 'black' }}
-                                    errorMessage={levantamientoErrors}
-                                    leftIcon={levantamientoErrors ? <Icon name="information-outline" type='material-community' size={20} color='white' /> : ''}
-                                    errorStyle={levantamientoErrors ? styles.errorStyle : null}
-                                    inputContainerStyle={setLevantamientoErrors ? styles.inputContainerError : styles.inputContainer}
-                                    onFocus={() => { setLevantamientoErrors("") }}
-                                />
-                                <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
-                                    <Button
-                                        title='Unirse'
-                                        onPress={unirseLevantamiento}
-                                        disabledStyle={styles.buttonPrimaryDisabled}
-                                        loading={cargando}
-                                        type="clear"
-                                        titleStyle={{ color: primary }}
-                                    />
-                                </View>
+                                {
+                                    loading ?
+                                        <ActivityIndicator size="large" color={primary} />
+                                        : <>
+
+                                            <Text style={styles.titleBlack}>Contador</Text>
+                                            <Text style={styles.textBlack}>Código de levantamiento</Text>
+                                            <Input
+                                                onChangeText={setLevantamiento}
+                                                value={levantamiento}
+                                                autoCapitalize='none'
+                                                placeholder={levantamientoErrors ? levantamientoErrors : "XXXX-XXXX-XXXX"}
+                                                inputMode="text"
+                                                textAlign='center'
+                                                style={{ ...styles.input, color: 'black' }}
+                                                errorMessage={levantamientoErrors}
+                                                leftIcon={levantamientoErrors ? <Icon name="information-outline" type='material-community' size={20} color='white' /> : ''}
+                                                errorStyle={levantamientoErrors ? styles.errorStyle : null}
+                                                inputContainerStyle={setLevantamientoErrors ? styles.inputContainerError : styles.inputContainer}
+                                                onFocus={() => { setLevantamientoErrors("") }}
+                                            />
+                                            <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
+                                                <Button
+                                                    title='Unirse'
+                                                    onPress={unirseLevantamiento}
+                                                    disabledStyle={styles.buttonPrimaryDisabled}
+                                                    loading={cargando}
+                                                    type="clear"
+                                                    titleStyle={{ color: primary }}
+                                                />
+                                            </View>
+                                        </>
+
+                                }
                             </View>
                     }
 

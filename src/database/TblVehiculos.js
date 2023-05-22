@@ -5,11 +5,13 @@ export const createTableVehiculos = () => {
     tx.executeSql(
       `CREATE TABLE IF NOT EXISTS tbl_vehiculos (
             id INTEGER PRIMARY KEY,
-            nombre TEXT, 
+            nombre TEXT
             );`,
       [],
       (sqlTxn, result) => {},
-      error => {},
+      error => {
+        console.log(error);
+      },
     );
   });
 };
@@ -38,7 +40,12 @@ export const getVehiculosDatabase = () => {
 };
 
 export const storeVehiculosDatabase = vehiculos => {
-  const sql = vehiculos.substring(0, vehiculos.length - 1);
+  const inserting_incidentes = vehiculos.map(item => {
+    return `(${item.id}, '${item.nombre}'),`;
+  });
+
+  const items = inserting_incidentes.join(' ');
+  const sql = items.substring(0, items.length - 1);
 
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
@@ -49,6 +56,24 @@ export const storeVehiculosDatabase = vehiculos => {
           resolve(result);
         },
         error => {
+          reject(error);
+        },
+      );
+    });
+  });
+};
+
+export const dropVehiculosDatabase = () => {
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        ` DELETE FROM tbl_vehiculos; `,
+        [],
+        (transaction, res) => {
+          resolve(res);
+        },
+        error => {
+          console.log(error);
           reject(error);
         },
       );

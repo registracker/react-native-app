@@ -20,10 +20,10 @@ export const catalogosReducer = (state, action) => {
             : state.ctl_medios_desplazamientos.lastUpdated,
         },
       };
-    case 'ctl_incidentes':
+    case 'clt_marcadores':
       return {
         ...state,
-        ctl_incidentes: {
+        clt_marcadores: {
           data: action.payload.data,
           lastUpdated: action.payload?.update
             ? action.payload.update

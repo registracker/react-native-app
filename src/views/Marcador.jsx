@@ -11,6 +11,7 @@ import { getUbicacionActual } from '../utils/functions';
 import { format } from 'date-fns';
 import { useContext } from 'react';
 import { MarcadorContext } from '../context/levantamiento/MarcadorContext';
+import { CatalogosContext } from '../context/store/CatalogosContext';
 
 const Marcador = ({ navigation }) => {
 
@@ -20,12 +21,10 @@ const Marcador = ({ navigation }) => {
     const [descripcion, setDescripcion] = useState()
     const [enviar, setEnviar] = useState(true)
     const { restablecer } = useContext(MarcadorContext)
-    const getMarcadoresView = async () => {
-        const response = await getMarcadores()
-        if (response.length > 0) {
-            setMarcadores(response);
-        }
-    }
+
+    const { clt_marcadores } = useContext(CatalogosContext)
+
+
     useEffect(() => {
         if (selected) {
             setEnviar(false)
@@ -95,10 +94,6 @@ const Marcador = ({ navigation }) => {
 
     }
 
-    useEffect(() => {
-        getMarcadoresView()
-    }, [])
-
 
     useEffect(() => {
 
@@ -132,7 +127,7 @@ const Marcador = ({ navigation }) => {
                 <View style={styles.body}>
                     <Text style={styles.chip}>Seleccione un marcador</Text>
                     <FlatList
-                        data={marcadores}
+                        data={clt_marcadores.data}
                         renderItem={renderItem}
                         keyExtractor={item => item.id}
                         numColumns='2'
