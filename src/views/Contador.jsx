@@ -22,13 +22,17 @@ const Contador = ({ navigation }) => {
         activo,
         levantamiento: levantamientoActivo,
         restablecer,
-        enviar
+        enviar,
+        conectarse,
+        agregarRegistro,
+        contador, 
+        actualizarConteo
     } = useContext(ContadorContext)
 
     const { isConnected } = useContext(NetworkContext)
 
 
-    const [vehiculos, setVehiculos] = useState()
+    const [vehiculos, setVehiculos] = useState([])
     const [contadorVehicular, setContadorVehicular] = useState([])
     const [modalVisible, setModalVisible] = useState(false)
     const [loading, setLoading] = useState(false)
@@ -52,13 +56,13 @@ const Contador = ({ navigation }) => {
 
 
     const borrarVehiculo = (id) => {
-        const contador = [...contadorVehicular]
-        const reversedArray = contador.slice().reverse();
+        const ct = [...contador]
+        const reversedArray = ct.slice().reverse();
         const index = reversedArray.findIndex((item) => item.id_vehiculo === id);
         if (index !== -1) {
-            const originalIndex = contador.length - 1 - index;
-            contador.splice(originalIndex, 1);
-            setContadorVehicular(contador)
+            const originalIndex = ct.length - 1 - index;
+            ct.splice(originalIndex, 1);
+            actualizarConteo(ct)
         }
     }
 
@@ -70,7 +74,6 @@ const Contador = ({ navigation }) => {
 
     const verificar = async () => {
         setLoading(true)
-        // await AsyncStorage.removeItem('levantamiento-contador')
         const previo = await AsyncStorage.getItem('levantamiento-contador')
         if (previo) {
             const levantamiento = JSON.parse(previo);
@@ -79,16 +82,15 @@ const Contador = ({ navigation }) => {
             const fecha = new Date(year, month - 1, day);
             const valido = compareAsc(fecha, new Date())
             if (valido === 1) {
-                if (isConnected){
+                if (isConnected) {
                     await guardar(levantamiento.codigo);
                 } else {
-                    setVehiculos(listado)
+                    await conectarse()
                 }
             } else {
                 await restablecer()
             }
         } else {
-            console.log("restablecer");
             await restablecer()
         }
         setLoading(false)
@@ -101,15 +103,6 @@ const Contador = ({ navigation }) => {
         agregarRegistro(contador[index].id);
     }
 
-    const agregarRegistro = (id) => {
-        const registro = {
-            id_levantamiento_contador: levantamientoActivo.id,
-            id_vehiculo: id,
-            registrado: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
-        }
-        const newArray = [...contadorVehicular, registro]
-        setContadorVehicular(newArray);
-    }
 
     const restar = (index) => {
         const contador = [...vehiculos]
@@ -121,32 +114,30 @@ const Contador = ({ navigation }) => {
     }
 
     const guardarRegistros = async () => {
-        console.log(contadorVehicular.length);
         await enviar(contadorVehicular);
-        setContadorVehicular([])
+        // restablecerContador()
     }
-
-    const SaveIcon = useCallback(
-        () => {
-
-            return (
-                <View style={{ position: 'absolute', top: 10, right: 10 }}>
-                    <Icon onPress={guardarRegistros} type='material-community' name='content-save' color={primary} size={40} />
-                </View>
-            )
-        },
-        [contadorVehicular],
-    )
-
 
     const restablecerContador = () => {
         listado.forEach(element => {
             element.contador = 0
         });
         setVehiculos(listado)
-        setContadorVehicular([])
-        setModalVisible(!modalVisible)
+        setModalVisible(false)
     }
+
+
+    const SaveIcon = useCallback(
+        () => {
+
+            return (
+                <View style={{ position: 'absolute', top: 10, left: 10, backgroundColor: primary, borderRadius:5 }}>
+                    <Icon onPress={guardarRegistros} type='material-community' name='content-save' color={'white'} size={40} />
+                </View>
+            )
+        },
+        [contadorVehicular],
+    )
 
     const FlatListVehiculos = useCallback(() => {
         return (
@@ -172,12 +163,11 @@ const Contador = ({ navigation }) => {
     }, [contadorVehicular])
 
     useEffect(() => {
-        setVehiculos([...listado])
+        if(vehiculos){
+            setVehiculos(listado)
+        }
     }, [listado])
 
-    // useEffect(() => {
-    //     console.log(JSON.stringify(contadorVehicular, null, 2));
-    // }, [contadorVehicular])
 
     useFocusEffect(
         React.useCallback(() => {
@@ -277,7 +267,6 @@ const Contador = ({ navigation }) => {
                                     loading ?
                                         <ActivityIndicator size="large" color={primary} />
                                         : <>
-
                                             <Text style={styles.titleBlack}>Contador</Text>
                                             <Text style={styles.textBlack}>Código de levantamiento</Text>
                                             <Input
@@ -300,6 +289,7 @@ const Contador = ({ navigation }) => {
                                                     onPress={unirseLevantamiento}
                                                     disabledStyle={styles.buttonPrimaryDisabled}
                                                     loading={cargando}
+                                                    disabled={!isConnected}
                                                     type="clear"
                                                     titleStyle={{ color: primary }}
                                                 />

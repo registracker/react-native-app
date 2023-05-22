@@ -10,6 +10,7 @@ import { dropIncidentes } from '../database/TblIncidentes';
 import { Switch } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { format } from 'date-fns';
+import { NetworkContext } from '../context/network/NetworkContext';
 
 
 export const Ajustes = () => {
@@ -28,6 +29,8 @@ export const Ajustes = () => {
   const { obtenerMediosDesplazamientos, obtenerIncidentes } = useContext(CatalogosContext)
   const [fecha] = useState(format(new Date(), 'yyyy'))
 
+  const {isConnected} = useContext(NetworkContext)
+
   const cerrarSesion = () => {
     setLoading(true);
     logout();
@@ -35,12 +38,14 @@ export const Ajustes = () => {
 
   const sincronizarCatalogos = async () => {
     try {
-      setSincronizarLoading(true)
-      await dropMediosDesplazamientos()
-      await dropIncidentes()
-
-      await obtenerMediosDesplazamientos();
-      await obtenerIncidentes();
+      if (isConnected) { 
+        setSincronizarLoading(true)
+        await dropMediosDesplazamientos()
+        await dropIncidentes()
+        
+        await obtenerMediosDesplazamientos();
+        await obtenerIncidentes();
+      }
     } catch (error) {
     }
     finally {

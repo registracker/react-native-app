@@ -1,4 +1,4 @@
-import { useReducer } from 'react';
+import { useContext, useReducer } from 'react';
 import { createContext } from 'react';
 import { incidenteReducer } from './incidenteReducer';
 import { storeReporteIncidente } from '../../database/TblIncidentes';
@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { postIncidente } from '../../services/incidenteServices'
 import { getUbicacionActual } from '../../utils/functions';
 import { format } from 'date-fns';
+import { NetworkContext } from '../network/NetworkContext';
 
 
 export const IncidenteContext = createContext();
@@ -16,6 +17,8 @@ const incidenteInicial = {
 
 export const IncidenteProvider = ({ children }) => {
     const [incidenteState, dispatch] = useReducer(incidenteReducer, incidenteInicial);
+
+    const {isConnected} = useContext(NetworkContext)
 
     const crearIncidente = () => {
         dispatch({ type: 'crear' })
@@ -37,7 +40,7 @@ export const IncidenteProvider = ({ children }) => {
         if (response.rowsAffected === 1) {
 
             const optionIncidente = await AsyncStorage.getItem('opcion-incidente');
-            if (optionIncidente === 'activo') {
+            if (optionIncidente === 'activo' && isConnected) {
                 await postIncidente(data)
                 // await enviarIncidente(response.insertId)
             }

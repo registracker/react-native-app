@@ -8,7 +8,7 @@ import { getVehiculos } from '../../services/vehiculos';
 import { format } from 'date-fns';
 
 import { dropIncidentes, getIncidentesDatabase, storeCatalogoIncidentes } from '../../database/TblIncidentes';
-import { getVehiculosDatabase } from '../../database/TblVehiculos';
+import { getVehiculosDatabase, storeVehiculosDatabase } from '../../database/TblVehiculos';
 import { NetworkContext } from '../network/NetworkContext';
 import { getMarcadoresDatabase } from '../../database/TblMarcadores';
 import { getMediosDesplazamientosDatabase } from '../../database/TblMediosDesplazamientos';
@@ -89,8 +89,7 @@ export const CatalogosProvider = ({ children }) => {
                 data.forEach(element => {
                     element.contador = 0
                 });
-
-                // await storeVehiculosDatabase(data)
+                
                 dispatch({ type: 'ctl_vehiculos', payload: { data, update: format(new Date(), 'dd-MM-yyyy HH:mm:ss') } })
                 return true
             }
@@ -113,6 +112,7 @@ export const CatalogosProvider = ({ children }) => {
                 obtenerMarcadores,
                 obtenerVehiculos
             ])
+            console.log(await vehiculo());
         } catch (error) {
             console.log("🚀 ~ file: CatalogosContext.jsx:47 ~ getCatalogos ~ error:", error)
 
