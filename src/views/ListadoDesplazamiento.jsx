@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect, useContext } from 'react'
 import { FlatList, ImageBackground, ToastAndroid, View } from 'react-native'
 import { Button, Icon, ListItem } from '@rneui/base'
 import { useFocusEffect } from '@react-navigation/native';
@@ -9,6 +9,7 @@ import { Loading } from '../components/Loading'
 import { styles } from '../styles/style';
 import { SearchBar } from '@rneui/themed';
 import { format } from 'date-fns';
+import { NetworkContext } from '../context/network/NetworkContext';
 
 export const ListadoDesplazamiento = () => {
 
@@ -17,6 +18,9 @@ export const ListadoDesplazamiento = () => {
   const [refreshing, setRefreshing] = useState(false);
 
   const [search, setSearch] = useState("");
+
+  const { isConnected } = useContext(NetworkContext)
+
 
   const updateSearch = (search) => {
     setSearch(search);
@@ -121,13 +125,24 @@ export const ListadoDesplazamiento = () => {
         />
       )}
       rightContent={(reset) => (
-        <Button
-          title="Enviar"
-          onPress={() => enviarDesplazamiento(item, reset)}
-          icon={{ name: 'send', color: 'white' }}
-          buttonStyle={{ minHeight: '100%', backgroundColor: 'green' }}
-          loading={cargando}
-        />
+        <>
+          {
+            isConnected ?
+              <Button
+                title="Enviar"
+                onPress={() => enviarDesplazamiento(item, reset)}
+                icon={{ name: 'send', color: 'white' }}
+                buttonStyle={{ minHeight: '100%', backgroundColor: 'green' }}
+                loading={cargando}
+              />
+              : <Button
+                title="Desconectado"
+                onPress={() => reset()}
+                icon={{ name: 'access-point-network-off', type: 'material-community', color: 'white' }}
+                buttonStyle={{ minHeight: '100%', backgroundColor: 'gray' }}
+              />
+          }
+        </>
       )}
       containerStyle={{ backgroundColor: "white" }}
       topDivider={true}
@@ -161,7 +176,6 @@ export const ListadoDesplazamiento = () => {
       >
         <SearchBar
           placeholder="Buscar por identificador o fecha ..."
-
           onChangeText={updateSearch}
           value={search}
           lightTheme

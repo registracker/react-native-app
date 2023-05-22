@@ -9,6 +9,8 @@ import { SearchBar } from '@rneui/themed';
 
 import { postReporteMarcador } from '../services/marcadorServices'
 import { format } from 'date-fns';
+import { NetworkContext } from '../context/network/NetworkContext';
+import { useContext } from 'react';
 
 
 export const ListadoMarcadores = () => {
@@ -18,6 +20,9 @@ export const ListadoMarcadores = () => {
     const [cargando, setCargando] = useState(false)
 
     const [search, setSearch] = useState("");
+
+    const { isConnected } = useContext(NetworkContext)
+
 
     const updateSearch = (search) => {
         setSearch(search);
@@ -105,19 +110,17 @@ export const ListadoMarcadores = () => {
             rightContent={(reset) => (
                 <>
                     {
-                        item.enviado === 1 ?
+                        isConnected ?
                             <Button
-                                onPress={() => enviarReporteMarcador(item, reset)}
-                                icon={{ name: 'information', color: 'white' }}
-                                buttonStyle={{ minHeight: '100%', backgroundColor: 'gray' }}
-                            />
-                            :
-                            <Button
-                                title="Enviar"
                                 onPress={() => enviarReporteMarcador(item, reset)}
                                 icon={{ name: 'send', color: 'white' }}
                                 buttonStyle={{ minHeight: '100%', backgroundColor: 'green' }}
-                                loading={cargando}
+                            />
+                            : <Button
+                                title="Desconectado"
+                                onPress={() => reset()}
+                                icon={{ name: 'access-point-network-off', type: 'material-community', color: 'white' }}
+                                buttonStyle={{ minHeight: '100%', backgroundColor: 'gray' }}
                             />
                     }
                 </>
