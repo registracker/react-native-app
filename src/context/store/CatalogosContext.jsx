@@ -8,9 +8,10 @@ import { getVehiculos } from '../../services/vehiculos';
 import { format } from 'date-fns';
 
 import { getIncidentesDatabase } from '../../database/TblIncidentes';
-import { dropVehiculosDatabase, getVehiculosDatabase, storeVehiculosDatabase } from '../../database/TblVehiculos';
+import { getVehiculosDatabase } from '../../database/TblVehiculos';
 import { NetworkContext } from '../network/NetworkContext';
 import { getMarcadoresDatabase } from '../../database/TblMarcadores';
+import { getMediosDesplazamientosDatabase } from '../../database/TblMediosDesplazamientos';
 
 
 export const CatalogosContext = createContext();
@@ -29,12 +30,18 @@ export const CatalogosProvider = ({ children }) => {
     const { isConnected } = useContext(NetworkContext)
 
     const obtenerMediosDesplazamientos = async () => {
-        const data = await getMediosDesplazamientos()
-        if (data) {
+        if (isConnected) {
+            const data = await getMediosDesplazamientos()
+            if (data) {
+                dispatch({ type: 'medios_desplazamientos', payload: { data, update: format(new Date(), 'dd-MM-yyyy HH:mm:ss') } })
+                return true
+            } else {
+                obtenerMediosDesplazamientos()
+            }
+        } else {
+            const data = await getMediosDesplazamientosDatabase();
             dispatch({ type: 'medios_desplazamientos', payload: { data } })
             return true
-        } else {
-            obtenerMediosDesplazamientos()
         }
     }
 

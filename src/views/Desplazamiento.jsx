@@ -207,7 +207,6 @@ export const Desplazamiento = () => {
           <MediosDesplazamientosComponentes
             selected={medio}
             cambiarMedio={setMedio}
-            mediosDesplazamientos={ctl_medios_desplazamientos.data}
             open={medioTransporteModal}
             setOpen={setMedioTransporteModal}
           />
