@@ -295,7 +295,6 @@ const stylesDesplazamiento = StyleSheet.create({
     marginRight: 10,
     padding: 0,
     borderRadius: 5,
-    marginRight: 15
   },
   textTitlePanel: { color: 'white', fontSize: 20 },
   iconoFAB: {

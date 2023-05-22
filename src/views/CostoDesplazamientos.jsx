@@ -220,7 +220,6 @@ const stylesCosto = StyleSheet.create({
         minHeight: '30%',
         padding: 10,
         justifyContent: 'space-around',
-        alignItems: 'center'
     },
     textStyle: {
         color: 'white',

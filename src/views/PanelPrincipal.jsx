@@ -50,20 +50,3 @@ export const PanelPrincipal = ({ navigation }) => {
         </View>
     )
 }
-
-const stylesPanel = StyleSheet.create({
-    button: {
-        alignItems: 'center',
-        backgroundColor: '#DDDDDD',
-        padding: 10,
-    },
-    menu: {
-        flexDirection: 'row',
-        margin: 50,
-        justifyContent: 'space-evenly',
-        borderColor: 'black',
-        borderWidth: 4,
-        padding: 40,
-        alignItems: 'center',
-    }
-})
