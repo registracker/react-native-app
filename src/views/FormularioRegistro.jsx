@@ -163,8 +163,7 @@ export const FormularioRegistro = ({ route, navigation }) => {
       email &&
       passwordConfirm &&
       isEmail() &&
-      selectRol() &&
-      checked
+      selectRol() 
     ) {
       setPasswordErrorMessage();
       setPasswordConfirmErrorMessage();
