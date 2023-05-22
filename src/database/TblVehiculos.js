@@ -9,9 +9,7 @@ export const createTableVehiculos = () => {
             );`,
       [],
       (sqlTxn, result) => {},
-      error => {
-        console.log(error);
-      },
+      error => {},
     );
   });
 };
@@ -67,13 +65,12 @@ export const dropVehiculosDatabase = () => {
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
-        ` DELETE FROM tbl_vehiculos; `,
+        ' DELETE FROM tbl_vehiculos; ',
         [],
         (transaction, res) => {
           resolve(res);
         },
         error => {
-          console.log(error);
           reject(error);
         },
       );

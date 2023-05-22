@@ -29,7 +29,7 @@ const getMarcadores = async () => {
 
     return data;
   } catch (error) {
-    return []
+    return [];
   }
 
 };
@@ -71,15 +71,11 @@ const postReporteMarcador = async (datos, automatico = true) => {
 
     return;
   } catch (error) {
-    console.log(
-      '🚀 ~ file: levantamientoServices.js:28 ~ postLevantamiento ~ error:',
-      error,
-    );
     return false;
   }
 };
 
 module.exports = {
   getMarcadores,
-  postReporteMarcador
+  postReporteMarcador,
 };

@@ -5,7 +5,7 @@ import { API_URL } from '@env';
 
 export const http_axios = async (url, params, method = 'get', data) => {
   const baseURL = API_URL || 'http://45.33.119.69:8100';
-  console.log('🚀 ~~ ', method, baseURL + url);
+  console.log('🚀 ~***~ ', method, baseURL + url);
 
   const headers = {
     Accept: 'application/json',
@@ -43,7 +43,6 @@ export const http_axios = async (url, params, method = 'get', data) => {
             resolve({ data: response.data, status: response.status, links: response.links });
           })
           .catch(err => {
-            console.log(JSON.stringify(err, null, 2));
             reject(err);
           });
 
@@ -86,7 +85,7 @@ export const http_axios = async (url, params, method = 'get', data) => {
 
 export const instance = async (url, params = {}, method = 'get', data = {}) => {
   const baseURL = API_URL || 'http://localhost:8100';
-  console.log('🚀 ~ file: axios.js:89 ~ instance ~ baseURL:', baseURL + url);
+  console.log('🚀 *** file: axios.js:89 ~ instance ~ baseURL:', baseURL + url);
 
   const headers = {
     Accept: 'application/json',

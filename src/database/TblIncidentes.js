@@ -40,7 +40,6 @@ export const getIncidentesDatabase = () => {
 };
 
 export const storeCatalogoIncidentes = incidentes => {
-
   const inserting_incidentes = incidentes.map(item => {
     return `(${item.id}, '${item.nombre}', '${item.icono}'),`;
   });
@@ -212,15 +211,8 @@ export const limpiarIncidenteTable = () => {
     tx.executeSql(
       'DELETE FROM tbl_reporte_incidente WHERE date(fecha_reporte) < date(?) AND enviado = 1',
       [now],
-      (transaction, res) => {
-        // console.log('lIMPIEZA INCIDENTES');
-      },
-      error => {
-        console.log(
-          '🚀 ~ file: TblDesplazamientos.jsx:163 ~ limpiarDesplazamientoDatatable ~ error:',
-          error,
-        );
-      },
+      (transaction, res) => {},
+      error => {},
     );
   });
 };

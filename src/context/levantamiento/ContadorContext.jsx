@@ -43,8 +43,6 @@ export const ContadorProvider = ({ children }) => {
                 })
                 return clt_vehiculos.data
             }
-            // console.log("🚀 ~ file: ContadorContext.jsx:48 ~ guardar")
-            // return []
         } else {
             await guardar(levantamiento)
         }
@@ -81,7 +79,6 @@ export const ContadorProvider = ({ children }) => {
 
         if( isConnected  ) {
             const response = await enviarReporte(contadorState.contador);
-            console.log("🚀 ~ file: ContadorContext.jsx:84 ~ enviar ~ response:", response)
         } else {
             // TODO: GUARDAR EN SQLITE
             console.log('guardar SQLITE');

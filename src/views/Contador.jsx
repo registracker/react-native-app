@@ -158,7 +158,6 @@ const Contador = ({ navigation }) => {
 
     useEffect(() => {
         if (contadorVehicular.length === 0) {
-            console.log("Vacio");
         }
     }, [contadorVehicular])
 
@@ -172,13 +171,10 @@ const Contador = ({ navigation }) => {
     useFocusEffect(
         React.useCallback(() => {
             // Función a ejecutar al cambiar a la pestaña Profile
-            // console.log('Cambiaste a la pestaña Conteo');
-
             // Lógica adicional aquí
 
             return () => {
                 // Función a ejecutar al salir de la pestaña Profile
-                // console.log('Save');
 
                 // Lógica adicional aquí
             };

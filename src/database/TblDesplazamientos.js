@@ -44,12 +44,7 @@ export const addItemDesplazamiento = data => {
         registro.fecha_registro,
       ],
       (sqlTxn, result) => {},
-      error => {
-        console.log(
-          '🚀 ~ file: TblDesplazamientos.jsx:48 ~ addItemDesplazamiento ~ error:',
-          error,
-        );
-      },
+      error => {},
     );
   });
 };
@@ -153,15 +148,8 @@ export const limpiarDesplazamientoTable = async () => {
     tx.executeSql(
       'DELETE FROM tbl_desplazamiento WHERE date(fecha_registro) < date(?) AND enviado = 1',
       [now],
-      (transaction, res) => {
-        // console.log('lIMPIEZA DESPLAZAMIENTO');
-      },
-      error => {
-        console.log(
-          '🚀 ~ file: TblDesplazamientos.jsx:163 ~ limpiarDesplazamientoDatatable ~ error:',
-          error,
-        );
-      },
+      (transaction, res) => {},
+      error => {},
     );
   });
 };

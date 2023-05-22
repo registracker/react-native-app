@@ -41,7 +41,6 @@ export const createTables = () => {
   createTableMarcadores();
   createTableReporteMarcador();
   createTableVehiculos();
-  console.log('CREATED TABLES');
 };
 
 export const limpiarRegistros = () => {

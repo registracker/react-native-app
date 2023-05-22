@@ -1,4 +1,4 @@
-import { format, subDays } from 'date-fns';
+import {format, subDays} from 'date-fns';
 import {db} from '../config/database';
 
 export const createTableReporteMarcador = () => {
@@ -138,19 +138,18 @@ export const removeReporteMarcador = () => {
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
-        `DELETE FROM tbl_reporte_marcador;`,
+        'DELETE FROM tbl_reporte_marcador;',
         [],
         (sqlTxn, result) => {
-          resolve(result)
+          resolve(result);
         },
         error => {
-          reject(error)
+          reject(error);
         },
       );
     });
-
   });
-}
+};
 
 export const limpiarMarcadoresTable = () => {
   const now = format(subDays(new Date(), 3), 'yyyy-MM-dd hh:mm:ss');
@@ -158,15 +157,8 @@ export const limpiarMarcadoresTable = () => {
     tx.executeSql(
       'DELETE FROM tbl_reporte_marcador WHERE date(fecha_reporte) < date(?) AND enviado = 1',
       [now],
-      (transaction, res) => {
-        // console.log('lIMPIEZA DESPLAZAMIENTO');
-      },
-      error => {
-        console.log(
-          '🚀 ~ file: TblDesplazamientos.jsx:163 ~ limpiarDesplazamientoDatatable ~ error:',
-          error,
-        );
-      },
+      (transaction, res) => {},
+      error => {},
     );
   });
 };

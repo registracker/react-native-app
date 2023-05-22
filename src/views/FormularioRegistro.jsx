@@ -31,7 +31,6 @@ export const FormularioRegistro = ({ route, navigation }) => {
 
   const [checked, setChecked] = React.useState(false);
   const toggleCheckbox = () => setChecked(!checked);
-  const viewTerminosCondiciones = () => console.log("TERMINOS Y CONDICIONES");
   const [modalVisible, setModalVisible] = useState(false);
 
   const inputPassword = createRef();
