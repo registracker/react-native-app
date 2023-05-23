@@ -281,9 +281,8 @@ const Contador = ({ navigation }) => {
                                             />
                                             <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
                                                 <Button
-                                                    title='Unirse'
+                                                    title={isConnected ? 'Unirse' : 'Sin conexión'}
                                                     onPress={unirseLevantamiento}
-                                                    disabledStyle={styles.buttonPrimaryDisabled}
                                                     loading={cargando}
                                                     disabled={!isConnected}
                                                     type="clear"

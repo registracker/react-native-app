@@ -101,12 +101,15 @@ export const MarcadorModalComponent = ({ open, setOpen }) => {
                                         titleStyle={{ color: primary }}
                                     />
                                     : <Button
-                                        title='Unirse sin conexion'
-                                        onPress={abrirMarcador}
-                                        disabledStyle={styles.buttonPrimaryDisabled}
+                                        title='Sin conexión'
+                                        // onPress={abrirMarcador}
+                                        disabled={true}
                                         type="clear"
                                         titleStyle={{ color: 'grey' }}
-                                    />
+                                    >
+                                        Desconectado
+                                        <Icon name="access-point-network-off" size={15} type='material-community' color="grey" />
+                                    </Button>
 
                             }
                         </View>
