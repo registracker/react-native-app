@@ -15,6 +15,7 @@ import { MarcadorProvider } from './src/context/levantamiento/MarcadorContext';
 import { NetworkProvider } from './src/context/network/NetworkContext';
 import { ContadorProvider } from './src/context/levantamiento/ContadorContext';
 import { IncidenteProvider } from './src/context/levantamiento/IncidenteContext';
+import { BitacoraProvider } from './src/context/bitacora/BitacoraContext';
 
 function App() {
   return (
@@ -23,18 +24,20 @@ function App() {
         <NetworkProvider>
 
           <AuthProvider>
-            <CatalogosProvider>
-              <DesplazamientoProvider>
-                <IncidenteProvider>
-                  <MarcadorProvider>
-                    <ContadorProvider>
-                      <Navigation />
-                      <Toast />
-                    </ContadorProvider>
-                  </MarcadorProvider>
-                </IncidenteProvider>
-              </DesplazamientoProvider>
-            </CatalogosProvider>
+            <BitacoraProvider>
+              <CatalogosProvider>
+                <DesplazamientoProvider>
+                  <IncidenteProvider>
+                    <MarcadorProvider>
+                      <ContadorProvider>
+                        <Navigation />
+                        <Toast />
+                      </ContadorProvider>
+                    </MarcadorProvider>
+                  </IncidenteProvider>
+                </DesplazamientoProvider>
+              </CatalogosProvider>
+            </BitacoraProvider>
           </AuthProvider>
         </NetworkProvider>
 

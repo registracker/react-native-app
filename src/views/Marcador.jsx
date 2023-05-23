@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { styles, primary } from '../styles/style';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getMarcadores, postReporteMarcador } from '../services/marcadorServices';
+import { postReporteMarcador } from '../services/marcadorServices';
 import { getUbicacionActual } from '../utils/functions';
 import { format } from 'date-fns';
 import { useContext } from 'react';

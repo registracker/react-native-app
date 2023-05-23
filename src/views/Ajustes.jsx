@@ -29,7 +29,7 @@ export const Ajustes = () => {
   const { obtenerMediosDesplazamientos, obtenerIncidentes } = useContext(CatalogosContext)
   const [fecha] = useState(format(new Date(), 'yyyy'))
 
-  const {isConnected} = useContext(NetworkContext)
+  const { isConnected } = useContext(NetworkContext)
 
   const cerrarSesion = () => {
     setLoading(true);
@@ -38,13 +38,9 @@ export const Ajustes = () => {
 
   const sincronizarCatalogos = async () => {
     try {
-      if (isConnected) { 
+      if (isConnected) {
         setSincronizarLoading(true)
-        await dropMediosDesplazamientos()
-        await dropIncidentes()
-        
-        await obtenerMediosDesplazamientos();
-        await obtenerIncidentes();
+
       }
     } catch (error) {
     }
@@ -178,66 +174,66 @@ export const Ajustes = () => {
   return (
     <View style={styles.container}>
 
-        <View style={{ flex: 10 }}>
-          <SincronizarList />
-          <OpcionDesplazamiento />
-          <OpcionIncidente />
-          <OpcionMarcador />
-        </View>
-        <View style={styles.foobar}>
-          <Button
-            title="Cerrar sesión"
-            type="clear"
-            onPress={() => { setModalVisible(true) }}
-            titleStyle={{ color: styles.primary, fontSize: 20, fontWeight:'bold' }}
-            icon={
-              <Icon
-                name="logout"
-                type="material-community"
-                size={15}
-                color={styles.primary}
-              />
-            }
-            iconRight
-          />
-          <View style={{ marginTop: 10, justifyContent: 'center', alignContent: 'center' }}>
+      <View style={{ flex: 10 }}>
+        <SincronizarList />
+        <OpcionDesplazamiento />
+        <OpcionIncidente />
+        <OpcionMarcador />
+      </View>
+      <View style={styles.foobar}>
+        <Button
+          title="Cerrar sesión"
+          type="clear"
+          onPress={() => { setModalVisible(true) }}
+          titleStyle={{ color: styles.primary, fontSize: 20, fontWeight: 'bold' }}
+          icon={
+            <Icon
+              name="logout"
+              type="material-community"
+              size={15}
+              color={styles.primary}
+            />
+          }
+          iconRight
+        />
+        <View style={{ marginTop: 10, justifyContent: 'center', alignContent: 'center' }}>
 
-            <Text style={styles.textBlack}>© {fecha} Universidad de El Salvador.</Text>
-            <Text style={styles.textBlack}>Todos los derechos reservados</Text>
-          </View>
-
+          <Text style={styles.textBlack}>© {fecha} Universidad de El Salvador.</Text>
+          <Text style={styles.textBlack}>Todos los derechos reservados</Text>
         </View>
-        <Modal
-          animationType="fade"
-          visible={modalVisible}
-          transparent={true}
-          statusBarTranslucent={true}
-          onRequestClose={() => {
-            setModalVisible(!modalVisible);
-          }}
-        >
-          <View style={stylesAjustes.centeredView}>
-            <View style={stylesAjustes.modalView}>
-              {/* <Text style={{ ...styles.titleText, color: primary, fontSize: 20 }}>Cerrar sesión</Text> */}
-              <Text style={{ ...styles.titleText, color: primary, fontSize: 20, fontWeight: 'bold' }}>¿Seguro de cerrar sesión?</Text>
-              <Text style={{ ...styles.titleText, color: 'gray', fontSize: 14, fontWeight: 'normal' }}>Cualquier registros no sincronizado se perderá</Text>
-              <View style={{
-                flexDirection: 'row'
-              }}>
-                {
-                  loading ? (
-                    <ActivityIndicator size="large" color={primary} />
-                  ) : (
-                    <>
-                      <Button title="Sí, seguro" type="clear" titleStyle={{ color: primary }} onPress={() => { cerrarSesion() }} />
-                      <Button title="Cancelar" type="clear" titleStyle={{ color: 'gray' }} onPress={() => { setModalVisible(!modalVisible) }} />
-                    </>
-                  )
-                }
-              </View>
+
+      </View>
+      <Modal
+        animationType="fade"
+        visible={modalVisible}
+        transparent={true}
+        statusBarTranslucent={true}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={stylesAjustes.centeredView}>
+          <View style={stylesAjustes.modalView}>
+            {/* <Text style={{ ...styles.titleText, color: primary, fontSize: 20 }}>Cerrar sesión</Text> */}
+            <Text style={{ ...styles.titleText, color: primary, fontSize: 20, fontWeight: 'bold' }}>¿Seguro de cerrar sesión?</Text>
+            <Text style={{ ...styles.titleText, color: 'gray', fontSize: 14, fontWeight: 'normal' }}>Cualquier registros no sincronizado se perderá</Text>
+            <View style={{
+              flexDirection: 'row'
+            }}>
+              {
+                loading ? (
+                  <ActivityIndicator size="large" color={primary} />
+                ) : (
+                  <>
+                    <Button title="Sí, seguro" type="clear" titleStyle={{ color: primary }} onPress={() => { cerrarSesion() }} />
+                    <Button title="Cancelar" type="clear" titleStyle={{ color: 'gray' }} onPress={() => { setModalVisible(!modalVisible) }} />
+                  </>
+                )
+              }
             </View>
           </View>
-        </Modal>
+        </View>
+      </Modal>
 
     </View>
   )

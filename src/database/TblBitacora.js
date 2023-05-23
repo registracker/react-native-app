@@ -22,7 +22,12 @@ export const getBitacotaDatabase = () => {
         'SELECT * FROM tbl_bitacora;',
         [],
         (transaction, res) => {
-          resolve(res);
+          let len = res.rows.length;
+          let result = [];
+          if (len > 0) {
+            result = res.rows.raw();
+          }
+          resolve(result);
         },
         error => {
           reject(false);
@@ -57,12 +62,12 @@ export const actualizarBitacora = (tabla, fecha) => {
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
-        'UPDATE tbl_bitacora SET fecha = ? WHERE tabla = ?;',
+        'UPDATE tbl_bitacora SET fecha_actualizado = ? WHERE tabla = ?;',
         [fecha, tabla],
         (transaction, res) => {
           resolve(res);
         },
-        () => {
+        err => {
           reject(false);
         },
       );
@@ -86,6 +91,7 @@ export const storeBitacoraDatabase = data => {
           resolve(res);
         },
         error => {
+          console.log(error);
           reject(false);
         },
       );

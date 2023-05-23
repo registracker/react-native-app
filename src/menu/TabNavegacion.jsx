@@ -10,6 +10,8 @@ import { useNetInfo } from '@react-native-community/netinfo';
 import { NetworkContext } from '../context/network/NetworkContext';
 import { DesplazamientoContext } from '../context/tracking/DesplazamientoContext';
 import Contador from '../views/Contador';
+import { CatalogosContext } from '../context/store/CatalogosContext';
+import { BitacoraContext } from '../context/bitacora/BitacoraContext';
 
 const Tab = createBottomTabNavigator();
 
@@ -33,12 +35,17 @@ export const TabNavegacion = () => {
 
     const netInfo = useNetInfo();
 
+    const { getCatalogos } = useContext(CatalogosContext)
+    const { obtenerBitacora } = useContext(BitacoraContext)
+
     const { envioAutomaticoDesplazamientos } = useContext(DesplazamientoContext)
 
     useEffect(() => {
         if (netInfo?.isConnected === true) {
             envioAutomaticoDesplazamientos()
         }
+        obtenerBitacora()
+        getCatalogos()
     }, [])
     
     return (

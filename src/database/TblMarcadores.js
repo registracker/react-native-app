@@ -1,4 +1,4 @@
-import { format, subDays } from 'date-fns';
+import {format, subDays} from 'date-fns';
 import {db} from '../config/database';
 
 export const createTableMarcadores = () => {
@@ -50,6 +50,23 @@ export const storeCatalogoMarcadores = marcadores => {
     db.transaction(tx => {
       tx.executeSql(
         `INSERT INTO tbl_marcadores (id, nombre, icono) VALUES ${sql} ;`,
+        [],
+        (sqlTxn, result) => {
+          resolve(result);
+        },
+        error => {
+          reject(error);
+        },
+      );
+    });
+  });
+};
+
+export const dropMarcadoresDatabase = marcadores => {
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'DELETE FROM tbl_marcadores;',
         [],
         (sqlTxn, result) => {
           resolve(result);

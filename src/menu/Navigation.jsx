@@ -22,6 +22,7 @@ import NetInfo from "@react-native-community/netinfo";
 import { NetworkContext } from '../context/network/NetworkContext';
 import { DesplazamientoContext } from '../context/tracking/DesplazamientoContext';
 import { CatalogosContext } from '../context/store/CatalogosContext'
+import { BitacoraContext } from '../context/bitacora/BitacoraContext';
 
 const Stack = createNativeStackNavigator();
 
@@ -63,7 +64,6 @@ export const Navigation = () => {
     const { permissions, checkLocationPermission } = useContext(PermissionContext);
     const { autenticado } = useContext(AuthContext);
     const { saveStatus } = useContext(NetworkContext)
-    const { getCatalogos, generarBitacora } = useContext(CatalogosContext)
     const { envioAutomaticoDesplazamientos } = useContext(DesplazamientoContext)
 
 
@@ -71,13 +71,8 @@ export const Navigation = () => {
         checkLocationPermission()
         createTables()
         limpiarRegistros()
-        generarBitacora()
-        getCatalogos()
 
-        const unsubscribe = NetInfo.addEventListener(state => {
-            saveStatus(state)
-
-        });
+        const unsubscribe = NetInfo.addEventListener(state => saveStatus(state));
 
         return () => {
             unsubscribe();

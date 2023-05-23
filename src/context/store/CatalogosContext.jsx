@@ -7,14 +7,12 @@ import { getMarcadores } from '../../services/marcadorServices';
 import { getVehiculos } from '../../services/vehiculos';
 import { format } from 'date-fns';
 
-import { dropIncidentes, getIncidentesDatabase, storeCatalogoIncidentes } from '../../database/TblIncidentes';
+import { getIncidentesDatabase, storeCatalogoIncidentes } from '../../database/TblIncidentes';
 import { getVehiculosDatabase, storeVehiculosDatabase } from '../../database/TblVehiculos';
 import { NetworkContext } from '../network/NetworkContext';
-import { getMarcadoresDatabase } from '../../database/TblMarcadores';
-import { dropMediosDesplazamientos, getMediosDesplazamientosDatabase } from '../../database/TblMediosDesplazamientos';
-import { getBitacotaDatabase, storeBitacoraDatabase } from '../../database/TblBitacora';
+import { getMarcadoresDatabase, storeCatalogoMarcadores } from '../../database/TblMarcadores';
+import { getMediosDesplazamientosDatabase } from '../../database/TblMediosDesplazamientos';
 import { storeCatalogoMediosDesplazamientos } from '../../database/TblMediosDesplazamientos';
-import { getBitacota } from '../../services/bitacoraServices';
 
 
 export const CatalogosContext = createContext();
@@ -131,28 +129,13 @@ export const CatalogosProvider = ({ children }) => {
                 obtenerMarcadores,
                 obtenerVehiculos
             ])
+            if (await medios() && await incidente() && await marcador() && await vehiculo() ){
+                console.log("Catalogo Listo");
+            }
         } catch (error) {
 
         }
     }
-
-    const generarBitacora = async() => {
-        const {rows} = await getBitacotaDatabase()
-        const items = rows?.raw()
-        if(items.length === 0 && isConnected) {
-            try {
-                const bitacora = await getBitacota()
-                await storeBitacoraDatabase(bitacora)
-                
-            } catch (e) {
-                console.log(e);
-            } finally {
-                
-            }
-        }
-
-    }
-
     return (
         <CatalogosContext.Provider
             value={{
@@ -161,7 +144,6 @@ export const CatalogosProvider = ({ children }) => {
                 obtenerIncidentes,
                 obtenerVehiculos,
                 getCatalogos,
-                generarBitacora
             }}
         >
             {children}
