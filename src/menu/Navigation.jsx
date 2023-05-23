@@ -63,7 +63,7 @@ export const Navigation = () => {
     const { permissions, checkLocationPermission } = useContext(PermissionContext);
     const { autenticado } = useContext(AuthContext);
     const { saveStatus } = useContext(NetworkContext)
-    const { getCatalogos } = useContext(CatalogosContext)
+    const { getCatalogos, generarBitacora } = useContext(CatalogosContext)
     const { envioAutomaticoDesplazamientos } = useContext(DesplazamientoContext)
 
 
@@ -71,6 +71,7 @@ export const Navigation = () => {
         checkLocationPermission()
         createTables()
         limpiarRegistros()
+        generarBitacora()
         getCatalogos()
 
         const unsubscribe = NetInfo.addEventListener(state => {

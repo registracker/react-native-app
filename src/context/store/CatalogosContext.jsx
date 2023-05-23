@@ -36,21 +36,12 @@ export const CatalogosProvider = ({ children }) => {
         if (isConnected) {
             const data = await getMediosDesplazamientos()
             if (data) {
-                const {rows}  = await getBitacotaDatabase('medios_deplazamiento')
-                const bitacora = rows.raw() 
-                if (bitacora.length > 0){
-
-
-                    
-                } else {
-                    
-                    // await storeCatalogoMediosDesplazamientos(data)
-                    // const response = await getMediosDesplazamientosDatabase()
-                    await obtenerBitacora()
-
+                const response = await getMediosDesplazamientosDatabase()
+                if (response.length === 0){
+                    await storeCatalogoMediosDesplazamientos(data)
                 }
+
                 dispatch({ type: 'medios_desplazamientos', payload: { data, update: format(new Date(), 'dd-MM-yyyy HH:mm:ss') } })
-                // actualizarBitacora()
                 return true
             } else {
                 obtenerMediosDesplazamientos()
@@ -67,6 +58,10 @@ export const CatalogosProvider = ({ children }) => {
         if (isConnected) {
             const data = await getIncidentes()
             if (data) {
+                const response = await getIncidentesDatabase()
+                if (response.length === 0) {
+                    await storeCatalogoIncidentes(data)
+                }
                 dispatch({ type: 'ctl_incidentes', payload: { data, update: format(new Date(), 'dd-MM-yyyy HH:mm:ss') } })
                 return true
             } else {
@@ -85,6 +80,10 @@ export const CatalogosProvider = ({ children }) => {
         if (isConnected) {
             const data = await getMarcadores()
             if (data) {
+                const response = await getMarcadoresDatabase()
+                if (response.length === 0) {
+                    await storeCatalogoMarcadores(data)
+                }
                 dispatch({ type: 'clt_marcadores', payload: { data, update: format(new Date(), 'dd-MM-yyyy HH:mm:ss') } })
                 return true
             } else {
@@ -98,7 +97,6 @@ export const CatalogosProvider = ({ children }) => {
 
     }
 
-
     const obtenerVehiculos = async () => {
         if (isConnected) {
             const data = await getVehiculos()
@@ -106,6 +104,11 @@ export const CatalogosProvider = ({ children }) => {
                 data.forEach(element => {
                     element.contador = 0
                 });
+
+                const response = await getVehiculosDatabase()
+                if (response.length === 0) {
+                    await storeVehiculosDatabase(data)
+                }
                 
                 dispatch({ type: 'ctl_vehiculos', payload: { data, update: format(new Date(), 'dd-MM-yyyy HH:mm:ss') } })
                 return true
@@ -120,7 +123,6 @@ export const CatalogosProvider = ({ children }) => {
         }
     }
 
-
     const getCatalogos = async () => {
         try {
             const [medios, incidente, marcador, vehiculo] = await Promise.all([
@@ -134,11 +136,20 @@ export const CatalogosProvider = ({ children }) => {
         }
     }
 
-    const obtenerBitacora = async() => {
-        const bitacora = await getBitacota()
-        console.log("🚀 ~ file: CatalogosContext.jsx:137 ~ getBitacora ~ bitacora:", bitacora)
-        await storeBitacoraDatabase(bitacora)
-        
+    const generarBitacora = async() => {
+        const {rows} = await getBitacotaDatabase()
+        const items = rows?.raw()
+        if(items.length === 0 && isConnected) {
+            try {
+                const bitacora = await getBitacota()
+                await storeBitacoraDatabase(bitacora)
+                
+            } catch (e) {
+                console.log(e);
+            } finally {
+                
+            }
+        }
 
     }
 
@@ -150,6 +161,7 @@ export const CatalogosProvider = ({ children }) => {
                 obtenerIncidentes,
                 obtenerVehiculos,
                 getCatalogos,
+                generarBitacora
             }}
         >
             {children}

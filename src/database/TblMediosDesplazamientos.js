@@ -40,7 +40,7 @@ export const getMediosDesplazamientosDatabase = () => {
 
 export const storeCatalogoMediosDesplazamientos = medios_desplazamiento => {
   const inserting_incidentes = medios_desplazamiento.map(item => {
-    return `(${item.id}, '${item.nombre}', '${item.icono}}'),`;
+    return `(${item.id}, '${item.nombre}', '${item.icono}'),`;
   });
 
   const items = inserting_incidentes.join(' ');

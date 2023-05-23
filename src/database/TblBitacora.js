@@ -15,17 +15,37 @@ export const createTableBitacora = () => {
   });
 };
 
-export const getBitacotaDatabase = tabla => {
+export const getBitacotaDatabase = () => {
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'SELECT * FROM tbl_bitacora;',
+        [],
+        (transaction, res) => {
+          resolve(res);
+        },
+        error => {
+          reject(false);
+        },
+      );
+    });
+  });
+};
+
+export const getTableBitacotaDatabase = tabla => {
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
         'SELECT * FROM tbl_bitacora WHERE tabla = ?;',
         [tabla],
         (transaction, res) => {
-          console.log(res);
           resolve(res);
         },
-        () => {
+        error => {
+          console.log(
+            '🚀 ~ file: TblBitacora.js:51 ~ returnnewPromise ~ error:',
+            error,
+          );
           reject(false);
         },
       );
@@ -50,7 +70,7 @@ export const actualizarBitacora = (tabla, fecha) => {
   });
 };
 
-export const storeBitacora = data => {
+export const storeBitacoraDatabase = data => {
   const inserting_incidentes = data.map(item => {
     return `(${item.id}, '${item.nombre_tabla}', '${item.actualizado}'),`;
   });
@@ -60,12 +80,12 @@ export const storeBitacora = data => {
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
-        `INSERT INTO tbl_incidente (id, tabla, fecha_actualizado) VALUES ${sql} ;`,
+        `INSERT INTO tbl_bitacora (id, tabla, fecha_actualizado) VALUES ${sql} ;`,
         [],
         (transaction, res) => {
           resolve(res);
         },
-        () => {
+        error => {
           reject(false);
         },
       );

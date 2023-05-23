@@ -40,7 +40,11 @@ export const getMarcadoresDatabase = () => {
 };
 
 export const storeCatalogoMarcadores = marcadores => {
-  const sql = marcadores.substring(0, marcadores.length - 1);
+  const inserting_incidentes = marcadores.map(item => {
+    return `(${item.id}, '${item.nombre}', '${item.icono}'),`;
+  });
+  const values = inserting_incidentes.join(' ');
+  const sql = values.substring(0, values.length - 1);
 
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
