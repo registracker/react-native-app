@@ -41,20 +41,21 @@ export const FormularioRegistro = ({ route, navigation }) => {
   const participante = { type: 'participante', id: 2 };
 
   const registrar = async () => {
-    const data = {
+    const datos = {
       email,
       password,
-      rol: rol.id,
+      rol: rol?.id,
     };
 
     try {
       setCargando(true);
       if (comparePassword()) {
-        const { usuario, estado_cuenta } = await register(null, data);
+        const { data } = await register(datos);
+        const { estado_cuenta } = data
         if (estado_cuenta === 'En revisión') {
           ToastAndroid.showWithGravity(
             'Cuenta con estado de revisión',
-            ToastAndroid.SHORT,
+            ToastAndroid.LONG,
             ToastAndroid.CENTER,
           );
         } else if (estado_cuenta === 'Activa') {
@@ -163,7 +164,7 @@ export const FormularioRegistro = ({ route, navigation }) => {
       email &&
       passwordConfirm &&
       isEmail() &&
-      selectRol() 
+      selectRol()
     ) {
       setPasswordErrorMessage();
       setPasswordConfirmErrorMessage();
@@ -180,6 +181,7 @@ export const FormularioRegistro = ({ route, navigation }) => {
   }, [rol]);
 
   return (
+    <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.container}>
 
         <ImageBackground
@@ -195,7 +197,7 @@ export const FormularioRegistro = ({ route, navigation }) => {
             <Text style={styles.text}>Elige un rol para tu usuario</Text>
             <View style={styles.row}>
               <TouchableHighlight
-                style={rol.id == 2 ? styles.customButtom : styles.customButtomDisabled}
+                style={rol?.id == 2 ? styles.customButtom : styles.customButtomDisabled}
                 onPress={() => setRol(participante)}>
                 <View
                   style={styles.center}>
@@ -211,7 +213,7 @@ export const FormularioRegistro = ({ route, navigation }) => {
                 </View>
               </TouchableHighlight>
               <TouchableHighlight
-                style={rol.id == 3 ? styles.customButtom : styles.customButtomDisabled}
+                style={rol?.id == 3 ? styles.customButtom : styles.customButtomDisabled}
                 onPress={() => setRol(investigador)}>
                 <View
                   style={styles.center}>
@@ -374,6 +376,8 @@ export const FormularioRegistro = ({ route, navigation }) => {
           </Modal>
         </ImageBackground>
       </ScrollView>
+    </View>
+
   );
 };
 
