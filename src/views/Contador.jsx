@@ -157,14 +157,10 @@ const Contador = ({ navigation }) => {
 
 
     useEffect(() => {
-        if (contadorVehicular.length === 0) {
-        }
-    }, [contadorVehicular])
-
-    useEffect(() => {
-        if(vehiculos){
             setVehiculos(listado)
-        }
+            if(listado?.length > 3 ){
+                navigation.navigate('ListadoVehiculo')
+            }
     }, [listado])
 
 
@@ -308,23 +304,23 @@ const Contador = ({ navigation }) => {
                     <View style={styles.centeredView}>
                         <View style={styles.modalView}>
                             <Text style={styles.textBlack}>Ajustes</Text>
-                            <TouchableOpacity style={{ width: '100%', height: 35, justifyContent: 'center', alignItems: 'center' }}>
-                                <Text>
+                            <TouchableOpacity onPress={() => {setModalVisible(!modalVisible); navigation.navigate('ListadoVehiculo')}} style={{ width: '100%', height: 35, justifyContent: 'center', alignItems: 'center' }}>
+                                <Text style={styles.textBlack}>
                                     Configurar Catálogos de vehiculos
                                 </Text>
                             </TouchableOpacity>
                             <TouchableOpacity onPress={restablecerContador} style={{ width: '100%', height: 35, justifyContent: 'center', alignItems: 'center' }}>
-                                <Text>
+                                <Text style={styles.textBlack}>
                                     Restablecer contador
                                 </Text>
                             </TouchableOpacity>
                             <TouchableOpacity onPress={cerrarConteo} style={{ width: '100%', height: 35, justifyContent: 'center', alignItems: 'center' }}>
-                                <Text>
+                                <Text style={styles.textBlack}>
                                     Cerrar conteo vehicular
                                 </Text>
                             </TouchableOpacity>
                             <TouchableOpacity onPress={() => setModalVisible(!modalVisible)} style={{ width: '100%', height: 35, justifyContent: 'center', alignItems: 'center' }}>
-                                <Text style={{ color: primary }}>
+                                <Text style={{ color: primary, size:18 }}>
                                     Cerrar ajustes
                                 </Text>
                             </TouchableOpacity>

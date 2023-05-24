@@ -21,7 +21,7 @@ const catalogosInicial = {
     ctl_medios_desplazamientos: {},
     ctl_incidentes: {},
     clt_marcadores: {},
-    clt_vehiculos: {},
+    ctl_vehiculos: {},
 }
 
 export const CatalogosProvider = ({ children }) => {

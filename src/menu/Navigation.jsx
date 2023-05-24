@@ -23,6 +23,7 @@ import { NetworkContext } from '../context/network/NetworkContext';
 import { DesplazamientoContext } from '../context/tracking/DesplazamientoContext';
 import { CatalogosContext } from '../context/store/CatalogosContext'
 import { BitacoraContext } from '../context/bitacora/BitacoraContext';
+import ListadoVehiculo from '../views/ListadoVehiculo';
 
 const Stack = createNativeStackNavigator();
 
@@ -114,6 +115,10 @@ export const Navigation = () => {
                                     }} />
                                     <Stack.Screen name='Marcador' component={Marcador} options={{
                                         title: 'Registrar marcador',
+                                        ...optionsView
+                                    }} />
+                                    <Stack.Screen name='ListadoVehiculo' component={ListadoVehiculo} options={{
+                                        titleListadoVehiculo: 'Listado de vehículos',
                                         ...optionsView
                                     }} />
                                 </Stack.Group>

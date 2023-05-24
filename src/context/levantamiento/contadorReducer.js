@@ -7,7 +7,7 @@ export const contadorReducer = (state, action) => {
         fecha_vencimiento: action.payload.fecha_vencimiento,
         listado: action.payload.listado,
         activo: true,
-        contador:[]
+        contador: [],
       };
     case 'restablecer':
       return {
@@ -32,6 +32,11 @@ export const contadorReducer = (state, action) => {
       return {
         ...state,
         contador: [],
+      };
+    case 'actualizar-listado':
+      return {
+        ...state,
+        listado: action.payload.vehiculos,
       };
     default:
       return state;

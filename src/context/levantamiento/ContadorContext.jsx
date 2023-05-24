@@ -25,23 +25,41 @@ export const ContadorProvider = ({ children }) => {
 
     const [contadorState, dispatch] = useReducer(contadorReducer, contadorInicial)
 
-    const { clt_vehiculos } = useContext(CatalogosContext)
-    const {isConnected} = useContext(NetworkContext)
+    const { ctl_vehiculos } = useContext(CatalogosContext)
+    const { isConnected } = useContext(NetworkContext)
 
     const guardar = async (levantamiento) => {
         const { data, status } = await getLevantamientoContador(levantamiento)
         if (data) {
             if (status === 200) {
                 await AsyncStorage.setItem('levantamiento-contador', JSON.stringify(data))
-                dispatch({
-                    type: 'guardar',
-                    payload: {
-                        fecha_vencimiento: data.fecha_vencimiento,
-                        levantamiento: data,
-                        listado: clt_vehiculos.data
-                    }
-                })
-                return clt_vehiculos.data
+
+                const vehiculos = await AsyncStorage.getItem('listado-vehiculos')
+                const lista = vehiculos != null ? JSON.parse(vehiculos) : null
+                if (lista) {
+                    const filtroVehiculos = ctl_vehiculos.data.filter((obj) => lista.some((element) => element === obj.id));
+                    dispatch({
+                        type: 'guardar',
+                        payload: {
+                            fecha_vencimiento: data.fecha_vencimiento,
+                            levantamiento: data,
+                            listado: filtroVehiculos
+                        }
+                    })
+                    return filtroVehiculos
+
+                } else {
+                    dispatch({
+                        type: 'guardar',
+                        payload: {
+                            fecha_vencimiento: data.fecha_vencimiento,
+                            levantamiento: data,
+                            listado: ctl_vehiculos.data
+                        }
+                    })
+                    return ctl_vehiculos.data
+                }
+
             }
         } else {
             await guardar(levantamiento)
@@ -53,38 +71,52 @@ export const ContadorProvider = ({ children }) => {
         if (previo) {
 
             const levantamiento = JSON.parse(previo);
-            const contador = [...clt_vehiculos.data]
+            const contador = [...ctl_vehiculos.data]
             contador.forEach(element => {
                 element.contador = 0
             });
-
-            dispatch({
-                type: 'guardar',
-                payload: {
-                    fecha_vencimiento: levantamiento.fecha_vencimiento,
-                    levantamiento,
-                    listado: contador
-                }
-            })
+            const vehiculos = await AsyncStorage.getItem('listado-vehiculos')
+            const lista = vehiculos != null ? JSON.parse(vehiculos) : null
+            if (lista) {
+                const filtroVehiculos = ctl_vehiculos.data.filter((obj) => lista.some((element) => element === obj.id));
+                dispatch({
+                    type: 'guardar',
+                    payload: {
+                        fecha_vencimiento: data.fecha_vencimiento,
+                        levantamiento: data,
+                        listado: filtroVehiculos
+                    }
+                })
+            } else {
+                dispatch({
+                    type: 'guardar',
+                    payload: {
+                        fecha_vencimiento: levantamiento.fecha_vencimiento,
+                        levantamiento,
+                        listado: contador
+                    }
+                })
+            }
         }
     }
 
 
     const restablecer = async () => {
         await AsyncStorage.removeItem('levantamiento-contador')
+        await AsyncStorage.removeItem('listado-vehiculos')
         dispatch({ type: 'restablecer' })
     }
 
     const enviar = async () => {
 
-        if( isConnected  ) {
+        if (isConnected) {
             const response = await enviarReporte(contadorState.contador);
         } else {
             // TODO: GUARDAR EN SQLITE
             console.log('guardar SQLITE');
         }
 
-        dispatch({ type:'restablecer-contador' })
+        dispatch({ type: 'restablecer-contador' })
     }
 
     const agregarRegistro = (id) => {
@@ -93,11 +125,17 @@ export const ContadorProvider = ({ children }) => {
             id_vehiculo: id,
             registrado: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
         }
-        dispatch({ type: 'agregar', payload:{ registro } })
+        dispatch({ type: 'agregar', payload: { registro } })
     }
 
     const actualizarConteo = (contador) => {
         dispatch({ type: 'actualizar', payload: { contador } })
+    }
+
+    const actualizarListado = async (items) => {
+        await AsyncStorage.setItem('listado-vehiculos', JSON.stringify(items))
+        const vehiculos = ctl_vehiculos.data.filter((obj) => items.some((element) => element === obj.id));
+        dispatch({ type: 'actualizar-listado', payload: { vehiculos } });
     }
     return (
         <ContadorContext.Provider value={{
@@ -108,6 +146,7 @@ export const ContadorProvider = ({ children }) => {
             conectarse,
             agregarRegistro,
             actualizarConteo,
+            actualizarListado,
         }} >
             {children}
         </ContadorContext.Provider>

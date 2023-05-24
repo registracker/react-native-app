@@ -33,7 +33,7 @@ export const catalogosReducer = (state, action) => {
     case 'ctl_vehiculos':
       return {
         ...state,
-        clt_vehiculos: {
+        ctl_vehiculos: {
           data: action.payload.data,
           lastUpdated: action.payload?.update
             ? action.payload.update
