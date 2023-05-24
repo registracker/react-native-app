@@ -82,6 +82,7 @@ const Contador = ({ navigation }) => {
             const fecha = new Date(year, month - 1, day);
             const valido = compareAsc(fecha, new Date())
             if (valido === 1) {
+                console.log("🚀 ~ file: Contador.jsx:86 ~ verificar ~ isConnected:", isConnected)
                 if (isConnected) {
                     await guardar(levantamiento.codigo);
                 } else {
@@ -163,6 +164,10 @@ const Contador = ({ navigation }) => {
             }
     }, [listado])
 
+    useEffect(() => {
+        setContadorVehicular(contador);
+
+    }, [contador])
 
     useFocusEffect(
         React.useCallback(() => {

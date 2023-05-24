@@ -10,6 +10,7 @@ import { getVehiculos, enviarReporte } from '../../services/vehiculos';
 import { useContext } from "react";
 import { CatalogosContext } from "../store/CatalogosContext";
 import { NetworkContext } from "../network/NetworkContext";
+import { storeReporteContadorDatabase } from "../../database/TblReporteContador";
 
 export const ContadorContext = createContext()
 
@@ -37,7 +38,7 @@ export const ContadorProvider = ({ children }) => {
                 const vehiculos = await AsyncStorage.getItem('listado-vehiculos')
                 const lista = vehiculos != null ? JSON.parse(vehiculos) : null
                 if (lista) {
-                    const filtroVehiculos = ctl_vehiculos.data.filter((obj) => lista.some((element) => element === obj.id));
+                    const filtroVehiculos = ctl_vehiculos?.data.filter((obj) => lista.some((element) => element === obj.id));
                     dispatch({
                         type: 'guardar',
                         payload: {
@@ -82,8 +83,8 @@ export const ContadorProvider = ({ children }) => {
                 dispatch({
                     type: 'guardar',
                     payload: {
-                        fecha_vencimiento: data.fecha_vencimiento,
-                        levantamiento: data,
+                        fecha_vencimiento: levantamiento.fecha_vencimiento,
+                        levantamiento,
                         listado: filtroVehiculos
                     }
                 })
@@ -107,13 +108,12 @@ export const ContadorProvider = ({ children }) => {
         dispatch({ type: 'restablecer' })
     }
 
-    const enviar = async () => {
-
+    const enviar = async (data) => {
         if (isConnected) {
-            const response = await enviarReporte(contadorState.contador);
+            const response = await enviarReporte(data);
         } else {
             // TODO: GUARDAR EN SQLITE
-            console.log('guardar SQLITE');
+            await storeReporteContadorDatabase(data)
         }
 
         dispatch({ type: 'restablecer-contador' })
@@ -122,6 +122,7 @@ export const ContadorProvider = ({ children }) => {
     const agregarRegistro = (id) => {
         const registro = {
             id_levantamiento_contador: contadorState.levantamiento.id,
+            codigo: contadorState.levantamiento.codigo,
             id_vehiculo: id,
             registrado: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
         }

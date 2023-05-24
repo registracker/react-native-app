@@ -3,20 +3,30 @@ import {
   createTableDesplazamiento,
   limpiarDesplazamientoTable,
 } from '../database/TblDesplazamientos';
-import {createTableMediosDesplazamiento, dropMediosDesplazamientos} from '../database/TblMediosDesplazamientos';
+import {
+  createTableMediosDesplazamiento,
+  dropMediosDesplazamientos,
+} from '../database/TblMediosDesplazamientos';
 import {
   createTableIncidentes,
   createTableReporteIncidentes,
   dropIncidentes,
   limpiarIncidenteTable,
 } from '../database/TblIncidentes';
-import {createTableMarcadores, dropMarcadoresDatabase} from '../database/TblMarcadores';
+import {
+  createTableMarcadores,
+  dropMarcadoresDatabase,
+} from '../database/TblMarcadores';
 import {
   createTableReporteMarcador,
   limpiarMarcadoresTable,
 } from '../database/TblReporteMarcador';
-import {createTableVehiculos, dropVehiculosDatabase} from '../database/TblVehiculos';
+import {
+  createTableVehiculos,
+  dropVehiculosDatabase,
+} from '../database/TblVehiculos';
 import {createTableBitacora} from '../database/TblBitacora';
+import {createTableReporteContador} from '../database/TblReporteContador';
 
 export const getUbicacionActual = () => {
   return new Promise((resolve, reject) => {
@@ -44,6 +54,7 @@ export const createTables = () => {
   createTableReporteMarcador();
   createTableVehiculos();
   createTableBitacora();
+  createTableReporteContador();
 };
 
 export const limpiarRegistros = () => {
@@ -52,10 +63,9 @@ export const limpiarRegistros = () => {
   limpiarMarcadoresTable();
 };
 
-export const limpiarCatalogos = async() => {
-  await dropIncidentes()
-  await dropMarcadoresDatabase()
-  await dropMediosDesplazamientos()
-  await dropVehiculosDatabase()
-
-}
+export const limpiarCatalogos = async () => {
+  await dropIncidentes();
+  await dropMarcadoresDatabase();
+  await dropMediosDesplazamientos();
+  await dropVehiculosDatabase();
+};
