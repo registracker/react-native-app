@@ -47,7 +47,7 @@ export const Login = () => {
   }
 
   const isEmail = () => {
-    const validRegex = /^[a-zA-Z0-9_]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    const validRegex = /^[a-zA-Z0-9_.]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
     if(email){
 
       if (!email.match(validRegex)) {
