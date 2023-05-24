@@ -11,14 +11,15 @@ const enviarReporte = async datos => {
   const body = {
     resources: datos
   }
+  console.log("🚀 ~ file: vehiculos.js:14 ~ enviarReporte ~ body:", body)
 
-  // const response = await instance(
-  //   '/api/reporte-contador/batch',
-  //   null,
-  //   'post',
-  //   body,
-  // );
-  // return response;
+  const response = await instance(
+    '/api/reporte-contador/batch',
+    null,
+    'post',
+    body,
+  );
+  return response;
 };
 
 module.exports = {

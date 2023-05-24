@@ -26,7 +26,7 @@ export const getReporteContadorDatabase = () => {
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
-        'SELECT count(codigo), codigo FROM tbl_reporte_contador GROUP BY codigo',
+        'SELECT count(codigo) AS cantidad, codigo FROM tbl_reporte_contador WHERE enviado = 0 GROUP BY codigo',
         [],
         (transaction, res) => {
           let len = res.rows.length;
@@ -37,7 +37,8 @@ export const getReporteContadorDatabase = () => {
           }
           resolve(result);
         },
-        () => {
+        err => {
+          console.log(err);
           reject(false);
         },
       );
@@ -49,7 +50,7 @@ export const getReporteContadorCodigoDatabase = codigo => {
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
-        'SELECT * FROM tbl_reporte_contador WHERE codigo = ?',
+        'SELECT contador FROM tbl_reporte_contador WHERE codigo = ? AND enviado = 0',
         [codigo],
         (transaction, res) => {
           let len = res.rows.length;
@@ -83,7 +84,38 @@ export const storeReporteContadorDatabase = datos => {
             result = res.rows.raw();
           }
           resolve(result);
-          console.log("🚀 ~ file: TblReporteContador.js:87 ~ returnnewPromise ~ result:", result)
+        },
+        err => {
+          console.log(err);
+          reject(false);
+        },
+      );
+    });
+  });
+};
+
+export const updateReporteContadorDatabase = codigo => {
+  console.log(
+    '🚀 ~ file: TblReporteContador.js:97 ~ updateReporteContadorDatabase ~ codigo:',
+    codigo,
+  );
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'UPDATE tbl_reporte_contador SET enviado = 1 WHERE codigo = ?',
+        [codigo],
+        (transaction, res) => {
+          let len = res.rows.length;
+          let result = [];
+
+          if (len > 0) {
+            result = res.rows.raw();
+          }
+          console.log(
+            '🚀 ~ file: TblReporteContador.js:111 ~ returnnewPromise ~ result:',
+            result,
+          );
+          resolve(result);
         },
         err => {
           console.log(err);

@@ -131,7 +131,7 @@ export const instance = async (url, params = {}, method = 'get', data = {}) => {
         console.log(error);
         break;
     }
-    console.log('🚀 ~ file: axios.js:117 ~ instance ~ error.response.:', error);
+    console.log('🚀 ~ file: axios.js:117 ~ instance ~ error.response.:', JSON.stringify(error));
 
   }
 };

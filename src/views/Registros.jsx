@@ -20,6 +20,11 @@ const menu = [
         icon: 'traffic-light',
         title: 'Marcadores'
     },
+    {
+        toGo: 'ListadoContador',
+        icon: 'car-3-plus',
+        title: 'Contedor Vehicular'
+    },
 ]
 
 
@@ -79,7 +84,7 @@ const stylesRegistros = StyleSheet.create({
         padding: 5,
         margin: 10,
         width: '90%',
-        height: '10%',
+        height: '14%',
         backgroundColor: primary
     },
     cardText: {

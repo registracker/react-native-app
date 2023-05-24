@@ -24,6 +24,7 @@ import { DesplazamientoContext } from '../context/tracking/DesplazamientoContext
 import { CatalogosContext } from '../context/store/CatalogosContext'
 import { BitacoraContext } from '../context/bitacora/BitacoraContext';
 import ListadoVehiculo from '../views/ListadoVehiculo';
+import ListadoContador from '../views/ListadoContador';
 
 const Stack = createNativeStackNavigator();
 
@@ -119,6 +120,10 @@ export const Navigation = () => {
                                     }} />
                                     <Stack.Screen name='ListadoVehiculo' component={ListadoVehiculo} options={{
                                         titleListadoVehiculo: 'Listado de vehículos',
+                                        ...optionsView
+                                    }} />
+                                    <Stack.Screen name='ListadoContador' component={ListadoContador} options={{
+                                        titleListadoVehiculo: 'Conteo vehicular',
                                         ...optionsView
                                     }} />
                                 </Stack.Group>

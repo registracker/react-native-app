@@ -112,7 +112,6 @@ export const ContadorProvider = ({ children }) => {
         if (isConnected) {
             const response = await enviarReporte(data);
         } else {
-            // TODO: GUARDAR EN SQLITE
             await storeReporteContadorDatabase(data)
         }
 
