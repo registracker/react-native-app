@@ -182,15 +182,15 @@ export const FormularioRegistro = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.container}>
 
-        <ImageBackground
-          source={require('../img/loginBackground.jpg')}
-          resizeMode="cover"
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-          }}>
+      <ImageBackground
+        source={require('../img/loginBackground.jpg')}
+        resizeMode="cover"
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+        }}>
+        <ScrollView>
           <View style={styles.body}>
 
             <Text style={styles.title}>Registro de usuario</Text>
@@ -374,9 +374,9 @@ export const FormularioRegistro = ({ route, navigation }) => {
               </View>
             </View>
           </Modal>
-        </ImageBackground>
-      </ScrollView>
-    </View>
+        </ScrollView>
+      </ImageBackground>
+    </View >
 
   );
 };
