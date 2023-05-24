@@ -3,18 +3,19 @@ import {
   createTableDesplazamiento,
   limpiarDesplazamientoTable,
 } from '../database/TblDesplazamientos';
-import {createTableMediosDesplazamiento} from '../database/TblMediosDesplazamientos';
+import {createTableMediosDesplazamiento, dropMediosDesplazamientos} from '../database/TblMediosDesplazamientos';
 import {
   createTableIncidentes,
   createTableReporteIncidentes,
+  dropIncidentes,
   limpiarIncidenteTable,
 } from '../database/TblIncidentes';
-import {createTableMarcadores} from '../database/TblMarcadores';
+import {createTableMarcadores, dropMarcadoresDatabase} from '../database/TblMarcadores';
 import {
   createTableReporteMarcador,
   limpiarMarcadoresTable,
 } from '../database/TblReporteMarcador';
-import {createTableVehiculos} from '../database/TblVehiculos';
+import {createTableVehiculos, dropVehiculosDatabase} from '../database/TblVehiculos';
 import {createTableBitacora} from '../database/TblBitacora';
 
 export const getUbicacionActual = () => {
@@ -50,3 +51,11 @@ export const limpiarRegistros = () => {
   limpiarIncidenteTable();
   limpiarMarcadoresTable();
 };
+
+export const limpiarCatalogos = async() => {
+  await dropIncidentes()
+  await dropMarcadoresDatabase()
+  await dropMediosDesplazamientos()
+  await dropVehiculosDatabase()
+
+}

@@ -7,6 +7,7 @@ import { ToastAndroid } from 'react-native';
 import { deleteReporteIncidentes } from '../../database/TblIncidentes';
 import { removeDesplazamientos } from '../../database/TblDesplazamientos';
 import { removeReporteMarcador } from '../../database/TblReporteMarcador';
+import { limpiarCatalogos } from '../../utils/functions';
 
 
 
@@ -63,6 +64,7 @@ export const AuthProvider = ({ children }) => {
             await deleteReporteIncidentes();
             await removeReporteMarcador();
             await removeDesplazamientos();
+            await limpiarCatalogos()
         } catch (error) {
             ToastAndroid.showWithGravity(
                 'Lo sentimos, algo salio mal.',
