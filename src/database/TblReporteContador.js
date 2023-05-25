@@ -10,13 +10,13 @@ export const createTableReporteContador = () => {
             );`,
       [],
       (sqlTxn, result) => {
-        console.log('result', result);
+        // console.log('result', result);
       },
       error => {
-        console.log(
-          '🚀 ~ file: TblReporteContador.js:17 ~ createTableReporteMarcador ~ error:',
-          error,
-        );
+        // console.log(
+        //   '🚀 ~ file: TblReporteContador.js:17 ~ createTableReporteMarcador ~ error:',
+        //   error,
+        // );
       },
     );
   });
@@ -38,7 +38,7 @@ export const getReporteContadorDatabase = () => {
           resolve(result);
         },
         err => {
-          console.log(err);
+          // console.log(err);
           reject(false);
         },
       );
@@ -86,7 +86,7 @@ export const storeReporteContadorDatabase = datos => {
           resolve(result);
         },
         err => {
-          console.log(err);
+          // console.log(err);
           reject(false);
         },
       );
@@ -95,10 +95,6 @@ export const storeReporteContadorDatabase = datos => {
 };
 
 export const updateReporteContadorDatabase = codigo => {
-  console.log(
-    '🚀 ~ file: TblReporteContador.js:97 ~ updateReporteContadorDatabase ~ codigo:',
-    codigo,
-  );
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
@@ -111,14 +107,14 @@ export const updateReporteContadorDatabase = codigo => {
           if (len > 0) {
             result = res.rows.raw();
           }
-          console.log(
-            '🚀 ~ file: TblReporteContador.js:111 ~ returnnewPromise ~ result:',
-            result,
-          );
+          // console.log(
+          //   '🚀 ~ file: TblReporteContador.js:111 ~ returnnewPromise ~ result:',
+          //   result,
+          // );
           resolve(result);
         },
         err => {
-          console.log(err);
+          // console.log(err);
           reject(false);
         },
       );

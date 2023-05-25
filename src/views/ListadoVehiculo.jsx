@@ -23,14 +23,13 @@ export default ListadoVehiculo = ({ navigation }) => {
         if (selectedItems.length <= 3) {
             setSelectedItems(selectedItems);
         } else {
-            console.log("No puede seleccionar mas 3 vehiculos");
+            // console.log("No puede seleccionar mas 3 vehiculos");
         }
     };
 
     const guardarVehiculos = () => {
 
         actualizarListado(selectedItems)
-        console.log("object");
         navigation.navigate('Contador')
 
     }

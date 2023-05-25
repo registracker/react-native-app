@@ -25,6 +25,7 @@ export const Ajustes = () => {
   const [checkOpcionDesplazamiento, setCheckOpcionDesplazamiento] = useState()
   const [checkOpcionIncidente, setCheckOpcionIncidente] = useState()
   const [checkOpcionMarcador, setCheckOpcionMarcador] = useState()
+  const [checkOpcionContador, setCheckOpcionContador] = useState()
 
   const { obtenerMediosDesplazamientos, obtenerIncidentes } = useContext(CatalogosContext)
   const [fecha] = useState(format(new Date(), 'yyyy'))
@@ -67,6 +68,12 @@ export const Ajustes = () => {
     setCheckOpcionMarcador(value)
   }
 
+  const sincronizarContador = async (value) => {
+    const estado = value ? 'activo' : 'inactivo'
+    await AsyncStorage.setItem('opcion-contador', estado)
+    setCheckOpcionContador(value)
+  }
+
   const getEstadoOpciones = async () => {
     const desplazamiento = await AsyncStorage.getItem('opcion-desplazamiento');
     desplazamiento === 'activo' ? setCheckOpcionDesplazamiento(true) : setCheckOpcionDesplazamiento(false)
@@ -76,6 +83,9 @@ export const Ajustes = () => {
 
     const marcador = await AsyncStorage.getItem('opcion-marcador');
     marcador === 'activo' ? setCheckOpcionMarcador(true) : setCheckOpcionMarcador(false)
+
+    const contador = await AsyncStorage.getItem('opcion-contador');
+    contador === 'activo' ? setCheckOpcionContador(true) : setCheckOpcionContador(false)
   }
 
   useEffect(() => {
@@ -170,7 +180,23 @@ export const Ajustes = () => {
       </ListItem>
     )
   }
+  const OpcionContador = () => {
+    return (
+      <ListItem>
+        <ListItem.Content>
+          <ListItem.Title>Envió automático de registros de marcadores</ListItem.Title>
+        </ListItem.Content>
+        <Switch
+          trackColor={{ false: '#d8d8db', true: '#d8d8db' }}
+          thumbColor={checkOpcionContador ? primary : '#f4f3f4'}
+          value={checkOpcionContador}
+          onValueChange={(value) => sincronizarContador(value)}
+        />
 
+      </ListItem>
+    )
+  }
+  
   return (
     <View style={styles.container}>
 
@@ -179,6 +205,7 @@ export const Ajustes = () => {
         <OpcionDesplazamiento />
         <OpcionIncidente />
         <OpcionMarcador />
+        <OpcionContador/>
       </View>
       <View style={styles.foobar}>
         <Button

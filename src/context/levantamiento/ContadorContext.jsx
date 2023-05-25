@@ -109,7 +109,8 @@ export const ContadorProvider = ({ children }) => {
     }
 
     const enviar = async (data) => {
-        if (isConnected) {
+        const contador = await AsyncStorage.getItem('opcion-contador');
+        if (isConnected && contador === 'activo') {
             const response = await enviarReporte(data);
         } else {
             await storeReporteContadorDatabase(data)
