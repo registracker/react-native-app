@@ -12,6 +12,8 @@ import { DesplazamientoContext } from '../context/tracking/DesplazamientoContext
 import Contador from '../views/Contador';
 import { CatalogosContext } from '../context/store/CatalogosContext';
 import { BitacoraContext } from '../context/bitacora/BitacoraContext';
+import { MarcadorContext } from '../context/levantamiento/MarcadorContext';
+import { IncidenteContext } from '../context/levantamiento/IncidenteContext';
 
 const Tab = createBottomTabNavigator();
 
@@ -38,14 +40,28 @@ export const TabNavegacion = () => {
     const { getCatalogos } = useContext(CatalogosContext)
     const { obtenerBitacora } = useContext(BitacoraContext)
 
+    const { sincronizarMarcadores } = useContext(MarcadorContext)
+    const { sincronizarIncidentes } = useContext(IncidenteContext)
+
     const { envioAutomaticoDesplazamientos } = useContext(DesplazamientoContext)
+
+    const sincronizar = async() => {
+        const respose = await Promise.all([
+             sincronizarMarcadores(),
+             sincronizarIncidentes(),
+             envioAutomaticoDesplazamientos()
+        ])
+
+    }
 
     useEffect(() => {
         if (netInfo?.isConnected === true) {
-            envioAutomaticoDesplazamientos()
+            // envioAutomaticoDesplazamientos()
+            // sincronizar()
         }
         obtenerBitacora()
         getCatalogos()
+        sincronizar()
     }, [])
     
     return (

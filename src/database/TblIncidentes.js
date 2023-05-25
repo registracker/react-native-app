@@ -216,3 +216,26 @@ export const limpiarIncidenteTable = () => {
     );
   });
 };
+
+export const sincronizarIncidentesDatabase = () => {
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'SELECT * FROM tbl_reporte_incidente WHERE enviado != 1',
+        [],
+        (transaction, res) => {
+          let len = res.rows.length;
+          let result = [];
+
+          if (len > 0) {
+            result = res.rows.raw();
+          }
+          resolve(result);
+        },
+        () => {
+          reject(false);
+        },
+      );
+    });
+  });
+};

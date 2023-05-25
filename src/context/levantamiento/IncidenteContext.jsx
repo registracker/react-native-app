@@ -1,7 +1,7 @@
 import { useContext, useReducer } from 'react';
 import { createContext } from 'react';
 import { incidenteReducer } from './incidenteReducer';
-import { storeReporteIncidente } from '../../database/TblIncidentes';
+import { sincronizarIncidentesDatabase, storeReporteIncidente } from '../../database/TblIncidentes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { postIncidente } from '../../services/incidenteServices'
 import { getUbicacionActual } from '../../utils/functions';
@@ -19,7 +19,7 @@ const incidenteInicial = {
 export const IncidenteProvider = ({ children }) => {
     const [incidenteState, dispatch] = useReducer(incidenteReducer, incidenteInicial);
 
-    const {isConnected} = useContext(NetworkContext)
+    const { isConnected } = useContext(NetworkContext)
 
     const crearIncidente = () => {
         dispatch({ type: 'crear' })
@@ -44,15 +44,24 @@ export const IncidenteProvider = ({ children }) => {
             if (optionIncidente === 'activo' && isConnected) {
                 await postIncidente(data)
                 showToast('Incidente registrado');
-            }else {
+            } else {
                 showToast('Incidente registrado temporalmente');
 
             }
         }
     }
 
+    const sincronizarIncidentes = async () => {
+        const data = await sincronizarIncidentesDatabase()
+        // console.log("🚀 ~ file: IncidenteContext.jsx:56 ~ sincronizarIncidentes ~ data:", data)
+    }
+
     return (
-        <IncidenteContext.Provider value={{ crearIncidente, enviarIncidente }}>
+        <IncidenteContext.Provider value={{
+            crearIncidente,
+            enviarIncidente,
+            sincronizarIncidentes
+        }}>
             {children}
         </IncidenteContext.Provider>
     )

@@ -13,6 +13,7 @@ import { NetworkContext } from '../network/NetworkContext';
 import { getMarcadoresDatabase, storeCatalogoMarcadores } from '../../database/TblMarcadores';
 import { getMediosDesplazamientosDatabase } from '../../database/TblMediosDesplazamientos';
 import { storeCatalogoMediosDesplazamientos } from '../../database/TblMediosDesplazamientos';
+import { showToast } from '../../utils/toast';
 
 
 export const CatalogosContext = createContext();
@@ -133,7 +134,7 @@ export const CatalogosProvider = ({ children }) => {
                 // console.log("Catalogo Listo");
             }
         } catch (error) {
-
+            showToast('No se puede sincronizar los catálogos')
         }
     }
     return (

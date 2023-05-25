@@ -8,6 +8,7 @@ import { marcadorReducer } from './marcadoreReducer'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { getLevantamientoMarcador } from '../../services/levantamientoServices'
 import { compareAsc } from 'date-fns'
+import { sincronizarMarcadoresDatabase } from '../../database/TblReporteMarcador'
 
 export const MarcadorContext = createContext()
 
@@ -60,6 +61,11 @@ export const MarcadorProvider = ({ children }) => {
         dispatch({ type: 'restablecer' })
     }
 
+    const sincronizarMarcadores = async() => {
+        const marcadores = await sincronizarMarcadoresDatabase()
+        // console.log("🚀 ~ file: MarcadorContext.jsx:65 ~ sincronizarMarcadoresTemporales ~ marcadores:", marcadores)
+    }
+
     return (
         <MarcadorContext.Provider
             value={{
@@ -67,6 +73,7 @@ export const MarcadorProvider = ({ children }) => {
                 guardar,
                 verificar,
                 restablecer,
+                sincronizarMarcadores
             }}
         >
             {children}

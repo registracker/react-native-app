@@ -162,3 +162,26 @@ export const limpiarMarcadoresTable = () => {
     );
   });
 };
+
+export const sincronizarMarcadoresDatabase = () => {
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'SELECT * FROM tbl_reporte_marcador WHERE enviado != 1;',
+        [],
+        (sqlTxn, res) => {
+          let len = res.rows.length;
+          let result = [];
+
+          if (len > 0) {
+            result = res.rows.raw();
+          }
+          resolve(result);
+        },
+        error => {
+          reject(error);
+        },
+      );
+    });
+  });
+};
