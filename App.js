@@ -6,24 +6,41 @@ import React from 'react';
 import Toast from 'react-native-toast-message';
 
 import { NavigationContainer } from '@react-navigation/native';
-import { PermissionsProvider } from './src/context/Permission/PermissionContext';
-import { Navigation } from './src/navigation/Navigation';
-import { AuthProvider } from './src/context/Auth/AuthContext';
-import { RecorridosProvider } from './src/context/Recorrido/RecorridosContext';
-import { CatalogosProvider } from './src/context/Catalogos/CatalogosContext';
+import { PermissionsProvider } from './src/context/permissions/PermissionContext';
+import { Navigation } from './src/menu/Navigation';
+import { AuthProvider } from './src/context/authentication/AuthContext';
+import { CatalogosProvider } from './src/context/store/CatalogosContext';
+import { DesplazamientoProvider } from './src/context/tracking/DesplazamientoContext';
+import { MarcadorProvider } from './src/context/levantamiento/MarcadorContext';
+import { NetworkProvider } from './src/context/network/NetworkContext';
+import { ContadorProvider } from './src/context/levantamiento/ContadorContext';
+import { IncidenteProvider } from './src/context/levantamiento/IncidenteContext';
+import { BitacoraProvider } from './src/context/bitacora/BitacoraContext';
 
 function App() {
   return (
     <NavigationContainer>
       <PermissionsProvider>
-        <AuthProvider>
-          <RecorridosProvider>
-            <CatalogosProvider>
-              <Navigation />
-              <Toast />
-            </CatalogosProvider>
-          </RecorridosProvider>
-        </AuthProvider>
+        <NetworkProvider>
+
+          <AuthProvider>
+            <BitacoraProvider>
+              <CatalogosProvider>
+                <DesplazamientoProvider>
+                  <IncidenteProvider>
+                    <MarcadorProvider>
+                      <ContadorProvider>
+                        <Navigation />
+                        <Toast />
+                      </ContadorProvider>
+                    </MarcadorProvider>
+                  </IncidenteProvider>
+                </DesplazamientoProvider>
+              </CatalogosProvider>
+            </BitacoraProvider>
+          </AuthProvider>
+        </NetworkProvider>
+
       </PermissionsProvider>
     </NavigationContainer>
   );

@@ -1,7 +1,7 @@
-import {http_axios} from '../config/axios';
+import {http_axios, instance} from '../config/axios';
 
-export const register = async (params, data) =>
-  await http_axios('/api/usuario', params, 'post', data);
+export const register = async data =>
+  await instance('/api/usuario', {}, 'post', data);
 
 export const account = async (params, data) =>
-  await http_axios('/api/user', params, 'get', data);
+  await instance('/api/user', params, 'get', data);

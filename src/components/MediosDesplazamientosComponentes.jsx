@@ -1,16 +1,17 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 
 import { primary, styles } from '../styles/style';
 import { Icon } from '@rneui/base';
 import { Loading } from './Loading';
+import { CatalogosContext } from '../context/store/CatalogosContext';
 
 
-export const MediosDesplazamientosComponentes = ({ selected, cambiarMedio, mediosDesplazamientos }) => {
-
+export const MediosDesplazamientosComponentes = ({ selected, cambiarMedio }) => {
     
-
-    if (!mediosDesplazamientos) return <Loading />
+    const { ctl_medios_desplazamientos } = useContext(CatalogosContext)
+    
+    if (!ctl_medios_desplazamientos.data) return <Loading />
 
     const renderItem = ({ item }) => {
         return (
@@ -18,6 +19,7 @@ export const MediosDesplazamientosComponentes = ({ selected, cambiarMedio, medio
                 margin: 10,
                 justifyContent: 'center',
                 alignItems: 'center',
+                width: 100
             }}>
                 <TouchableOpacity
                     onPress={() => cambiarMedio(item)}
@@ -33,22 +35,19 @@ export const MediosDesplazamientosComponentes = ({ selected, cambiarMedio, medio
                     />
 
                 </TouchableOpacity>
-                <Text adjustsFontSizeToFit style={styles.modalText}>
-                    {item.nombre} 
+                <Text adjustsFontSizeToFit style={styles.text}>
+                    {item.nombre}
                 </Text>
             </View>
         );
     };
 
-
     return (
-        <View style={styles.modalView}>
-            <FlatList
-                data={mediosDesplazamientos}
-                renderItem={renderItem}
-                keyExtractor={item => item.id}
-                numColumns='3'
-            />
-        </View>
+        <FlatList
+            data={ctl_medios_desplazamientos.data}
+            renderItem={renderItem}
+            keyExtractor={item => item.id}
+            numColumns='3'
+        />
     )
 }

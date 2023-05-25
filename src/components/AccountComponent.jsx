@@ -3,7 +3,7 @@ import { Button, Icon, Overlay } from '@rneui/base'
 import React, { useContext, useState } from 'react'
 import { useEffect } from 'react'
 import { Text, View } from 'react-native'
-import { AuthContext } from '../context/Auth/AuthContext'
+import { AuthContext } from '../context/authentication/AuthContext'
 import { account } from '../services/aurtenticacionServices'
 import { styles } from '../styles/style'
 

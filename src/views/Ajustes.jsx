@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Icon, ListItem } from '@rneui/base';
 import { useContext } from 'react';
-import { ActivityIndicator, Modal, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { ActivityIndicator, ImageBackground, Modal, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import { primary, styles } from '../styles/style';
-import { AuthContext } from '../context/Auth/AuthContext'
-import { CatalogosContext } from '../context/Catalogos/CatalogosContext';
+import { AuthContext } from '../context/authentication/AuthContext'
+import { CatalogosContext } from '../context/store/CatalogosContext';
 import { dropMediosDesplazamientos } from '../database/TblMediosDesplazamientos';
 import { dropIncidentes } from '../database/TblIncidentes';
 import { Switch } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { format } from 'date-fns';
+import { NetworkContext } from '../context/network/NetworkContext';
 
 
 export const Ajustes = () => {
@@ -23,9 +24,13 @@ export const Ajustes = () => {
 
   const [checkOpcionDesplazamiento, setCheckOpcionDesplazamiento] = useState()
   const [checkOpcionIncidente, setCheckOpcionIncidente] = useState()
+  const [checkOpcionMarcador, setCheckOpcionMarcador] = useState()
+  const [checkOpcionContador, setCheckOpcionContador] = useState()
 
   const { obtenerMediosDesplazamientos, obtenerIncidentes } = useContext(CatalogosContext)
   const [fecha] = useState(format(new Date(), 'yyyy'))
+
+  const { isConnected } = useContext(NetworkContext)
 
   const cerrarSesion = () => {
     setLoading(true);
@@ -34,12 +39,10 @@ export const Ajustes = () => {
 
   const sincronizarCatalogos = async () => {
     try {
-      setSincronizarLoading(true)
-      await dropMediosDesplazamientos()
-      await dropIncidentes()
+      if (isConnected) {
+        setSincronizarLoading(true)
 
-      await obtenerMediosDesplazamientos();
-      await obtenerIncidentes();
+      }
     } catch (error) {
     }
     finally {
@@ -59,12 +62,30 @@ export const Ajustes = () => {
     setCheckOpcionIncidente(value)
   }
 
+  const sincronizarMarcador = async (value) => {
+    const estado = value ? 'activo' : 'inactivo'
+    await AsyncStorage.setItem('opcion-marcador', estado)
+    setCheckOpcionMarcador(value)
+  }
+
+  const sincronizarContador = async (value) => {
+    const estado = value ? 'activo' : 'inactivo'
+    await AsyncStorage.setItem('opcion-contador', estado)
+    setCheckOpcionContador(value)
+  }
+
   const getEstadoOpciones = async () => {
     const desplazamiento = await AsyncStorage.getItem('opcion-desplazamiento');
     desplazamiento === 'activo' ? setCheckOpcionDesplazamiento(true) : setCheckOpcionDesplazamiento(false)
 
     const incidente = await AsyncStorage.getItem('opcion-incidente');
     incidente === 'activo' ? setCheckOpcionIncidente(true) : setCheckOpcionIncidente(false)
+
+    const marcador = await AsyncStorage.getItem('opcion-marcador');
+    marcador === 'activo' ? setCheckOpcionMarcador(true) : setCheckOpcionMarcador(false)
+
+    const contador = await AsyncStorage.getItem('opcion-contador');
+    contador === 'activo' ? setCheckOpcionContador(true) : setCheckOpcionContador(false)
   }
 
   useEffect(() => {
@@ -143,20 +164,55 @@ export const Ajustes = () => {
       </ListItem>
     )
   }
+  const OpcionMarcador = () => {
+    return (
+      <ListItem>
+        <ListItem.Content>
+          <ListItem.Title>Envió automático de registros de marcadores</ListItem.Title>
+        </ListItem.Content>
+        <Switch
+          trackColor={{ false: '#d8d8db', true: '#d8d8db' }}
+          thumbColor={checkOpcionMarcador ? primary : '#f4f3f4'}
+          value={checkOpcionMarcador}
+          onValueChange={(value) => sincronizarMarcador(value)}
+        />
 
+      </ListItem>
+    )
+  }
+  const OpcionContador = () => {
+    return (
+      <ListItem>
+        <ListItem.Content>
+          <ListItem.Title>Envió automático de registros de marcadores</ListItem.Title>
+        </ListItem.Content>
+        <Switch
+          trackColor={{ false: '#d8d8db', true: '#d8d8db' }}
+          thumbColor={checkOpcionContador ? primary : '#f4f3f4'}
+          value={checkOpcionContador}
+          onValueChange={(value) => sincronizarContador(value)}
+        />
+
+      </ListItem>
+    )
+  }
+  
   return (
-    <View style={styles.container}>
+    <View style={{ ...styles.container, backgroundColor: '#bdbdbd'}}>
+
       <View style={{ flex: 10 }}>
         <SincronizarList />
         <OpcionDesplazamiento />
         <OpcionIncidente />
+        <OpcionMarcador />
+        <OpcionContador/>
       </View>
       <View style={styles.foobar}>
         <Button
           title="Cerrar sesión"
           type="clear"
           onPress={() => { setModalVisible(true) }}
-          titleStyle={{ color: styles.primary }}
+          titleStyle={{ color: styles.primary, fontSize: 20, }}
           icon={
             <Icon
               name="logout"
@@ -167,10 +223,10 @@ export const Ajustes = () => {
           }
           iconRight
         />
-        <View style={{marginTop:10, justifyContent:'center', alignContent:'center'}}>
+        <View style={{ marginTop: 10, justifyContent: 'center', alignContent: 'center' }}>
 
-                    <Text style={{color: 'gray', fontSize: 14, fontWeight: 'normal', textAlign:'center' }}>© { fecha } Universidad de El Salvador.</Text>
-                    <Text style={{ color: 'gray', fontSize: 14, fontWeight: 'normal', textAlign:'center' }}>Todos los derechos reservados</Text>
+          <Text style={styles.text}>© {fecha} Universidad de El Salvador.</Text>
+          <Text style={styles.text}>Todos los derechos reservados</Text>
         </View>
 
       </View>
@@ -185,15 +241,15 @@ export const Ajustes = () => {
       >
         <View style={stylesAjustes.centeredView}>
           <View style={stylesAjustes.modalView}>
-            <Text style={{ ...styles.titleText, color: primary, fontSize: 20 }}>Cerrar sesión</Text>
-            <Text style={{ ...styles.titleText, color: 'gray', fontSize: 16, fontWeight: 'normal' }}>¿Seguro de cerrar sesión?</Text>
+            {/* <Text style={{ ...styles.titleText, color: primary, fontSize: 20 }}>Cerrar sesión</Text> */}
+            <Text style={{ ...styles.titleText, color: primary, fontSize: 20, fontWeight: 'bold' }}>¿Seguro de cerrar sesión?</Text>
             <Text style={{ ...styles.titleText, color: 'gray', fontSize: 14, fontWeight: 'normal' }}>Cualquier registros no sincronizado se perderá</Text>
             <View style={{
               flexDirection: 'row'
             }}>
               {
                 loading ? (
-                  <ActivityIndicator size="large" color={styles.primary} />
+                  <ActivityIndicator size="large" color={primary} />
                 ) : (
                   <>
                     <Button title="Sí, seguro" type="clear" titleStyle={{ color: primary }} onPress={() => { cerrarSesion() }} />

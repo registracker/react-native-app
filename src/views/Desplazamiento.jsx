@@ -1,9 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground, ToastAndroid } from 'react-native';
 import { FAB, Icon, SpeedDial } from '@rneui/base';
 import { format } from 'date-fns';
 import Geolocation from 'react-native-geolocation-service';
-import uuid from 'react-native-uuid';
 import BackgroundService from 'react-native-background-actions';
 import KeepAwake from '@sayem314/react-native-keep-awake';
 import { es } from 'date-fns/locale'
@@ -14,114 +13,51 @@ import { Toast } from 'react-native-toast-message/lib/src/Toast';
 import { primary, styles } from '../styles/style';
 import { MediosDesplazamientosComponentes } from '../components/MediosDesplazamientosComponentes';
 import { ModalComponent } from '../components/ModalComponent';
-//Base de datos 
-import { createTableMediosDesplazamiento } from '../database/TblMediosDesplazamientos';
-import { createTableIncidentes, createTableReporteIncidentes, storeReporteIncidente, enviarIncidente } from '../database/TblIncidentes';
-import { addItemDesplazamiento, createTableDesplazamiento, sendDesplazamiento } from '../database/TblDesplazamientos';
+import { MarcadorModalComponent } from '../components/MarcadorModalComponent';
+import RutaTransporteModalComponent from '../components/RutaTransporteModalComponent';
+import CostoDesplazamientoModalComponent from '../components/CostoDesplazamientoModalComponent';
 
 //Servicios
-import { postDesplazamiento } from '../services/desplazamientoServices'
 import { postIncidente } from '../services/incidenteServices'
 
 //Context
-import { RecorridosContext } from '../context/Recorrido/RecorridosContext';
-import { CatalogosContext } from '../context/Catalogos/CatalogosContext'
+import { CatalogosContext } from '../context/store/CatalogosContext'
+import { DesplazamientoContext } from '../context/tracking/DesplazamientoContext';
+
+import { getUbicacionActual } from '../utils/functions';
+import { NetworkContext } from '../context/network/NetworkContext';
+import { showToast } from '../utils/toast';
 
 
 export const Desplazamiento = () => {
-  const [data, setData] = useState([]);
-  const [puntos, setPuntos] = useState([]);
   const [position, setPosition] = useState();
   const [watchId, setWatchId] = useState();
   const [viajeIniciado, setViajeIniciado] = useState(false);
   const [open, setOpen] = useState(false);
-  const [uuidDesplazamiento, setUuidDesplazamiento] = useState();
   const [medio, setMedio] = useState({ id: 1, nombre: 'Caminando', icono: 'walk' });
-  const [horaInciado, setHoraInciado] = useState();
-  const [fechaInciado, setFechaInciado] = useState();
   const [modalIncidentes, setModalIncidentes] = useState(false);
-  const [incidenteSelected, setIncidenteSelected] = useState();
-  const [contadorMedio, setContadorMedio] = useState(0);
-  const [fechaUltimoDesplazamiento, setFechaUltimoDesplazamiento] = useState()
+  const [, setIncidenteSelected] = useState();
+  const [modalMarcador, setModalMarcador] = useState(false);
+  const [medioTransporteModal, setMedioTransporteModal] = useState(false)
+  const [costoDesplazamientoModal, setCostoDesplazamientoModal] = useState(false)
 
-  const { insertarPunto, restaurar } = useContext(RecorridosContext);
   const { ctl_medios_desplazamientos, ctl_incidentes, obtenerMediosDesplazamientos, obtenerIncidentes } = useContext(CatalogosContext)
+  const { agregarMedioDesplazamiento, iniciarDesplazamiento, registrarDesplazamiento } = useContext(DesplazamientoContext)
+  const { isConnected } = useContext(NetworkContext)
 
   const created = async () => {
     await obtenerMediosDesplazamientos()
     await obtenerIncidentes()
   };
 
-  const getLocation = () => {
-    setData([])
-    setViajeIniciado(true);
-    setUuidDesplazamiento(uuid.v4());
-    setFechaHoraInciado(new Date());
-
-
-    Geolocation.getCurrentPosition(
-      position => {
-        setPosition(position);
-        setData([...data, position]);
-      },
-      error => {
-        // See error code charts below.
-      },
-      {
-        enableHighAccuracy: true,
-        distanceFilter: 0,
-      },
-    );
-
-    return position;
-  };
-  const IniciarDesplazamiento = async () => {
-    setViajeIniciado(true);
-    setUuidDesplazamiento(uuid.v4());
-    setFechaHoraInciado(new Date());
-
-    const detener = time =>
-      new Promise(resolve => setTimeout(() => resolve(), time));
-    const veryIntensiveTask = async taskDataArguments => {
-      // Example of an infinite loop task
-      const { delay } = taskDataArguments;
-      await new Promise(async resolve => {
-        for (let i = 0; BackgroundService.isRunning(); i++) {
-          Geolocation.getCurrentPosition(
-            position => {
-              setPosition(position);
-            },
-            error => {
-              // See error code charts below.
-            },
-            {
-              enableHighAccuracy: true,
-              distanceFilter: 0,
-            },
-          );
-
-          await detener(delay);
-        }
-      });
-    };
-
-    await BackgroundService.start(veryIntensiveTask, options);
-    await BackgroundService.updateNotification({
-      taskDesc: 'registrando desplazamiento',
-    });
-  };
-
   const getLocationObservation = () => {
     setViajeIniciado(true);
-    setUuidDesplazamiento(uuid.v4());
     setDefaultOptions({ locale: es })
-    setHoraInciado(format(new Date(), 'hh:mm:ss aaaa'));
-    setFechaInciado(format(new Date(), 'PPP'));
+    showToast('Viaje Iniciado', ToastAndroid.SHORT);
 
     const observation = Geolocation.watchPosition(
       position => {
         setPosition(position);
-        setData([...data, position]);
       },
       error => {
       },
@@ -137,89 +73,28 @@ export const Desplazamiento = () => {
 
   const stopLocationObserving = async () => {
     setViajeIniciado(false);
-    await BackgroundService.stop()
-    if (data.length > 0) {
-      const data = {
-        uuid: uuidDesplazamiento,
-        desplazamiento: JSON.stringify(puntos, null),
-        fecha_registro: format(new Date(), 'dd-MM-yyyy hh:mm:ss aaaa'),
-      };
-      await addItemDesplazamiento(data);
-
-      const optionDesplazamiento = await AsyncStorage.getItem('opcion-desplazamiento');
-      if (optionDesplazamiento === 'activo') {
-        await postDesplazamiento({ uuid: uuidDesplazamiento, desplazamiento: puntos })
-        await sendDesplazamiento(uuidDesplazamiento)
-      }
-
-      const mensaje = 'Desplazamiento finalizado';
-      const subtitulo = `Registrado en la fecha ${data.fecha_registro}`;
-      notificacion(mensaje, subtitulo);
-
-    }
-    restaurar();
-    setData([]);
-    setPuntos([])
     setPosition()
-    setUuidDesplazamiento();
-    setContadorMedio(0);
     Geolocation.clearWatch(watchId);
-    setFechaUltimoDesplazamiento(format(new Date(), 'PPPP p'))
+    setCostoDesplazamientoModal(true);  //Modal for displaying costo de desplazamiento
+    showToast('Viaje finalizado', ToastAndroid.LONG);
   };
 
-  const openModalIncidentes = async () => {
+  /**
+  * Abrir Modal de ingreso de incidentes
+  */
+  const openModalIncidentes = () => {
     setModalIncidentes(true);
     setOpen(false);
   };
 
-  const getUbicacionActual = () => {
-    return new Promise((resolve, reject) => {
-      Geolocation.getCurrentPosition(
-        position => {
-          resolve(position);
-        },
-        error => {
-          reject(error);
-        },
-        {
-          enableHighAccuracy: true,
-          distanceFilter: 0,
-        },
-      );
-    });
+  /**
+   * Abrir Modal de ingreso de marcadores y levantamientos
+   */
+  const openModalMarcadores = () => {
+    setModalMarcador(true);
+    setOpen(false);
   };
 
-  const enviarIncidenteModal = async (incidente, uuid = null) => {
-    const position = await getUbicacionActual();
-
-    const data = {
-      id_incidente: incidente.id,
-      icono: incidente.icono,
-      nombre: incidente.nombre,
-      longitud: position.coords.longitude,
-      latitud: position.coords.latitude,
-      altitud: position.coords.altitude,
-      fecha_reporte: format(new Date(), 'dd-MM-yyyy hh:mm:ss'),
-    };
-    if (uuid) data.desplazamiento_id = uuid;
-
-
-    const response = await storeReporteIncidente(data);
-    if (response.rowsAffected === 1) {
-
-      const optionIncidente = await AsyncStorage.getItem('opcion-incidente');
-      if (optionIncidente === 'activo') {
-        await postIncidente(data)
-        await enviarIncidente(response.insertId)
-      }
-
-
-
-      const mensaje = 'Incidente registrado';
-      const subtitulo = `${data.nombre} registrado la fecha de ${data.fecha_reporte}`;
-      notificacion(mensaje, subtitulo);
-    }
-  };
 
   const notificacion = (mensaje, subtitulo = '') => {
     Toast.show({
@@ -232,146 +107,129 @@ export const Desplazamiento = () => {
   };
 
   useEffect(() => {
-    createTableDesplazamiento();
-    createTableMediosDesplazamiento();
-    createTableIncidentes();
-    createTableReporteIncidentes();
     created();
   }, []);
 
-  //Detectar cambios de la posicion
   useEffect(() => {
-    if (position) {
-      const point = {
-        latitud: position.coords.latitude,
-        longitud: position.coords.longitude,
-        fecha_registro: position.timestamp,
-        velocidad: position.coords.speed,
-        id_medio_desplazamiento: medio.id,
-        agrupacion_medio_desplazamiento: contadorMedio,
-      };
-      setPuntos([...puntos, point]);
-      insertarPunto({ uuid: uuidDesplazamiento, punto: point });
-    }
-  }, [position]);
+    if (viajeIniciado) registrarDesplazamiento(position, medio);
+  }, [position])
+
 
   useEffect(() => {
-    if (viajeIniciado) setContadorMedio(contadorMedio + 1);
+    if (medio.nombre === 'Autobús' && viajeIniciado && isConnected) setMedioTransporteModal(true)
   }, [medio]);
+
+  useEffect(() => {
+    if (viajeIniciado) {
+      iniciarDesplazamiento()
+      agregarMedioDesplazamiento(medio)
+      if (medio.nombre === 'Autobús' && isConnected) setMedioTransporteModal(true)
+    }
+  }, [viajeIniciado])
+
 
   return (
     <View style={styles.container}>
-      <KeepAwake />
-      <ModalComponent
-        modalVisible={modalIncidentes}
-        setModalVisible={setModalIncidentes}
-        setItem={setIncidenteSelected}
-        data={ctl_incidentes.data}
-        enviar={enviarIncidenteModal}
-        uuid={uuidDesplazamiento}
-      />
-      <View style={{ flex: 1, marginHorizontal: '12%' }}>
-        {
-          viajeIniciado ? (
-            <View style={stylesDesplazamiento.panel}>
-              <View style={stylesDesplazamiento.backgroundImage}>
-                <Image
-                  style={{ width: 65, height: 65, }}
-                  source={require('../img/travel/image-location.gif')}
-                />
-              </View>
-              <View style={{ flexDirection: 'column' }}>
-                <Text style={stylesDesplazamiento.textPanel} >
-                  Viaje en curso
-                </Text>
-                <Text style={stylesDesplazamiento.textPanel} >
-                  Iniciado: {horaInciado}
-                </Text>
-                <Text style={stylesDesplazamiento.textPanel} >
-                  Fecha: {fechaInciado}
-                </Text>
-              </View>
-            </View>
+      <ImageBackground
+        source={require('../img/fondo.png')}
+        resizeMode="cover"
+        style={styles.imageBackground}
+      >
+        <KeepAwake />
+        <MarcadorModalComponent
+          open={modalMarcador}
+          setOpen={setModalMarcador}
+          getUbicacion={getUbicacionActual}
+        />
+        <ModalComponent
+          modalVisible={modalIncidentes}
+          setModalVisible={setModalIncidentes}
+        />
+        <RutaTransporteModalComponent
+          open={medioTransporteModal}
+          setOpen={setMedioTransporteModal}
+        />
+        <CostoDesplazamientoModalComponent
+          open={costoDesplazamientoModal}
+          setOpen={setCostoDesplazamientoModal}
+        />
+        <View style={styles.body}>
+          <View style={styles.row}>
+            {
+              isConnected && viajeIniciado ?
+                <View style={styles.chip}>
+                  <Icon name='cellphone-marker' type='material-community' color={'white'} style={{ marginRight: 5 }} />
+                  <Text style={styles.text}> Conectado</Text>
+                </View>
+                : !isConnected && viajeIniciado ?
+                  <View style={styles.chipDisabled}>
+                    <Icon name='cellphone-marker' type='material-community' color={'white'} style={{ marginRight: 5 }} />
+                    <Text style={styles.text}>Modo sin conexión</Text>
+                  </View> :
+                  <View style={{...styles.chip, backgroundColor:'white', borderColor: primary}}>
+                    <Icon name='cellphone-marker' type='material-community' color={primary} style={{ marginRight: 5 }} />
+                    <Text style={styles.textBlack}>Registracker</Text>
+                  </View>
+            }
+          </View>
+          <Text style={styles.title}>
+            Elige tu medio de desplazamientos
+          </Text>
+          <MediosDesplazamientosComponentes
+            selected={medio}
+            cambiarMedio={setMedio}
+            open={medioTransporteModal}
+            setOpen={setMedioTransporteModal}
+          />
+        </View>
+        <>
+          {viajeIniciado ? (
+            <FAB
+              visible={viajeIniciado}
+              onPress={stopLocationObserving}
+              title="Detener viaje"
+              placement="left"
+              upperCase
+              icon={stylesDesplazamiento.iconoTerminarViaje}
+              style={{ marginBottom: 20 }}
+              color={styles.primary}
+            />
           ) : (
-            fechaUltimoDesplazamiento && (
-              <View style={stylesDesplazamiento.panelOff}>
-                <View style={stylesDesplazamiento.backgroundImage}>
-                  <Icon
-                    name='history'
-                    color='#808080'
-                    type='material-community'
-                    size={50}
-                    containerStyle={{ width: 65, height: 65, justifyContent: 'center', alignItems: 'center' }}
-                  />
-                </View>
-                <View style={{ flexDirection: 'column' }}>
-                  <Text style={stylesDesplazamiento.textPanelOff} >
-                    Ultimo viaje
-                  </Text>
-                  <Text style={stylesDesplazamiento.textPanelOff} >
-                    Hora: {horaInciado}
-                  </Text>
-                  <Text style={stylesDesplazamiento.textPanelOff} >
-                    Fecha: {fechaInciado}
-                  </Text>
-                </View>
-              </View>
-            )
-          )
-        }
-      </View>
-      <View style={styles.body}>
-        <Text style={styles.subtitleText}>
-          Elige tu medio de desplazamientos
-        </Text>
-        <MediosDesplazamientosComponentes
-          selected={medio}
-          cambiarMedio={setMedio}
-          mediosDesplazamientos={ctl_medios_desplazamientos.data}
-        />
-      </View>
-      <View style={styles.foobar}>
-        {/* Deja un espacio vació entre los medios de desplazamientos y los botones de FAB */}
-      </View>
-      <>
-        {viajeIniciado ? (
-          <FAB
-            visible={viajeIniciado}
-            onPress={stopLocationObserving}
-            title="Detener viaje"
-            placement="left"
-            upperCase
-            icon={stylesDesplazamiento.iconoTerminarViaje}
-            style={{ marginBottom: 20 }}
+            <FAB
+              visible
+              onPress={getLocationObservation}
+              title="Comenzar el viaje"
+              placement="left"
+              upperCase
+              icon={stylesDesplazamiento.iconoComenzarViaje}
+              style={{ marginBottom: 20 }}
+              color="green"
+            />
+          )}
+        </>
+        <SpeedDial
+          isOpen={open}
+          icon={stylesDesplazamiento.iconoFAB}
+          openIcon={stylesDesplazamiento.iconoFABClose}
+          onOpen={() => setOpen(!open)}
+          onClose={() => setOpen(!open)}
+          color={styles.primary}>
+          <SpeedDial.Action
+            title="Marcador"
+            icon={stylesDesplazamiento.iconoMarcador}
             color={styles.primary}
+            onPress={openModalMarcadores}
+            titleStyle={styles.textBlack}
           />
-        ) : (
-          <FAB
-            visible
-            onPress={getLocationObservation}
-            title="Comenzar el viaje"
-            placement="left"
-            upperCase
-            icon={stylesDesplazamiento.iconoComenzarViaje}
-            style={{ marginBottom: 20 }}
-            color="green"
+          <SpeedDial.Action
+            title="Incidente"
+            icon={stylesDesplazamiento.iconoIncidente}
+            color={styles.primary}
+            onPress={openModalIncidentes}
+            titleStyle={styles.textBlack}
           />
-        )}
-      </>
-      <SpeedDial
-        isOpen={open}
-        icon={stylesDesplazamiento.iconoFAB}
-        openIcon={stylesDesplazamiento.iconoFABClose}
-        onOpen={() => setOpen(!open)}
-        onClose={() => setOpen(!open)}
-        color={styles.primary}>
-        <SpeedDial.Action
-          title="Incidente"
-          icon={stylesDesplazamiento.iconoIncidente}
-          color={styles.primary}
-          onPress={openModalIncidentes}
-        />
-      </SpeedDial>
+        </SpeedDial>
+      </ImageBackground>
     </View>
   );
 };
@@ -408,7 +266,6 @@ const stylesDesplazamiento = StyleSheet.create({
     marginRight: 10,
     padding: 0,
     borderRadius: 5,
-    marginRight: 15
   },
   textTitlePanel: { color: 'white', fontSize: 20 },
   iconoFAB: {
@@ -418,6 +275,11 @@ const stylesDesplazamiento = StyleSheet.create({
   },
   iconoIncidente: {
     name: 'marker-check',
+    color: 'white',
+    type: 'material-community',
+  },
+  iconoMarcador: {
+    name: 'map-marker-check',
     color: 'white',
     type: 'material-community',
   },

@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Alert, ImageBackground, StyleSheet, Text, ToastAndroid, View } from 'react-native'
 import { primary, styles } from '../styles/style'
 import { Button, Icon } from '@rneui/base'
-import { AuthContext } from '../context/Auth/AuthContext'
+import { AuthContext } from '../context/authentication/AuthContext'
 import { Input } from '@rneui/themed'
 
 export const Login = () => {
@@ -47,7 +47,7 @@ export const Login = () => {
   }
 
   const isEmail = () => {
-    const validRegex = /^[a-zA-Z0-9_]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    const validRegex = /^[a-zA-Z0-9_.]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
     if(email){
 
       if (!email.match(validRegex)) {
