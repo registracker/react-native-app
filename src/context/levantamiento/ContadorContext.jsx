@@ -11,6 +11,7 @@ import { useContext } from "react";
 import { CatalogosContext } from "../store/CatalogosContext";
 import { NetworkContext } from "../network/NetworkContext";
 import { storeReporteContadorDatabase } from "../../database/TblReporteContador";
+import { showToast } from "../../utils/toast";
 
 export const ContadorContext = createContext()
 
@@ -112,7 +113,11 @@ export const ContadorProvider = ({ children }) => {
         const contador = await AsyncStorage.getItem('opcion-contador');
         if (isConnected && contador === 'activo') {
             const response = await enviarReporte(data);
+
+            showToast('Registros de conteo vehicular registrados');            
+            
         } else {
+            showToast('Registros de conteo vehicular registrados temporalmente');            
             await storeReporteContadorDatabase(data)
         }
 

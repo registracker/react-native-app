@@ -10,6 +10,7 @@ import { primary, styles } from '../styles/style';
 import { useState } from 'react'
 import { Input } from '@rneui/themed'
 import { useBackHandler } from '@react-native-community/hooks'
+import { showToast } from '../utils/toast'
 
 
 const CostoDesplazamientos = ({ navigation }) => {
@@ -63,11 +64,13 @@ const CostoDesplazamientos = ({ navigation }) => {
 
     const finalizar = () => {
         enviarDesplazamiento()
+        showToast('Costos de transporte almacenados');
         navigation.navigate('TabNavegacion')
     }
 
     useBackHandler(() => {
         enviarDesplazamiento()
+        showToast('Costos de transporte sin terminar');
         return true;
     })
 

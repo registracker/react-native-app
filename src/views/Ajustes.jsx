@@ -198,7 +198,7 @@ export const Ajustes = () => {
   }
   
   return (
-    <View style={styles.container}>
+    <View style={{ ...styles.container, backgroundColor: '#bdbdbd'}}>
 
       <View style={{ flex: 10 }}>
         <SincronizarList />
@@ -212,7 +212,7 @@ export const Ajustes = () => {
           title="Cerrar sesión"
           type="clear"
           onPress={() => { setModalVisible(true) }}
-          titleStyle={{ color: styles.primary, fontSize: 20, fontWeight: 'bold' }}
+          titleStyle={{ color: styles.primary, fontSize: 20, }}
           icon={
             <Icon
               name="logout"
@@ -225,8 +225,8 @@ export const Ajustes = () => {
         />
         <View style={{ marginTop: 10, justifyContent: 'center', alignContent: 'center' }}>
 
-          <Text style={styles.textBlack}>© {fecha} Universidad de El Salvador.</Text>
-          <Text style={styles.textBlack}>Todos los derechos reservados</Text>
+          <Text style={styles.text}>© {fecha} Universidad de El Salvador.</Text>
+          <Text style={styles.text}>Todos los derechos reservados</Text>
         </View>
 
       </View>

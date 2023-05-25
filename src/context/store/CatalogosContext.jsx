@@ -130,7 +130,7 @@ export const CatalogosProvider = ({ children }) => {
                 obtenerVehiculos
             ])
             if (await medios() && await incidente() && await marcador() && await vehiculo() ){
-                console.log("Catalogo Listo");
+                // console.log("Catalogo Listo");
             }
         } catch (error) {
 

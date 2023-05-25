@@ -9,6 +9,7 @@ import { compareAsc, format } from 'date-fns'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useFocusEffect } from '@react-navigation/native'
 import { NetworkContext } from '../context/network/NetworkContext'
+import { showToast } from '../utils/toast'
 
 const Contador = ({ navigation }) => {
 
@@ -47,6 +48,7 @@ const Contador = ({ navigation }) => {
                     element.contador = 0
                 });
                 setVehiculos(response)
+                showToast('Levantamiento ingresado exitosamente');
             }
         } else {
             setLevantamientoErrors('Debe ingresar un código de levantamiento')
@@ -69,6 +71,7 @@ const Contador = ({ navigation }) => {
     const cerrarConteo = async () => {
         await restablecer();
         setModalVisible(!modalVisible)
+        showToast('Conteo vehicular finalizado');
         restablecerContador()
     }
 
@@ -84,10 +87,12 @@ const Contador = ({ navigation }) => {
             if (valido === 1) {
                 if (isConnected) {
                     await guardar(levantamiento.codigo);
+                    showToast('Levantamiento valido');
                 } else {
                     await conectarse()
                 }
             } else {
+                showToast('Código de levantamiento no vigente');
                 await restablecer()
             }
         } else {
@@ -114,8 +119,9 @@ const Contador = ({ navigation }) => {
     }
 
     const guardarRegistros = async () => {
-        await enviar(contadorVehicular);
-        // restablecerContador()
+        if (contadorVehicular.length > 0){
+            await enviar(contadorVehicular);
+        }
     }
 
     const restablecerContador = () => {
@@ -124,6 +130,7 @@ const Contador = ({ navigation }) => {
         });
         setVehiculos(listado)
         setModalVisible(false)
+        showToast('Contador vehicular restablecido');            
     }
 
 
@@ -175,7 +182,7 @@ const Contador = ({ navigation }) => {
 
             return () => {
                 // Función a ejecutar al salir de la pestaña Profile
-
+                guardarRegistros()
                 // Lógica adicional aquí
             };
         }, [])

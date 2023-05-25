@@ -19,6 +19,7 @@ export const MediosDesplazamientosComponentes = ({ selected, cambiarMedio }) => 
                 margin: 10,
                 justifyContent: 'center',
                 alignItems: 'center',
+                width: 100
             }}>
                 <TouchableOpacity
                     onPress={() => cambiarMedio(item)}

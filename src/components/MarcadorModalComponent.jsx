@@ -9,6 +9,7 @@ import { MarcadorContext } from '../context/levantamiento/MarcadorContext'
 import { useContext } from 'react';
 import { NavigationContext } from '@react-navigation/native';
 import { NetworkContext } from '../context/network/NetworkContext';
+import { showToast } from '../utils/toast';
 
 export const MarcadorModalComponent = ({ open, setOpen }) => {
     const [levantamiento, setLevantamiento] = useState()
@@ -27,6 +28,9 @@ export const MarcadorModalComponent = ({ open, setOpen }) => {
             const continuar = await guardar(levantamiento);
             if (continuar) {
                 abrirMarcador()
+                showToast('Levantamiento ingresado');
+            }else{
+                showToast('Código invalido');
             }
         } else {
             setLevantamientoErrors('Debe ingresar un código de levantamiento')
@@ -85,31 +89,40 @@ export const MarcadorModalComponent = ({ open, setOpen }) => {
                         }
                         <View style={styles.row}>
                             <Button
-                                title={valido ? 'Restablecer' : 'Omitir'}
+                                title={valido ? 'Restablecer' : 'Cerrar'}
                                 type="clear"
                                 titleStyle={{ color: 'gray' }}
                                 onPress={() => { valido ? restablecer() : setOpen(!open) }}
                             />
                             {
-                                isConnected ?
+                                valido ?
                                     <Button
                                         title='Unirse'
-                                        onPress={unirseLevantamiento}
+                                        onPress={abrirMarcador}
                                         disabledStyle={styles.buttonPrimaryDisabled}
                                         loading={cargando}
                                         type="clear"
                                         titleStyle={{ color: primary }}
                                     />
-                                    : <Button
-                                        title='Sin conexión'
-                                        // onPress={abrirMarcador}
-                                        disabled={true}
-                                        type="clear"
-                                        titleStyle={{ color: 'grey' }}
-                                    >
-                                        Desconectado
-                                        <Icon name="access-point-network-off" size={15} type='material-community' color="grey" />
-                                    </Button>
+                                    :  !valido && isConnected ? 
+                                        <Button
+                                            onPress={unirseLevantamiento}
+                                            type="clear"
+                                            loading={cargando}
+                                            titleStyle={{ color: primary }}
+                                        >
+                                            Unirse
+                                        </Button> :
+                                        <Button
+                                            onPress={abrirMarcador}
+                                            disabled={true}
+                                            type="clear"
+                                            titleStyle={{ color: 'grey' }}
+                                        >
+                                            Sin conexión
+                                            <Icon name="access-point-network-off" size={15} type='material-community' color="grey" />
+                                        </Button>
+
 
                             }
                         </View>

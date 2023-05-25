@@ -122,6 +122,34 @@ export const updateReporteContadorDatabase = codigo => {
   });
 };
 
+export const deleteReporteContadorCodigoDatabase = codigo => {
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'DELETE FROM tbl_reporte_contador WHERE codigo = ?',
+        [codigo],
+        (transaction, res) => {
+          let len = res.rows.length;
+          let result = [];
+
+          if (len > 0) {
+            result = res.rows.raw();
+          }
+          // console.log(
+          //   '🚀 ~ file: TblReporteContador.js:111 ~ returnnewPromise ~ result:',
+          //   result,
+          // );
+          resolve(result);
+        },
+        err => {
+          // console.log(err);
+          reject(false);
+        },
+      );
+    });
+  });
+};
+
 const createValues = data => {
   const inserting_incidentes = data.map(item => {
     return `('${item.codigo}', '${JSON.stringify(item)}', 0),`;

@@ -42,7 +42,7 @@ export const BitacoraProvider = ({ children }) => {
                 await storeBitacoraDatabase(bitacora)
                 dispatch({ type: 'obtener', bitacora })
             } catch (e) {
-                console.log(e);
+                // console.log(e);
             }
         } else if (isConnected) {
             const newBitacora = await getBitacota()

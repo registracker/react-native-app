@@ -7,6 +7,7 @@ import { postIncidente } from '../../services/incidenteServices'
 import { getUbicacionActual } from '../../utils/functions';
 import { format } from 'date-fns';
 import { NetworkContext } from '../network/NetworkContext';
+import { showToast } from '../../utils/toast';
 
 
 export const IncidenteContext = createContext();
@@ -42,12 +43,11 @@ export const IncidenteProvider = ({ children }) => {
             const optionIncidente = await AsyncStorage.getItem('opcion-incidente');
             if (optionIncidente === 'activo' && isConnected) {
                 await postIncidente(data)
-                // await enviarIncidente(response.insertId)
-            }
+                showToast('Incidente registrado');
+            }else {
+                showToast('Incidente registrado temporalmente');
 
-            // const mensaje = 'Incidente registrado';
-            // const subtitulo = `${data.nombre} registrado la fecha de ${data.fecha_reporte}`;
-            // notificacion(mensaje, subtitulo);
+            }
         }
     }
 

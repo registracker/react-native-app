@@ -128,13 +128,20 @@ export const ListadoDesplazamiento = () => {
         <>
           {
             isConnected ?
-              <Button
-                title="Enviar"
-                onPress={() => enviarDesplazamiento(item, reset)}
-                icon={{ name: 'send', color: 'white' }}
-                buttonStyle={{ minHeight: '100%', backgroundColor: 'green' }}
-                loading={cargando}
-              />
+              item.enviado === 1 ?
+                <Button
+                  onPress={() => reset()}
+                  icon={{ name: 'send-check', type: 'material-community', color: 'white' }}
+                  loading={cargando}
+                  buttonStyle={{ minHeight: '100%', backgroundColor: 'green' }}
+                /> :
+                <Button
+                  title="Enviar"
+                  onPress={() => enviarDesplazamiento(item, reset)}
+                  icon={{ name: 'send', color: 'white' }}
+                  buttonStyle={{ minHeight: '100%', backgroundColor: 'green' }}
+                  loading={cargando}
+                />
               : <Button
                 title="Desconectado"
                 onPress={() => reset()}

@@ -66,7 +66,6 @@ export const Navigation = () => {
     const { permissions, checkLocationPermission } = useContext(PermissionContext);
     const { autenticado } = useContext(AuthContext);
     const { saveStatus } = useContext(NetworkContext)
-    const { envioAutomaticoDesplazamientos } = useContext(DesplazamientoContext)
 
 
     useEffect(() => {

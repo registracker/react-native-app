@@ -47,10 +47,10 @@ export const getTableBitacotaDatabase = tabla => {
           resolve(res);
         },
         error => {
-          console.log(
-            '🚀 ~ file: TblBitacora.js:51 ~ returnnewPromise ~ error:',
-            error,
-          );
+          // console.log(
+          //   '🚀 ~ file: TblBitacora.js:51 ~ returnnewPromise ~ error:',
+          //   error,
+          // );
           reject(false);
         },
       );
@@ -91,7 +91,7 @@ export const storeBitacoraDatabase = data => {
           resolve(res);
         },
         error => {
-          console.log(error);
+          // console.log(error);
           reject(false);
         },
       );

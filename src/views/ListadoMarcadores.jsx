@@ -111,11 +111,20 @@ export const ListadoMarcadores = () => {
                 <>
                     {
                         isConnected ?
-                            <Button
-                                onPress={() => enviarReporteMarcador(item, reset)}
-                                icon={{ name: 'send', color: 'white' }}
-                                buttonStyle={{ minHeight: '100%', backgroundColor: 'green' }}
-                            />
+                            item.enviado === 1 ?
+                                <Button
+                                    onPress={() => reset()}
+                                    icon={{name: 'send-check', type:'material-community', color: 'white' }}
+                                    loading={cargando}
+                                    buttonStyle={{ minHeight: '100%', backgroundColor: 'green' }}
+                                /> :
+                                <Button
+                                    onPress={() => enviarReporteMarcador(item, reset)}
+                                    icon={{ name: 'send', color: 'white' }}
+                                    loading={cargando}
+                                    buttonStyle={{ minHeight: '100%', backgroundColor: 'green' }}
+                                />
+
                             : <Button
                                 title="Desconectado"
                                 onPress={() => reset()}

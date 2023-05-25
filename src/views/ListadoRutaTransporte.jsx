@@ -11,6 +11,7 @@ import { TouchableOpacity } from 'react-native';
 
 import { useBackHandler } from '@react-native-community/hooks'
 import { DesplazamientoContext } from '../context/tracking/DesplazamientoContext';
+import { showToast } from '../utils/toast';
 
 
 const ListadoRutaTransporte = ({ navigation }) => {
@@ -44,11 +45,17 @@ const ListadoRutaTransporte = ({ navigation }) => {
         if (page) {
 
             const { data, links } = await postBuscarRutasTransporteInstance(ruta, page)
-            if (data) setResultado([...resultado, ...data])
+            if (data) {
+                setResultado([...resultado, ...data])
+                showToast('Resultado encontrados');
+            } 
             setSiguiente(links?.next)
         } else {
             const { data, links } = await postBuscarRutasTransporteInstance(ruta)
-            if (data) setResultado(data)
+            if (data) {
+                setResultado(data)
+                showToast('Resultado encontrados');
+            }
             setSiguiente(links?.next)
         }
         setLoading(false)
@@ -62,6 +69,7 @@ const ListadoRutaTransporte = ({ navigation }) => {
     const actualizarMedio = () => {
         actualizarMedioDesplazamiento(seleted)
         restaurar()
+        showToast('Ruta de transporte almacenada');
         navigation.navigate('TabNavegacion')
     }
 

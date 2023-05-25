@@ -9,6 +9,7 @@ import { primary, styles } from '../styles/style'
 import { ContadorContext } from '../context/levantamiento/ContadorContext'
 import { useEffect } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { showToast } from '../utils/toast'
 
 export default ListadoVehiculo = ({ navigation }) => {
 
@@ -23,14 +24,20 @@ export default ListadoVehiculo = ({ navigation }) => {
         if (selectedItems.length <= 3) {
             setSelectedItems(selectedItems);
         } else {
+            showToast('No se permiten mas de tres vehículos');            
             // console.log("No puede seleccionar mas 3 vehiculos");
         }
     };
 
     const guardarVehiculos = () => {
 
-        actualizarListado(selectedItems)
-        navigation.navigate('Contador')
+        if (selectedItems.length > 0) {
+            actualizarListado(selectedItems)
+            showToast('Vehiculos seleccionados');            
+            navigation.navigate('Contador')
+        }else {
+            showToast('No ha seleccionado ningún vehículo');            
+        }
 
     }
 

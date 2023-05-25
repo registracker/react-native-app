@@ -16,7 +16,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flex: 10,
-    padding: 20,
+    padding: 10,
     paddingTop: StatusBar.currentHeight,
   },
   toolbar: {
@@ -157,7 +157,7 @@ export const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
     fontSize: 18,
-    marginBottom: 5
+    marginBottom: 5,
   },
   modalText: {
     color: 'black',
@@ -293,6 +293,23 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
     marginVertical: 10,
     color: 'white',
+    flexDirection: 'row',
+  },
+  chipDisabled: {
+    borderWidth: 2,
+    borderColor: 'white',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    backgroundColor: 'grey',
+    borderRadius: 25,
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginVertical: 10,
+    color: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
   },
   card: {
     borderWidth: 2,

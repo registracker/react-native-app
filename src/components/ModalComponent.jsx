@@ -80,6 +80,7 @@ export const ModalComponent = ({ modalVisible, setModalVisible, enviar }) => {
                         title="Reportar"
                         onPress={() => reportarIncidente()}
                         radius="lg"
+                        disabled={!selected}
                         buttonStyle={styles.buttonPrimary}
                         containerStyle={styles.buttonContainer}
                     />

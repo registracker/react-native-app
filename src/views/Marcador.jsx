@@ -12,6 +12,7 @@ import { format } from 'date-fns';
 import { useContext } from 'react';
 import { MarcadorContext } from '../context/levantamiento/MarcadorContext';
 import { CatalogosContext } from '../context/store/CatalogosContext';
+import { showToast } from '../utils/toast';
 
 const Marcador = ({ navigation }) => {
 
@@ -50,6 +51,7 @@ const Marcador = ({ navigation }) => {
             enviado: 0
         }
         await postReporteMarcador(datos)
+        showToast('Marcador registrado');
         setSelected()
         setDescripcion("")
         setEnviar(true)
@@ -90,6 +92,7 @@ const Marcador = ({ navigation }) => {
         setSelected()
         await AsyncStorage.removeItem('levantamiento');
         restablecer()
+        showToast('Levantamiento cerrado');
         navigation.navigate('TabNavegacion');
 
     }

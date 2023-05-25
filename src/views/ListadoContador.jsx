@@ -1,6 +1,6 @@
 import { View, Text, ImageBackground, FlatList } from 'react-native'
 import React, { useEffect } from 'react'
-import { getReporteContadorCodigoDatabase, getReporteContadorDatabase, updateReporteContadorDatabase } from '../database/TblReporteContador';
+import { deleteReporteContadorCodigoDatabase, getReporteContadorCodigoDatabase, getReporteContadorDatabase, updateReporteContadorDatabase } from '../database/TblReporteContador';
 import { useState } from 'react';
 import { styles } from '../styles/style';
 import { Button, Icon, ListItem, SearchBar } from '@rneui/base';
@@ -8,6 +8,7 @@ import { useContext } from 'react';
 import { NetworkContext } from '../context/network/NetworkContext';
 
 import { enviarReporte } from '../services/vehiculos';
+import { showToast } from '../utils/toast';
 
 
 export default ListadoContador = () => {
@@ -33,10 +34,17 @@ export default ListadoContador = () => {
             if(status === 200){
                 await updateReporteContadorDatabase(codigo)
                 await items()
+                showToast('Datos de conteo vehicular sincronizados correctamente');            
             }
         }
         setCargando(false)
+        reset()
+    }
 
+    const removeDatos = async(codigo, reset) => {
+        await deleteReporteContadorCodigoDatabase(codigo)
+        await items()
+        showToast('Elemento eliminado');            
         reset()
     }
 
@@ -51,7 +59,8 @@ export default ListadoContador = () => {
 
         let result = null;
         if (regex.test(search)) {
-            result = data.filter(element => element.codigodas === search)
+            result = data.filter(element => element.codigo === search)
+            setContador(result)
         } else {
             setContador(data)
         }
@@ -67,20 +76,11 @@ export default ListadoContador = () => {
             leftContent={(reset) => (
                 <Button
                     title="Eliminar"
-                    onPress={() => deleteDesplazamiento(item.uuid, reset)}
+                    onPress={() => removeDatos(item.codigo, reset)}
                     icon={{ name: 'delete', color: 'white' }}
                     buttonStyle={{ minHeight: '100%', backgroundColor: 'red' }}
                 />
             )}
-            // rightContent={(reset) => (
-            //     <Button
-            //         title="Enviar"
-            //         onPress={() => verificarDatos(item.codigo, reset)}
-            //         icon={{ name: 'send', color: 'white' }}
-            //         buttonStyle={{ minHeight: '100%', backgroundColor: 'green' }}
-            //         loading={cargando}
-            //     />
-            // )}
             rightContent={(reset) => (
                 <>
                     {

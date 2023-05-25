@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ImageBackground } from 'react-native';
-import { FAB,  SpeedDial } from '@rneui/base';
+import { View, Text, StyleSheet, ImageBackground, ToastAndroid } from 'react-native';
+import { FAB, Icon, SpeedDial } from '@rneui/base';
 import { format } from 'date-fns';
 import Geolocation from 'react-native-geolocation-service';
 import BackgroundService from 'react-native-background-actions';
@@ -26,6 +26,7 @@ import { DesplazamientoContext } from '../context/tracking/DesplazamientoContext
 
 import { getUbicacionActual } from '../utils/functions';
 import { NetworkContext } from '../context/network/NetworkContext';
+import { showToast } from '../utils/toast';
 
 
 export const Desplazamiento = () => {
@@ -52,6 +53,7 @@ export const Desplazamiento = () => {
   const getLocationObservation = () => {
     setViajeIniciado(true);
     setDefaultOptions({ locale: es })
+    showToast('Viaje Iniciado', ToastAndroid.SHORT);
 
     const observation = Geolocation.watchPosition(
       position => {
@@ -74,6 +76,7 @@ export const Desplazamiento = () => {
     setPosition()
     Geolocation.clearWatch(watchId);
     setCostoDesplazamientoModal(true);  //Modal for displaying costo de desplazamiento
+    showToast('Viaje finalizado', ToastAndroid.LONG);
   };
 
   /**
@@ -150,57 +153,25 @@ export const Desplazamiento = () => {
           open={costoDesplazamientoModal}
           setOpen={setCostoDesplazamientoModal}
         />
-        {/* <View style={{ flex: 1, marginHorizontal: '12%' }}>
-        {
-          viajeIniciado ? (
-            <View style={stylesDesplazamiento.panel}>
-              <View style={stylesDesplazamiento.backgroundImage}>
-                <Image
-                  style={{ width: 65, height: 65, }}
-                  source={require('../img/travel/image-location.gif')}
-                />
-              </View>
-              <View style={{ flexDirection: 'column' }}>
-                <Text style={stylesDesplazamiento.textPanel} >
-                  Viaje en curso
-                </Text>
-                <Text style={stylesDesplazamiento.textPanel} >
-                  Iniciado: {horaInciado}
-                </Text>
-                <Text style={stylesDesplazamiento.textPanel} >
-                  Fecha: {fechaInciado}
-                </Text>
-              </View>
-            </View>
-          ) : (
-            fechaUltimoDesplazamiento && (
-              <View style={stylesDesplazamiento.panelOff}>
-                <View style={stylesDesplazamiento.backgroundImage}>
-                  <Icon
-                    name='history'
-                    color='#808080'
-                    type='material-community'
-                    size={50}
-                    containerStyle={{ width: 65, height: 65, justifyContent: 'center', alignItems: 'center' }}
-                  />
-                </View>
-                <View style={{ flexDirection: 'column' }}>
-                  <Text style={stylesDesplazamiento.textPanelOff} >
-                    Ultimo viaje
-                  </Text>
-                  <Text style={stylesDesplazamiento.textPanelOff} >
-                    Hora: {horaInciado}
-                  </Text>
-                  <Text style={stylesDesplazamiento.textPanelOff} >
-                    Fecha: {fechaInciado}
-                  </Text>
-                </View>
-              </View>
-            )
-          )
-        }
-      </View> */}
         <View style={styles.body}>
+          <View style={styles.row}>
+            {
+              isConnected && viajeIniciado ?
+                <View style={styles.chip}>
+                  <Icon name='cellphone-marker' type='material-community' color={'white'} style={{ marginRight: 5 }} />
+                  <Text style={styles.text}> Conectado</Text>
+                </View>
+                : !isConnected && viajeIniciado ?
+                  <View style={styles.chipDisabled}>
+                    <Icon name='cellphone-marker' type='material-community' color={'white'} style={{ marginRight: 5 }} />
+                    <Text style={styles.text}>Modo sin conexión</Text>
+                  </View> :
+                  <View style={{...styles.chip, backgroundColor:'white', borderColor: primary}}>
+                    <Icon name='cellphone-marker' type='material-community' color={primary} style={{ marginRight: 5 }} />
+                    <Text style={styles.textBlack}>Registracker</Text>
+                  </View>
+            }
+          </View>
           <Text style={styles.title}>
             Elige tu medio de desplazamientos
           </Text>
