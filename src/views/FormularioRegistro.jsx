@@ -185,7 +185,7 @@ export const FormularioRegistro = ({ route, navigation }) => {
       onPress={() => setSelectionRol(data.id)}
     >
       <Icon
-        name="map-marker-distance"
+        name="account-hard-hat"
         type="material-community"
         size={36}
         color="white"
