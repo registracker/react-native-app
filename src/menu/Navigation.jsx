@@ -23,6 +23,7 @@ import { NetworkContext } from '../context/network/NetworkContext';
 import ListadoVehiculo from '../views/ListadoVehiculo';
 import ListadoContador from '../views/ListadoContador';
 import TestView from '../components/TestComponent';
+import { PermisosBackground } from '../views/PermisosBackground';
 
 const Stack = createNativeStackNavigator();
 
@@ -70,6 +71,7 @@ export const Navigation = () => {
         checkLocationPermission()
         createTables()
         limpiarRegistros()
+        console.log(permissions);
 
         const unsubscribe = NetInfo.addEventListener(state => saveStatus(state));
 
@@ -129,9 +131,15 @@ export const Navigation = () => {
                                     }} />
                                 </Stack.Group>
                                 : <Stack.Group >
-                                    <Stack.Screen name='Home' component={Home} />
-                                    <Stack.Screen name='Login' component={Login} />
-                                    <Stack.Screen name='FormularioRegistro' component={FormularioRegistro} />
+                                    {
+                                        permissions.locationBackground !== 'granted' ?
+                                            <Stack.Screen name='PermisosBackground' component={PermisosBackground} />
+                                            : <Stack.Group >
+                                                <Stack.Screen name='Home' component={Home} />
+                                                <Stack.Screen name='Login' component={Login} />
+                                                <Stack.Screen name='FormularioRegistro' component={FormularioRegistro} />
+                                            </Stack.Group>
+                                    }
                                 </Stack.Group>
                         }
 
