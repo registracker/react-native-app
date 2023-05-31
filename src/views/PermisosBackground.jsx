@@ -35,7 +35,7 @@ export const PermisosBackground = () => {
                         style={{ ...styles.image, width: '50%', height: '50%' }}
                     />
                     <Text style={styles.titleText}>
-                        Habilitar acciones en segundo plano
+                        Habilitar registro de desplazamiento en segundo plano
                     </Text>
                     <Text style={styles.subtitleText}>
                         Respetamos tu privacidad. Tus datos se recolectaran con precisión y confidencialidad para mejorar tu experiencia.
@@ -49,7 +49,7 @@ export const PermisosBackground = () => {
                     {
                         permissions.locationBackground !== 'never_ask_again'
                             ? <Button
-                                title='Permitir segundo plano'
+                                title='Permitir en segundo plano'
                                 onPress={askBackgroundLocations}
                                 buttonStyle={styles.buttonPrimary}
                                 containerStyle={styles.buttonContainer}
