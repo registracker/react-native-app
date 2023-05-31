@@ -20,11 +20,9 @@ import { createTables, limpiarRegistros } from '../utils/functions';
 import NetInfo from "@react-native-community/netinfo";
 
 import { NetworkContext } from '../context/network/NetworkContext';
-import { DesplazamientoContext } from '../context/tracking/DesplazamientoContext';
-import { CatalogosContext } from '../context/store/CatalogosContext'
-import { BitacoraContext } from '../context/bitacora/BitacoraContext';
 import ListadoVehiculo from '../views/ListadoVehiculo';
 import ListadoContador from '../views/ListadoContador';
+import TestView from '../components/TestComponent';
 
 const Stack = createNativeStackNavigator();
 
@@ -123,6 +121,10 @@ export const Navigation = () => {
                                     }} />
                                     <Stack.Screen name='ListadoContador' component={ListadoContador} options={{
                                         titleListadoVehiculo: 'Conteo vehicular',
+                                        ...optionsView
+                                    }} />
+                                    <Stack.Screen name='TestView' component={TestView} options={{
+                                        titleListadoVehiculo: 'Próximamente',
                                         ...optionsView
                                     }} />
                                 </Stack.Group>

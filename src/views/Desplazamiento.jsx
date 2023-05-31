@@ -1,14 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ImageBackground, ToastAndroid } from 'react-native';
 import { FAB, Icon, SpeedDial } from '@rneui/base';
-import { format } from 'date-fns';
 import Geolocation from 'react-native-geolocation-service';
-import BackgroundService from 'react-native-background-actions';
+
+import BackgroundActions from 'react-native-background-actions';
 import KeepAwake from '@sayem314/react-native-keep-awake';
-import { es } from 'date-fns/locale'
-import { setDefaultOptions } from 'date-fns'
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Toast } from 'react-native-toast-message/lib/src/Toast';
+
 //Componentes
 import { primary, styles } from '../styles/style';
 import { MediosDesplazamientosComponentes } from '../components/MediosDesplazamientosComponentes';
@@ -17,66 +14,94 @@ import { MarcadorModalComponent } from '../components/MarcadorModalComponent';
 import RutaTransporteModalComponent from '../components/RutaTransporteModalComponent';
 import CostoDesplazamientoModalComponent from '../components/CostoDesplazamientoModalComponent';
 
-//Servicios
-import { postIncidente } from '../services/incidenteServices'
-
 //Context
-import { CatalogosContext } from '../context/store/CatalogosContext'
 import { DesplazamientoContext } from '../context/tracking/DesplazamientoContext';
-
-import { getUbicacionActual } from '../utils/functions';
 import { NetworkContext } from '../context/network/NetworkContext';
+
+//FUNCIONES
+import { getUbicacionActual } from '../utils/functions';
 import { showToast } from '../utils/toast';
 
+const LOCATION_TASK_NAME = 'locationTask';
 
 export const Desplazamiento = () => {
   const [position, setPosition] = useState();
-  const [watchId, setWatchId] = useState();
   const [viajeIniciado, setViajeIniciado] = useState(false);
   const [open, setOpen] = useState(false);
   const [medio, setMedio] = useState({ id: 1, nombre: 'Caminando', icono: 'walk' });
   const [modalIncidentes, setModalIncidentes] = useState(false);
-  const [, setIncidenteSelected] = useState();
   const [modalMarcador, setModalMarcador] = useState(false);
   const [medioTransporteModal, setMedioTransporteModal] = useState(false)
   const [costoDesplazamientoModal, setCostoDesplazamientoModal] = useState(false)
 
-  const { ctl_medios_desplazamientos, ctl_incidentes, obtenerMediosDesplazamientos, obtenerIncidentes } = useContext(CatalogosContext)
   const { agregarMedioDesplazamiento, iniciarDesplazamiento, registrarDesplazamiento } = useContext(DesplazamientoContext)
   const { isConnected } = useContext(NetworkContext)
 
-  const created = async () => {
-    await obtenerMediosDesplazamientos()
-    await obtenerIncidentes()
+  const sleep = (time) => new Promise((resolve) => setTimeout(() => resolve(), time));
+
+  const configureBackgroundActions = async () => {
+    const taskOptions = {
+      taskName: LOCATION_TASK_NAME,
+      taskTitle: 'Viaje Iniciado',
+      taskDesc: 'Registrando desplazamiento',
+      taskIcon: {
+        name: 'ic_launcher',
+        type: 'mipmap',
+      },
+      parameters: {
+        delay: 5000, // Intervalo de tiempo en milisegundos (5 segundos)
+      },
+    };
+
+    const locationTask = async (taskData) => {
+      try {
+        const { delay } = taskData;
+        
+        const watch = Geolocation.watchPosition(
+          position => {
+            setPosition(position);
+          },
+          error => {
+            showToast('Error en obtener la ubicación', ToastAndroid.LONG);
+          },
+          {
+            enableHighAccuracy: true,
+            interval: 5000,
+            distanceFilter: 0,
+          }
+        );
+        do {
+          await sleep(delay);
+          
+        } while (BackgroundActions.isRunning());
+        Geolocation.clearWatch(watch); 
+        return taskData;
+      } catch (error) {
+        showToast('Error en la tarea en segundo plano', ToastAndroid.LONG);
+      }
+    };
+
+    try {
+      await BackgroundActions.start(locationTask, taskOptions);
+    } catch (error) {
+      showToast('Error al iniciar la tarea en segundo plano', ToastAndroid.LONG);
+    }
   };
+
 
   const getLocationObservation = () => {
     setViajeIniciado(true);
-    setDefaultOptions({ locale: es })
-    showToast('Viaje Iniciado', ToastAndroid.SHORT);
-
-    const observation = Geolocation.watchPosition(
-      position => {
-        setPosition(position);
-      },
-      error => {
-      },
-      {
-        enableHighAccuracy: true,
-        interval: 5000,
-        distanceFilter: 0,
-      },
-    );
-
-    setWatchId(observation);
+    configureBackgroundActions(); 
   };
 
   const stopLocationObserving = async () => {
-    setViajeIniciado(false);
-    setPosition()
-    Geolocation.clearWatch(watchId);
-    setCostoDesplazamientoModal(true);  //Modal for displaying costo de desplazamiento
-    showToast('Viaje finalizado', ToastAndroid.LONG);
+    if(viajeIniciado){
+      setViajeIniciado(false);
+      BackgroundActions.stop(LOCATION_TASK_NAME);
+      setPosition()
+      setCostoDesplazamientoModal(true);  //Modal for displaying costo de desplazamiento
+      showToast('Viaje finalizado', ToastAndroid.LONG);
+    }
   };
 
   /**
@@ -95,20 +120,6 @@ export const Desplazamiento = () => {
     setOpen(false);
   };
 
-
-  const notificacion = (mensaje, subtitulo = '') => {
-    Toast.show({
-      type: 'success',
-      text1: mensaje,
-      text2: subtitulo,
-      position: 'top',
-      topOffset: 0
-    });
-  };
-
-  useEffect(() => {
-    created();
-  }, []);
 
   useEffect(() => {
     if (viajeIniciado) registrarDesplazamiento(position, medio);
@@ -166,7 +177,7 @@ export const Desplazamiento = () => {
                     <Icon name='cellphone-marker' type='material-community' color={'white'} style={{ marginRight: 5 }} />
                     <Text style={styles.text}>Modo sin conexión</Text>
                   </View> :
-                  <View style={{...styles.chip, backgroundColor:'white', borderColor: primary}}>
+                  <View style={{ ...styles.chip, backgroundColor: 'white', borderColor: primary }}>
                     <Icon name='cellphone-marker' type='material-community' color={primary} style={{ marginRight: 5 }} />
                     <Text style={styles.textBlack}>Registracker</Text>
                   </View>
@@ -178,8 +189,6 @@ export const Desplazamiento = () => {
           <MediosDesplazamientosComponentes
             selected={medio}
             cambiarMedio={setMedio}
-            open={medioTransporteModal}
-            setOpen={setMedioTransporteModal}
           />
         </View>
         <>
