@@ -257,7 +257,7 @@ export const styles = StyleSheet.create({
     borderColor: 'white',
     paddingTop: 0,
     paddingHorizontal: 0,
-    marginHorizontal: '5%',
+    marginHorizontal: 5,
     marginBottom: 0,
   },
   customButtomDisabled: {
@@ -272,7 +272,7 @@ export const styles = StyleSheet.create({
     borderColor: 'white',
     paddingTop: 0,
     paddingHorizontal: 0,
-    marginHorizontal: '5%',
+    marginHorizontal: 5,
     marginBottom: 0,
   },
   row: {

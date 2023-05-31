@@ -9,12 +9,13 @@ import {
   Text,
   ToastAndroid,
   TouchableHighlight,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import { primary, styles } from '../styles/style';
 import { Button, CheckBox, Icon } from '@rneui/base';
 import { Input } from '@rneui/themed';
-import { register } from '../services/aurtenticacionServices';
+import { getRoles, register } from '../services/aurtenticacionServices';
 
 export const FormularioRegistro = ({ route, navigation }) => {
   const [email, setEmail] = useState('');
@@ -26,7 +27,8 @@ export const FormularioRegistro = ({ route, navigation }) => {
   const [emailErrorMessage, setEmailErrorMessage] = useState();
   const [formInvalid, setFormInvalid] = useState(true);
   const [cargando, setCargando] = useState(false);
-  const [rol, setRol] = useState({ id: 2 });
+  const [rol, setRol] = useState();
+  const [roles, setRoles] = useState([])
   const [selectionRol, setSelectionRol] = useState(false);
 
   const [checked, setChecked] = React.useState(false);
@@ -37,14 +39,11 @@ export const FormularioRegistro = ({ route, navigation }) => {
   const inputPasswordConfirm = createRef();
   const inputEmail = createRef();
 
-  const investigador = { type: 'investigador', id: 3 };
-  const participante = { type: 'participante', id: 2 };
-
   const registrar = async () => {
     const datos = {
       email,
       password,
-      rol: rol?.id,
+      rol: selectionRol,
     };
 
     try {
@@ -110,11 +109,6 @@ export const FormularioRegistro = ({ route, navigation }) => {
     }
   };
 
-  const selectRol = () => {
-    if (rol) return true;
-    setSelectionRol(true);
-    return false;
-  };
 
   /* 
     ^                         Start anchor
@@ -164,7 +158,7 @@ export const FormularioRegistro = ({ route, navigation }) => {
       email &&
       passwordConfirm &&
       isEmail() &&
-      selectRol()
+      selectionRol
     ) {
       setPasswordErrorMessage();
       setPasswordConfirmErrorMessage();
@@ -174,11 +168,33 @@ export const FormularioRegistro = ({ route, navigation }) => {
       setFormInvalid(true);
     }
 
-  }, [passwordConfirm, password, email, rol, checked]);
+  }, [passwordConfirm, password, email, selectionRol, checked]);
+
 
   useEffect(() => {
-    if (rol) setSelectionRol(false);
-  }, [rol]);
+    const obtenerRoles = async () => {
+      const roles = await getRoles();
+      setRoles(roles);
+    }
+    obtenerRoles()
+  }, [])
+
+  const Item = ({ data }) => (
+    <TouchableOpacity
+      style={data.id == selectionRol ? styles.customButtom : styles.customButtomDisabled}
+      onPress={() => setSelectionRol(data.id)}
+    >
+      <Icon
+        name="account-hard-hat"
+        type="material-community"
+        size={36}
+        color="white"
+      />
+      <Text style={styles.text}>
+        {data.name}
+      </Text>
+    </TouchableOpacity>
+  );
 
   return (
     <View style={styles.container}>
@@ -196,38 +212,14 @@ export const FormularioRegistro = ({ route, navigation }) => {
             <Text style={styles.title}>Registro de usuario</Text>
             <Text style={styles.text}>Elige un rol para tu usuario</Text>
             <View style={styles.row}>
-              <TouchableHighlight
-                style={rol?.id == 2 ? styles.customButtom : styles.customButtomDisabled}
-                onPress={() => setRol(participante)}>
-                <View
-                  style={styles.center}>
-                  <Icon
-                    name="map-marker-distance"
-                    type="material-community"
-                    size={36}
-                    color="white"
-                  />
-                  <Text style={styles.text}>
-                    Participante
-                  </Text>
-                </View>
-              </TouchableHighlight>
-              <TouchableHighlight
-                style={rol?.id == 3 ? styles.customButtom : styles.customButtomDisabled}
-                onPress={() => setRol(investigador)}>
-                <View
-                  style={styles.center}>
-                  <Icon
-                    name="account-hard-hat"
-                    type="material-community"
-                    size={36}
-                    color="white"
-                  />
-                  <Text style={styles.text}>
-                    Investigador
-                  </Text>
-                </View>
-              </TouchableHighlight>
+              <FlatList
+                data={roles}
+                renderItem={({ item }) => <Item data={item} />}
+                keyExtractor={item => item.id}
+                horizontal
+                contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}
+              />
+
             </View>
 
             <View style={styles.center} >
