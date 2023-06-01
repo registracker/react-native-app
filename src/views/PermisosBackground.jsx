@@ -31,7 +31,7 @@ export const PermisosBackground = () => {
             }}>
                 <View style={styles.body}>
                     <Image
-                        source={require('../img/permiso/smartphone.png')}
+                        source={require('../img/permiso/settings.png')}
                         style={{ ...styles.image, width: '50%', height: '50%' }}
                     />
                     <Text style={styles.titleText}>
