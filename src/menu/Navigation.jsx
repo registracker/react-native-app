@@ -24,6 +24,7 @@ import ListadoVehiculo from '../views/ListadoVehiculo';
 import ListadoContador from '../views/ListadoContador';
 import TestView from '../components/TestComponent';
 import { PermisosBackground } from '../views/PermisosBackground';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createNativeStackNavigator();
 
@@ -67,11 +68,11 @@ export const Navigation = () => {
     const { saveStatus } = useContext(NetworkContext)
 
 
+
     useEffect(() => {
         checkLocationPermission()
         createTables()
         limpiarRegistros()
-        console.log(permissions);
 
         const unsubscribe = NetInfo.addEventListener(state => saveStatus(state));
 

@@ -184,7 +184,7 @@ export const Ajustes = () => {
     return (
       <ListItem>
         <ListItem.Content>
-          <ListItem.Title>Envió automático de registros de marcadores</ListItem.Title>
+          <ListItem.Title>Envió automático de registros de Contadores</ListItem.Title>
         </ListItem.Content>
         <Switch
           trackColor={{ false: '#d8d8db', true: '#d8d8db' }}
