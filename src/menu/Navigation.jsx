@@ -85,13 +85,12 @@ export const Navigation = () => {
         <Stack.Navigator
             screenOptions={options}
         >
-
             {
-                (permissions.locationStatus === 'granted')
+                (autenticado === 'autenticado')
                     ? <Stack.Group >
                         {
-                            (autenticado === 'autenticado')
-                                ? <Stack.Group >
+                            (permissions.locationStatus === 'granted' && permissions.locationBackground === 'granted') ?
+                                <Stack.Group >
                                     <Stack.Screen name='TabNavegacion' component={TabNavegacion} />
                                     <Stack.Screen name='ListadoDesplazamiento' component={ListadoDesplazamiento} options={{
                                         title: 'Listado de desplazamientos',
@@ -130,24 +129,27 @@ export const Navigation = () => {
                                         ...optionsView
                                     }} />
                                 </Stack.Group>
-                                : <Stack.Group >
+                                :
+                                <Stack.Group >
                                     {
-                                        permissions.locationBackground !== 'granted' ?
+                                        (permissions.locationStatus === 'granted') ?
                                             <Stack.Screen name='PermisosBackground' component={PermisosBackground} />
-                                            : <Stack.Group >
-                                                <Stack.Screen name='Home' component={Home} />
-                                                <Stack.Screen name='Login' component={Login} />
-                                                <Stack.Screen name='FormularioRegistro' component={FormularioRegistro} />
-                                            </Stack.Group>
+                                            :
+                                            <Stack.Screen name="Permission" component={Permisos} />
                                     }
                                 </Stack.Group>
+
+
                         }
-
                     </Stack.Group>
-
-
-                    : <Stack.Screen name="Permission" component={Permisos} />
+                    :
+                    <Stack.Group >
+                        <Stack.Screen name='Home' component={Home} />
+                        <Stack.Screen name='Login' component={Login} />
+                        <Stack.Screen name='FormularioRegistro' component={FormularioRegistro} />
+                    </Stack.Group>
             }
-        </Stack.Navigator>
+
+        </Stack.Navigator >
     )
 }

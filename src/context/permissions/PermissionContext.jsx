@@ -1,6 +1,7 @@
-import React, { createContext, useEffect, useRef, useState } from "react";
+import React, { createContext, useContext, useEffect, useRef, useState } from "react";
 import { AppState, PermissionsAndroid } from "react-native";
 import { showToast } from "../../utils/toast";
+import { NavigationContext } from '@react-navigation/native';
 
 export const permissionsInitState = {
     locationStatus: 'unavailable',
@@ -16,6 +17,8 @@ export const PermissionsProvider = ({ children }) => {
     const [appStateVisible, setAppStateVisible] = useState(appState.current);
     const [permissions, setPermissions] = useState(permissionsInitState)
 
+    const navigation = useContext(NavigationContext)
+
     const askLocationPermissions = async () => {
 
         try {
@@ -30,7 +33,8 @@ export const PermissionsProvider = ({ children }) => {
                     intentos: 0,
 
                 })
-
+                // navigation.navigate('PermisosBackground')
+                return true;
             } else if (PermissionsAndroid.RESULTS.DENIED === granted) {
                 setPermissions({
                     ...permissions,
@@ -38,6 +42,7 @@ export const PermissionsProvider = ({ children }) => {
                     intentos: permissions.intentos + 1,
 
                 })
+                return false;
             } else if (PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN === granted) {
                 if (permissions.intentos < 1) {
                     setPermissions({
@@ -45,16 +50,20 @@ export const PermissionsProvider = ({ children }) => {
                         locationStatus: 'denied',
                         intentos: permissions.intentos + 1,
                     })
+                    return false;
                 } else {
                     setPermissions({
                         ...permissions,
                         locationStatus: 'never_ask_again',
                         intentos: 0,
                     })
+                    return false;
                 }
 
             }
         } catch (err) {
+            console.log("🚀 ~ file: PermissionContext.jsx:21 ~ PermissionsProvider ~ navigation:", navigation)
+            console.log("🚀 ~ file: PermissionContext.jsx:62 ~ askLocationPermissions ~ err:", err)
             showToast('Ocurrió un error al conceder los permisos')
         }
 

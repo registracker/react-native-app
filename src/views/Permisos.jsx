@@ -5,9 +5,12 @@ import { Button } from '@rneui/base'
 import { Loading } from '../components/Loading';
 import { styles } from '../styles/style';
 import { useCallback } from 'react';
+import { NavigationContext } from '@react-navigation/native';
 
 export const Permisos = () => {
   const { permissions, askLocationPermissions } = useContext(PermissionContext)
+  const navigation = useContext(NavigationContext)
+
 
   if (permissions.locationStatus === 'unavailable') {
     return <Loading />;
@@ -24,6 +27,11 @@ export const Permisos = () => {
       containerStyle={styles.buttonContainer}
     />;
   };
+
+  const respuestaPermiso = async ()  => {
+    const respuesta = await askLocationPermissions()
+    if (respuesta) navigation.navigate('PermisosBackground')
+  }
 
   return (
     <View style={styles.container}>
@@ -48,7 +56,7 @@ export const Permisos = () => {
             permissions.locationStatus !== 'never_ask_again'
               ? <Button
                 title='Permitir geolocalización'
-                onPress={askLocationPermissions}
+                onPress={respuestaPermiso}
                 buttonStyle={styles.buttonPrimary}
                 containerStyle={styles.buttonContainer}
                 radius="lg"
