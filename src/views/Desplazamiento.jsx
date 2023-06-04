@@ -56,7 +56,7 @@ export const Desplazamiento = () => {
     const locationTask = async (taskData) => {
       try {
         const { delay } = taskData;
-        
+
         const watch = Geolocation.watchPosition(
           position => {
             setPosition(position);
@@ -72,9 +72,9 @@ export const Desplazamiento = () => {
         );
         do {
           await sleep(delay);
-          
+
         } while (BackgroundActions.isRunning());
-        Geolocation.clearWatch(watch); 
+        Geolocation.clearWatch(watch);
         return taskData;
       } catch (error) {
         showToast('Error en la tarea en segundo plano', ToastAndroid.LONG);
@@ -91,11 +91,11 @@ export const Desplazamiento = () => {
 
   const getLocationObservation = () => {
     setViajeIniciado(true);
-    configureBackgroundActions(); 
+    configureBackgroundActions();
   };
 
   const stopLocationObserving = async () => {
-    if(viajeIniciado){
+    if (viajeIniciado) {
       setViajeIniciado(false);
       BackgroundActions.stop(LOCATION_TASK_NAME);
       setPosition()
@@ -164,58 +164,53 @@ export const Desplazamiento = () => {
           open={costoDesplazamientoModal}
           setOpen={setCostoDesplazamientoModal}
         />
-        <View style={styles.body}>
-          <View style={styles.row}>
+        <View style={styles.row}>
+          <View style={styles.chip}>
+            <Icon name='cellphone-marker' type='material-community' color={'white'} style={{ marginRight: 5 }} />
             {
               isConnected && viajeIniciado ?
-                <View style={styles.chip}>
-                  <Icon name='cellphone-marker' type='material-community' color={'white'} style={{ marginRight: 5 }} />
-                  <Text style={styles.text}> Conectado</Text>
-                </View>
+                <Text style={styles.text}>Registrando</Text>
                 : !isConnected && viajeIniciado ?
-                  <View style={styles.chipDisabled}>
-                    <Icon name='cellphone-marker' type='material-community' color={'white'} style={{ marginRight: 5 }} />
-                    <Text style={styles.text}>Modo sin conexión</Text>
-                  </View> :
-                  <View style={{ ...styles.chip, backgroundColor: 'white', borderColor: primary }}>
-                    <Icon name='cellphone-marker' type='material-community' color={primary} style={{ marginRight: 5 }} />
-                    <Text style={styles.textBlack}>Registracker</Text>
-                  </View>
+                  <Text style={styles.text}>Registrando sin conexión</Text>
+                  :
+                  <Text style={{ ...styles.textBlack, color: 'white', fontWeight: 'bold' }}>REGISTRACKER</Text>
             }
           </View>
+        </View>
+        <View style={styles.body}>
           <Text style={styles.title}>
-            Elige tu medio de desplazamientos
+            Elige tu modo de desplazamiento
           </Text>
           <MediosDesplazamientosComponentes
             selected={medio}
             cambiarMedio={setMedio}
           />
+          <>
+            {viajeIniciado ? (
+              <FAB
+                visible={viajeIniciado}
+                onPress={stopLocationObserving}
+                title="Detener viaje"
+                placement="left"
+                upperCase
+                icon={stylesDesplazamiento.iconoTerminarViaje}
+                style={{ marginBottom: 20 }}
+                color={styles.primary}
+              />
+            ) : (
+              <FAB
+                visible
+                onPress={getLocationObservation}
+                title="Comenzar el viaje"
+                placement="left"
+                upperCase
+                icon={stylesDesplazamiento.iconoComenzarViaje}
+                style={{ marginBottom: 20 }}
+                color="green"
+              />
+            )}
+          </>
         </View>
-        <>
-          {viajeIniciado ? (
-            <FAB
-              visible={viajeIniciado}
-              onPress={stopLocationObserving}
-              title="Detener viaje"
-              placement="left"
-              upperCase
-              icon={stylesDesplazamiento.iconoTerminarViaje}
-              style={{ marginBottom: 20 }}
-              color={styles.primary}
-            />
-          ) : (
-            <FAB
-              visible
-              onPress={getLocationObservation}
-              title="Comenzar el viaje"
-              placement="left"
-              upperCase
-              icon={stylesDesplazamiento.iconoComenzarViaje}
-              style={{ marginBottom: 20 }}
-              color="green"
-            />
-          )}
-        </>
         <SpeedDial
           isOpen={open}
           icon={stylesDesplazamiento.iconoFAB}
@@ -228,14 +223,14 @@ export const Desplazamiento = () => {
             icon={stylesDesplazamiento.iconoMarcador}
             color={styles.primary}
             onPress={openModalMarcadores}
-            titleStyle={styles.textBlack}
+            titleStyle={{...styles.textBlack, borderRadius:15}}
           />
           <SpeedDial.Action
             title="Incidente"
             icon={stylesDesplazamiento.iconoIncidente}
             color={styles.primary}
             onPress={openModalIncidentes}
-            titleStyle={styles.textBlack}
+            titleStyle={{ ...styles.textBlack, borderRadius: 15 }}
           />
         </SpeedDial>
       </ImageBackground>

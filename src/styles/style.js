@@ -151,13 +151,11 @@ export const styles = StyleSheet.create({
     color: 'black',
     textAlign: 'center',
     fontSize: 18,
-    marginBottom: 5
   },
   text: {
     color: 'white',
     textAlign: 'center',
     fontSize: 18,
-    marginBottom: 5,
   },
   modalText: {
     color: 'black',
@@ -218,7 +216,7 @@ export const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginVertical: 10,
+    marginBottom: 5,
     color: 'white',
   },
   titleBlack: {
