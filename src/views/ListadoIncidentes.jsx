@@ -59,12 +59,11 @@ export const ListadoIncidentes = () => {
     }
 
     const deleteIncidentes = async (id, reset) => {
-        const mensaje = 'Incidente eliminado. ';
         try {
             await deleteReporteIncidente(id)
             items();
             reset()
-            mostrarNotificacion(mensaje)
+            showToast('Reporte de incidente eliminado exitosamente')
 
         } catch (error) {
             reset()

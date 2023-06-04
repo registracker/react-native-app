@@ -278,12 +278,12 @@ const stylesDesplazamiento = StyleSheet.create({
     type: 'material-community',
   },
   iconoIncidente: {
-    name: 'marker-check',
+    name: 'car-cog',
     color: 'white',
     type: 'material-community',
   },
   iconoMarcador: {
-    name: 'map-marker-check',
+    name: 'traffic-light',
     color: 'white',
     type: 'material-community',
   },
