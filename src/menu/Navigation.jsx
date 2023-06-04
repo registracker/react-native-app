@@ -71,7 +71,7 @@ export const Navigation = () => {
     useEffect(() => {
         checkLocationPermission()
         createTables()
-        limpiarRegistros()
+        limpiarRegistros()      //Limpia tabla de reportes de Desplazamiento, incidentes y marcadores 
 
         const unsubscribe = NetInfo.addEventListener(state => saveStatus(state));
 

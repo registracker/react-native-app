@@ -36,8 +36,6 @@ const options = {
 
 export const TabNavegacion = () => {
 
-    const netInfo = useNetInfo();
-
     const { getCatalogos } = useContext(CatalogosContext)
     const { obtenerBitacora } = useContext(BitacoraContext)
 

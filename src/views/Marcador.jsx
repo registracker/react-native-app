@@ -47,7 +47,8 @@ const Marcador = ({ navigation }) => {
             longitud: ubicacion.coords.longitude,
             altitud: ubicacion.coords.altitude,
             comentario: descripcion ? descripcion : '',
-            fecha_reporte: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
+            // fecha_reporte: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
+            fecha_reporte: '2023-01-01 10:00:00',
             enviado: 0
         }
         await postReporteMarcador(datos)

@@ -63,6 +63,7 @@ export const limpiarRegistros = () => {
   limpiarDesplazamientoTable();
   limpiarIncidenteTable();
   limpiarMarcadoresTable();
+  showToast('Liberando espacio de memoria')
 };
 
 export const limpiarCatalogos = async () => {
