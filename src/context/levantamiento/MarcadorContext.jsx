@@ -9,6 +9,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { getLevantamientoMarcador } from '../../services/levantamientoServices'
 import { compareAsc } from 'date-fns'
 import { sincronizarMarcadoresDatabase } from '../../database/TblReporteMarcador'
+import { postReporteMarcador } from '../../services/marcadorServices';
+import { showToast } from '../../utils/toast'
+
 
 export const MarcadorContext = createContext()
 
@@ -23,20 +26,17 @@ export const MarcadorProvider = ({ children }) => {
     const [marcadorState, dispatch] = useReducer(marcadorReducer, marcadorInicial)
 
     const guardar = async (levantamiento) => {
-        await AsyncStorage.removeItem('levantamiento')
         const { data, status } = await getLevantamientoMarcador(levantamiento)
-        if(data){
+        if (data) {
             if (status === 200) {
                 await AsyncStorage.setItem('levantamiento', JSON.stringify(data))
                 dispatch({ type: 'guardar', payload: { levantamiento: data, fecha_vencimiento: data.fecha_vencimiento } })
                 return true
             }
             return false
-        }else {
-           await guardar(levantamiento)
+        } else {
+            await guardar(levantamiento)
         }
-
-        // const previo = await AsyncStorage.getItem('levantamiento')
 
     }
 
@@ -61,9 +61,17 @@ export const MarcadorProvider = ({ children }) => {
         dispatch({ type: 'restablecer' })
     }
 
-    const sincronizarMarcadores = async() => {
-        const marcadores = await sincronizarMarcadoresDatabase()
-        // console.log("🚀 ~ file: MarcadorContext.jsx:65 ~ sincronizarMarcadoresTemporales ~ marcadores:", marcadores)
+    const sincronizarMarcadores = async () => {
+        const marcador = await AsyncStorage.getItem('opcion-marcador');
+        if (marcador === 'activo') {
+            const data = await sincronizarMarcadoresDatabase()
+            if (data.length > 0) {
+                for await (const item of data) {
+                    await postReporteMarcador(item, false)
+                }
+                showToast('Marcadores sincronizados')
+            }
+        }
     }
 
     return (

@@ -20,16 +20,13 @@ export const createTableDesplazamiento = () => {
 };
 
 export const addItemDesplazamiento = data => {
-  if (!data) {
-    alert('Enter Data');
-    return;
-  }
 
   const registro = {
     ...data,
     desplazamiento: JSON.stringify(data.desplazamiento, null),
     costos: JSON.stringify(data.costos, null),
-    fecha_registro: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
+    // fecha_registro: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
+    fecha_registro: '2023-01-01 10:00:00',
   };
 
   db.transaction(tx => {

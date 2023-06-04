@@ -4,6 +4,8 @@ import { desplazamientoReducer } from './desplazamientoReducer';
 
 import { postDesplazamiento } from '../../services/desplazamientoServices.js';
 import { limpiarDesplazamientoDatatable, obtenerSinSincronzarDesplazamientos } from '../../database/TblDesplazamientos';
+import { showToast } from '../../utils/toast';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const DesplazamientoContext = createContext();
 
@@ -57,7 +59,7 @@ export const DesplazamientoProvider = ({ children }) => {
             costos: desplazamientoState.listMedios
         }
         await postDesplazamiento(data, manual)
-        dispatch({ type: 'detener'})
+        dispatch({ type: 'detener' })
     }
     /**
      * FUNCIONALIDAD PARA ALMACENAR MEDIO DE DESPLAZAMIENTO
@@ -112,15 +114,23 @@ export const DesplazamientoProvider = ({ children }) => {
     /**
      * METODOS PARA ENVIAR AUTOMATICO REGISTROS DE DESPLAZAMIENTOS
      */
-    const envioAutomaticoDesplazamientos = async() => {
-        const data = await obtenerSinSincronzarDesplazamientos();
-        for await (const item of data) { 
-            const json = {
-                uuid: item.uuid,
-                desplazamiento: JSON.parse(item.desplazamiento),
-                costos: JSON.parse(item.costos)
+    const sincronizarReporteDesplazamiento = async () => {
+        const desplazamiento = await AsyncStorage.getItem('opcion-desplazamiento');
+        if (desplazamiento === 'activo') {
+            const data = await obtenerSinSincronzarDesplazamientos();
+            if (data.length > 0) {
+
+                for await (const item of data) {
+                    const json = {
+                        uuid: item.uuid,
+                        desplazamiento: JSON.parse(item.desplazamiento),
+                        costos: JSON.parse(item.costos)
+                    }
+                    await postDesplazamiento(json, true)
+                }
+                showToast('Desplazamientos sincronizados')
             }
-            await postDesplazamiento(json, true)
+        } else {
         }
     }
     return (
@@ -135,7 +145,7 @@ export const DesplazamientoProvider = ({ children }) => {
                 enviarDesplazamiento,
                 agregarMedioDesplazamiento,
                 actualizarMedioDesplazamiento,
-                envioAutomaticoDesplazamientos
+                sincronizarReporteDesplazamiento
             }}>
             {children}
         </DesplazamientoContext.Provider>

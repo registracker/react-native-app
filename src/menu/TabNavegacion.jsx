@@ -43,28 +43,31 @@ export const TabNavegacion = () => {
 
     const { sincronizarMarcadores } = useContext(MarcadorContext)
     const { sincronizarIncidentes } = useContext(IncidenteContext)
+    const { isConnected } = useContext(NetworkContext)
 
-    const { envioAutomaticoDesplazamientos } = useContext(DesplazamientoContext)
+    const { sincronizarReporteDesplazamiento } = useContext(DesplazamientoContext)
 
     const sincronizar = async () => {
         const respose = await Promise.all([
+            sincronizarReporteDesplazamiento(),
             sincronizarMarcadores(),
-            sincronizarIncidentes(),
-            envioAutomaticoDesplazamientos(),
-            getOptionEnvioAutomatico()
+            // sincronizarIncidentes(),
+            // envioAutomaticoDesplazamientos(),
+            // getOptionEnvioAutomatico()
 
         ])
 
     }
 
     useEffect(() => {
-        if (netInfo?.isConnected === true) {
+        // console.log("🚀 ~ file: TabNavegacion.jsx:63 ~ useEffect ~ netInfo:", netInfo)
+        if (isConnected === true) {
             // envioAutomaticoDesplazamientos()
             // sincronizar()
+            sincronizar()
         }
         obtenerBitacora()
         getCatalogos()
-        sincronizar()
     }, [])
 
     return (
