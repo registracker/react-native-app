@@ -62,8 +62,6 @@ export const PermissionsProvider = ({ children }) => {
 
             }
         } catch (err) {
-            console.log("🚀 ~ file: PermissionContext.jsx:21 ~ PermissionsProvider ~ navigation:", navigation)
-            console.log("🚀 ~ file: PermissionContext.jsx:62 ~ askLocationPermissions ~ err:", err)
             showToast('Ocurrió un error al conceder los permisos')
         }
 
@@ -75,7 +73,6 @@ export const PermissionsProvider = ({ children }) => {
             const grantedBackground = await PermissionsAndroid.request(
                 PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION,
             )
-            console.log("🚀 ~ file: PermissionContext.jsx:79 ~ askBackgroundLocations ~ grantedBackground:", grantedBackground)
             if (grantedBackground === PermissionsAndroid.RESULTS.GRANTED) {
                 setPermissions({
                     ...permissions,
