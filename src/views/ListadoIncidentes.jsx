@@ -77,10 +77,10 @@ export const ListadoIncidentes = () => {
         try {
             setCargando(true)
             await postIncidente(item)
-            await enviarIncidente(item.id)
+            await enviarIncidenteDatabase(item.id)
             items();
             reset()
-            mostrarNotificacion(mensaje)
+            // mostrarNotificacion(mensaje)
         } catch (error) {
             reset()
         } finally {

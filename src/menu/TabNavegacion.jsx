@@ -51,7 +51,7 @@ export const TabNavegacion = () => {
         const respose = await Promise.all([
             sincronizarReporteDesplazamiento(),
             sincronizarMarcadores(),
-            // sincronizarIncidentes(),
+            sincronizarIncidentes(),
             // envioAutomaticoDesplazamientos(),
             // getOptionEnvioAutomatico()
 
