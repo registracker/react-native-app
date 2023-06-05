@@ -218,13 +218,13 @@ export const Desplazamiento = () => {
           onOpen={() => setOpen(!open)}
           onClose={() => setOpen(!open)}
           color={styles.primary}>
-          <SpeedDial.Action
+          {/* <SpeedDial.Action
             title="Marcador"
             icon={stylesDesplazamiento.iconoMarcador}
             color={styles.primary}
             onPress={openModalMarcadores}
             titleStyle={{...styles.textBlack, borderRadius:15}}
-          />
+          /> */}
           <SpeedDial.Action
             title="Incidente"
             icon={stylesDesplazamiento.iconoIncidente}

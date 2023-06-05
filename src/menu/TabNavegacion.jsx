@@ -15,6 +15,7 @@ import { BitacoraContext } from '../context/bitacora/BitacoraContext';
 import { MarcadorContext } from '../context/levantamiento/MarcadorContext';
 import { IncidenteContext } from '../context/levantamiento/IncidenteContext';
 import { getOptionEnvioAutomatico } from '../utils/functions';
+import { Proximamente } from '../views/Proximamente';
 
 const Tab = createBottomTabNavigator();
 
@@ -85,7 +86,8 @@ export const TabNavegacion = () => {
             />
             <Tab.Screen
                 name="Contador"
-                component={Contador}
+                component={Proximamente}
+                // component={Contador}
                 options={{
                     title: 'Contador vehicular',
                     tabBarIcon: ({ color, size }) => (

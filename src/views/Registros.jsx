@@ -21,7 +21,7 @@ const menu = [
         title: 'Marcadores'
     },
     {
-        toGo: 'ListadoContador',
+        toGo: 'Proximamente',
         icon: 'car-3-plus',
         title: 'Contedor Vehicular'
     },
