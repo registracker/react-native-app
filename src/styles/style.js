@@ -180,7 +180,7 @@ export const styles = StyleSheet.create({
   },
   buttonSecondary: {
     backgroundColor: secondary,
-    borderRadius: 5,
+    borderRadius: 15,
     marginHorizontal: 5,
     padding: 10,
   },

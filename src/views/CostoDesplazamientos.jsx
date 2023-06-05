@@ -177,14 +177,15 @@ const stylesCosto = StyleSheet.create({
         width: '100%',
     },
     item: {
-        backgroundColor: '#e1e1e1',
+        backgroundColor: '#fff',
         padding: 15,
         marginVertical: 2,
-        borderRadius: 5,
+        borderRadius: 15,
         justifyContent: 'space-between',
         alignItems: 'center',
         flexDirection: 'row',
-
+        borderWidth:2,
+        borderColor: primary
     },
     elements: {
         flexDirection: 'row',
@@ -199,7 +200,7 @@ const stylesCosto = StyleSheet.create({
     button: {
         marginHorizontal: 10,
         marginVertical: 3,
-        borderRadius: 5,
+        borderRadius: 15,
     },
 
     centeredView: {
