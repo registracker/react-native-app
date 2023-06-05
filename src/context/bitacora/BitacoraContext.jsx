@@ -47,11 +47,11 @@ export const BitacoraProvider = ({ children }) => {
         } else if (isConnected) {
             const newBitacora = await getBitacota()
             const compare = compararArrays(data, newBitacora)
-            actualizarCatalogo(compare)
+            await actualizarCatalogo(compare)
+            dispatch({ type: 'obtener', bitacora: newBitacora })
 
         }
 
-        dispatch({ type: 'obtener', bitacora: data })
     }
 
     const compararArrays = (array1, array2) => {

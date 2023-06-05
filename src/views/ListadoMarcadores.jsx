@@ -11,6 +11,7 @@ import { postReporteMarcador } from '../services/marcadorServices'
 import { format } from 'date-fns';
 import { NetworkContext } from '../context/network/NetworkContext';
 import { useContext } from 'react';
+import { showToast } from '../utils/toast';
 
 
 export const ListadoMarcadores = () => {
@@ -68,6 +69,7 @@ export const ListadoMarcadores = () => {
         try {
             await deleteReporteMarcador(id)
             items();
+            showToast('Reporte de marcador eliminado exitosamente')
         } catch (error) {
         } finally {
             reset()
@@ -78,6 +80,7 @@ export const ListadoMarcadores = () => {
         try {
             setCargando(true)
             await postReporteMarcador(item, false)
+            showToast('Reporte de marcador enviado exitosamente')
             items();
         } catch (error) {
         } finally {

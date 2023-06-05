@@ -27,6 +27,8 @@ import {
 } from '../database/TblVehiculos';
 import {createTableBitacora} from '../database/TblBitacora';
 import {createTableReporteContador} from '../database/TblReporteContador';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {showToast} from './toast';
 
 export const getUbicacionActual = () => {
   return new Promise((resolve, reject) => {
@@ -68,4 +70,32 @@ export const limpiarCatalogos = async () => {
   await dropMarcadoresDatabase();
   await dropMediosDesplazamientos();
   await dropVehiculosDatabase();
+};
+
+export const getOptionEnvioAutomatico = async () => {
+  const desplazamiento = await AsyncStorage.getItem('opcion-desplazamiento');
+  const incidente = await AsyncStorage.getItem('opcion-incidente');
+  const marcador = await AsyncStorage.getItem('opcion-marcador');
+  const contador = await AsyncStorage.getItem('opcion-contador');
+
+  if (!desplazamiento) {
+    await AsyncStorage.setItem('opcion-desplazamiento', 'activo');
+  }
+  if (!incidente) {
+    await AsyncStorage.setItem('opcion-incidente', 'activo');
+  }
+  if (!marcador) {
+    await AsyncStorage.setItem('opcion-marcador', 'activo');
+  }
+  if (!contador) {
+    await AsyncStorage.setItem('opcion-contador', 'activo');
+  }
+};
+
+export const clearLocalStorage = async () => {
+  try {
+    await AsyncStorage.clear();
+  } catch (e) {
+    showToast('Ocurrió un error al limpiar el almacenamiento local.');
+  }
 };

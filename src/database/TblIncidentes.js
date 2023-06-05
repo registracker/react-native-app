@@ -150,7 +150,7 @@ export const deleteReporteIncidente = id => {
   });
 };
 
-export const enviarIncidente = id => {
+export const enviarIncidenteDatabase = id => {
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(

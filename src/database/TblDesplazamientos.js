@@ -20,11 +20,6 @@ export const createTableDesplazamiento = () => {
 };
 
 export const addItemDesplazamiento = data => {
-  if (!data) {
-    alert('Enter Data');
-    return;
-  }
-
   const registro = {
     ...data,
     desplazamiento: JSON.stringify(data.desplazamiento, null),

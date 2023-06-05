@@ -20,11 +20,12 @@ import { createTables, limpiarRegistros } from '../utils/functions';
 import NetInfo from "@react-native-community/netinfo";
 
 import { NetworkContext } from '../context/network/NetworkContext';
-import { DesplazamientoContext } from '../context/tracking/DesplazamientoContext';
-import { CatalogosContext } from '../context/store/CatalogosContext'
-import { BitacoraContext } from '../context/bitacora/BitacoraContext';
 import ListadoVehiculo from '../views/ListadoVehiculo';
 import ListadoContador from '../views/ListadoContador';
+import TestView from '../components/TestComponent';
+import { PermisosBackground } from '../views/PermisosBackground';
+
+
 
 const Stack = createNativeStackNavigator();
 
@@ -67,11 +68,10 @@ export const Navigation = () => {
     const { autenticado } = useContext(AuthContext);
     const { saveStatus } = useContext(NetworkContext)
 
-
     useEffect(() => {
         checkLocationPermission()
         createTables()
-        limpiarRegistros()
+        limpiarRegistros()      //Limpia tabla de reportes de Desplazamiento, incidentes y marcadores 
 
         const unsubscribe = NetInfo.addEventListener(state => saveStatus(state));
 
@@ -85,13 +85,12 @@ export const Navigation = () => {
         <Stack.Navigator
             screenOptions={options}
         >
-
             {
-                (permissions.locationStatus === 'granted')
+                (autenticado === 'autenticado')
                     ? <Stack.Group >
                         {
-                            (autenticado === 'autenticado')
-                                ? <Stack.Group >
+                            (permissions.locationStatus === 'granted' && permissions.locationBackground === 'granted') ?
+                                <Stack.Group >
                                     <Stack.Screen name='TabNavegacion' component={TabNavegacion} />
                                     <Stack.Screen name='ListadoDesplazamiento' component={ListadoDesplazamiento} options={{
                                         title: 'Listado de desplazamientos',
@@ -125,19 +124,32 @@ export const Navigation = () => {
                                         titleListadoVehiculo: 'Conteo vehicular',
                                         ...optionsView
                                     }} />
+                                    <Stack.Screen name='TestView' component={TestView} options={{
+                                        titleListadoVehiculo: 'Próximamente',
+                                        ...optionsView
+                                    }} />
                                 </Stack.Group>
-                                : <Stack.Group >
-                                    <Stack.Screen name='Home' component={Home} />
-                                    <Stack.Screen name='Login' component={Login} />
-                                    <Stack.Screen name='FormularioRegistro' component={FormularioRegistro} />
+                                :
+                                <Stack.Group >
+                                    {
+                                        (permissions.locationStatus === 'granted') ?
+                                            <Stack.Screen name='PermisosBackground' component={PermisosBackground} />
+                                            :
+                                            <Stack.Screen name="Permission" component={Permisos} />
+                                    }
                                 </Stack.Group>
+
+
                         }
-
                     </Stack.Group>
-
-
-                    : <Stack.Screen name="Permission" component={Permisos} />
+                    :
+                    <Stack.Group >
+                        <Stack.Screen name='Home' component={Home} />
+                        <Stack.Screen name='Login' component={Login} />
+                        <Stack.Screen name='FormularioRegistro' component={FormularioRegistro} />
+                    </Stack.Group>
             }
-        </Stack.Navigator>
+
+        </Stack.Navigator >
     )
 }

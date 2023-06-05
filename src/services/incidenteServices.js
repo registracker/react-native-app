@@ -8,7 +8,7 @@ const getIncidentes = async() => {
 }
 
 const postIncidente = async data => {
-  await http_axios('/api/reporte-incidente', null, 'post', data);
+  await instance('/api/reporte-incidente', null, 'post', data);
 };
 
 module.exports = {

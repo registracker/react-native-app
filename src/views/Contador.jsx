@@ -1,7 +1,7 @@
 import { ActivityIndicator, ImageBackground, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { primary, styles } from '../styles/style'
-import { Button, Icon, Input } from '@rneui/base'
+import { Badge, Button, FAB, Icon, Input } from '@rneui/base'
 import { ContadorContext } from '../context/levantamiento/ContadorContext'
 import { FlatList, ScrollView } from 'react-native-gesture-handler'
 import { CatalogosContext } from '../context/store/CatalogosContext'
@@ -16,6 +16,7 @@ const Contador = ({ navigation }) => {
     const [levantamiento, setLevantamiento] = useState()
     const [levantamientoErrors, setLevantamientoErrors] = useState()
     const [cargando, setCargando] = useState(false)
+    const [cantidad, setCantidad] = useState(0)
 
     const {
         listado,
@@ -26,7 +27,7 @@ const Contador = ({ navigation }) => {
         enviar,
         conectarse,
         agregarRegistro,
-        contador, 
+        contador,
         actualizarConteo
     } = useContext(ContadorContext)
 
@@ -87,7 +88,6 @@ const Contador = ({ navigation }) => {
             if (valido === 1) {
                 if (isConnected) {
                     await guardar(levantamiento.codigo);
-                    showToast('Levantamiento valido');
                 } else {
                     await conectarse()
                 }
@@ -119,7 +119,7 @@ const Contador = ({ navigation }) => {
     }
 
     const guardarRegistros = async () => {
-        if (contadorVehicular.length > 0){
+        if (contadorVehicular.length > 0) {
             await enviar(contadorVehicular);
         }
     }
@@ -130,7 +130,7 @@ const Contador = ({ navigation }) => {
         });
         setVehiculos(listado)
         setModalVisible(false)
-        showToast('Contador vehicular restablecido');            
+        showToast('Contador vehicular restablecido');
     }
 
 
@@ -138,7 +138,7 @@ const Contador = ({ navigation }) => {
         () => {
 
             return (
-                <View style={{ position: 'absolute', top: 10, left: 10, backgroundColor: primary, borderRadius:5 }}>
+                <View style={{ position: 'absolute', top: 10, left: 10, backgroundColor: primary, borderRadius: 5 }}>
                     <Icon onPress={guardarRegistros} type='material-community' name='content-save' color={'white'} size={40} />
                 </View>
             )
@@ -164,10 +164,10 @@ const Contador = ({ navigation }) => {
 
 
     useEffect(() => {
-            setVehiculos(listado)
-            if(listado?.length > 3 ){
-                navigation.navigate('ListadoVehiculo')
-            }
+        if (listado?.length > 3) {
+            navigation.navigate('ListadoVehiculo')
+        }
+        setVehiculos(listado)
     }, [listado])
 
     useEffect(() => {
@@ -175,16 +175,14 @@ const Contador = ({ navigation }) => {
 
     }, [contador])
 
+    useEffect(() => {
+        setCantidad(contadorVehicular.length)
+    }, [contadorVehicular])
+    
+
     useFocusEffect(
         React.useCallback(() => {
-            // Función a ejecutar al cambiar a la pestaña Profile
-            // Lógica adicional aquí
-
-            return () => {
-                // Función a ejecutar al salir de la pestaña Profile
-                guardarRegistros()
-                // Lógica adicional aquí
-            };
+            return () => guardarRegistros()
         }, [])
     );
 
@@ -263,7 +261,6 @@ const Contador = ({ navigation }) => {
                             <View style={{ width: '100%', borderRadius: 5, justifyContent: 'center', alignItems: 'center', }}>
                                 <Text style={styles.chip}>Código: {levantamientoActivo.codigo}</Text>
                                 <FlatListVehiculos />
-                                <SaveIcon />
                             </View> :
                             <View style={styles.modalView}>
                                 {
@@ -301,7 +298,20 @@ const Contador = ({ navigation }) => {
                                 }
                             </View>
                     }
-
+                    {
+                        activo &&
+                        <FAB
+                            icon={{ name: 'content-save', color: 'white', type: 'material-community' }}
+                            size="large"
+                            disabled={cantidad === 0 ? true: false}
+                            placement='right'
+                            upperCase
+                            onPress={guardarRegistros}
+                            color={primary}
+                            title='Guardar'
+                        >
+                        </FAB>
+                    }
                 </View>
                 <Modal
                     animationType="fade"
@@ -314,8 +324,8 @@ const Contador = ({ navigation }) => {
                     }}>
                     <View style={styles.centeredView}>
                         <View style={styles.modalView}>
-                            <Text style={styles.textBlack}>Ajustes</Text>
-                            <TouchableOpacity onPress={() => {setModalVisible(!modalVisible); navigation.navigate('ListadoVehiculo')}} style={{ width: '100%', height: 35, justifyContent: 'center', alignItems: 'center' }}>
+                            <Text style={styles.titleBlack}>Ajustes</Text>
+                            <TouchableOpacity onPress={() => { setModalVisible(!modalVisible); navigation.navigate('ListadoVehiculo') }} style={{ width: '100%', height: 35, justifyContent: 'center', alignItems: 'center' }}>
                                 <Text style={styles.textBlack}>
                                     Configurar Catálogos de vehiculos
                                 </Text>
@@ -331,7 +341,7 @@ const Contador = ({ navigation }) => {
                                 </Text>
                             </TouchableOpacity>
                             <TouchableOpacity onPress={() => setModalVisible(!modalVisible)} style={{ width: '100%', height: 35, justifyContent: 'center', alignItems: 'center' }}>
-                                <Text style={{ color: primary, size:18 }}>
+                                <Text style={{ color: primary, size: 18 }}>
                                     Cerrar ajustes
                                 </Text>
                             </TouchableOpacity>

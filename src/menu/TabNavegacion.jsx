@@ -14,6 +14,7 @@ import { CatalogosContext } from '../context/store/CatalogosContext';
 import { BitacoraContext } from '../context/bitacora/BitacoraContext';
 import { MarcadorContext } from '../context/levantamiento/MarcadorContext';
 import { IncidenteContext } from '../context/levantamiento/IncidenteContext';
+import { getOptionEnvioAutomatico } from '../utils/functions';
 
 const Tab = createBottomTabNavigator();
 
@@ -28,42 +29,45 @@ const options = {
     headerBackTitle: 'Atrás',
     headerBackTitleVisible: false,
     //   cardOverlayEnabled: true
-    tabBarStyle:{
+    tabBarStyle: {
         backgroundColor: 'white',
     }
 }
 
 export const TabNavegacion = () => {
 
-    const netInfo = useNetInfo();
-
     const { getCatalogos } = useContext(CatalogosContext)
     const { obtenerBitacora } = useContext(BitacoraContext)
 
     const { sincronizarMarcadores } = useContext(MarcadorContext)
     const { sincronizarIncidentes } = useContext(IncidenteContext)
+    const { isConnected } = useContext(NetworkContext)
 
-    const { envioAutomaticoDesplazamientos } = useContext(DesplazamientoContext)
+    const { sincronizarReporteDesplazamiento } = useContext(DesplazamientoContext)
 
-    const sincronizar = async() => {
+    const sincronizar = async () => {
         const respose = await Promise.all([
-             sincronizarMarcadores(),
-             sincronizarIncidentes(),
-             envioAutomaticoDesplazamientos()
+            sincronizarReporteDesplazamiento(),
+            sincronizarMarcadores(),
+            sincronizarIncidentes(),
+            // envioAutomaticoDesplazamientos(),
+            // getOptionEnvioAutomatico()
+
         ])
 
     }
 
     useEffect(() => {
-        if (netInfo?.isConnected === true) {
+        // console.log("🚀 ~ file: TabNavegacion.jsx:63 ~ useEffect ~ netInfo:", netInfo)
+        if (isConnected === true) {
             // envioAutomaticoDesplazamientos()
             // sincronizar()
+            sincronizar()
         }
         obtenerBitacora()
         getCatalogos()
-        sincronizar()
     }, [])
-    
+
     return (
         <Tab.Navigator screenOptions={options}>
             <Tab.Screen

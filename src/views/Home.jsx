@@ -2,23 +2,8 @@ import React, { useEffect } from 'react'
 import { Image, ImageBackground, Text, View } from 'react-native'
 import { styles } from '../styles/style'
 import { Button } from '@rneui/themed';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const Home = ({ navigation }) => {
-
-    useEffect(() => {
-        getOptionEnvioAutomatico();
-    }, [])
-
-    const getOptionEnvioAutomatico = async () => {
-        const desplazamiento = await AsyncStorage.getItem('opcion-desplazamiento');
-        const incidente = await AsyncStorage.getItem('opcion-incidente');
-        const marcador = await AsyncStorage.getItem('opcion-marcador');
-
-        if (!desplazamiento) await AsyncStorage.setItem('opcion-desplazamiento', 'activo')
-        if (!incidente) await AsyncStorage.setItem('opcion-incidente', 'activo')
-        if (!marcador) await AsyncStorage.setItem('opcion-marcador', 'activo')
-    }
 
     return (
         <View style={styles.container}>

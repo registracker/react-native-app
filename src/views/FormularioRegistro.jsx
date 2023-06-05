@@ -1,5 +1,6 @@
 import React, { useEffect, useState, createRef } from 'react';
 import {
+  ActivityIndicator,
   FlatList,
   ImageBackground,
   Modal,
@@ -34,6 +35,8 @@ export const FormularioRegistro = ({ route, navigation }) => {
   const [checked, setChecked] = React.useState(false);
   const toggleCheckbox = () => setChecked(!checked);
   const [modalVisible, setModalVisible] = useState(false);
+
+  const [loader, setLoader] = useState(true)
 
   const inputPassword = createRef();
   const inputPasswordConfirm = createRef();
@@ -175,6 +178,7 @@ export const FormularioRegistro = ({ route, navigation }) => {
     const obtenerRoles = async () => {
       const roles = await getRoles();
       setRoles(roles);
+      if(roles) setLoader(false);
     }
     obtenerRoles()
   }, [])
@@ -212,13 +216,18 @@ export const FormularioRegistro = ({ route, navigation }) => {
             <Text style={styles.title}>Registro de usuario</Text>
             <Text style={styles.text}>Elige un rol para tu usuario</Text>
             <View style={styles.row}>
-              <FlatList
-                data={roles}
-                renderItem={({ item }) => <Item data={item} />}
-                keyExtractor={item => item.id}
-                horizontal
-                contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}
-              />
+              {
+                !loader ?
+                  <FlatList
+                    data={roles}
+                    renderItem={({ item }) => <Item data={item} />}
+                    keyExtractor={item => item.id}
+                    horizontal
+                    contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}
+                  />
+                  :
+                  <ActivityIndicator size={'large'} color={'white'} />
+              }
 
             </View>
 

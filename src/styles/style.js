@@ -19,11 +19,6 @@ export const styles = StyleSheet.create({
     padding: 10,
     paddingTop: StatusBar.currentHeight,
   },
-  toolbar: {
-    flexDirection: 'row',
-    borderWidth: 2,
-    justifyContent: 'space-between',
-  },
   foobar: {
     flex: 2,
     alignItems: 'center',
@@ -81,30 +76,11 @@ export const styles = StyleSheet.create({
     backgroundColor: 'white',
 
   },
-  inputError: {
-    borderWidth: 3,
-    padding: 10,
-    height: 40,
-    width: '80%',
-    borderRadius: 5,
-    borderColor: primary,
-    paddingBottom: 0,
-    color: 'white',
-  },
   errorStyle: {
     fontSize: 12
   },
-  buttonSearch: {
-    backgroundColor: 'green',
-    borderRadius: 3,
-    margin: 5
-  },
   buttonPrimaryDisabled: {
     backgroundColor: primaryDisabled,
-    borderRadius: 3,
-  },
-  buttonSecondaryDisabled: {
-    backgroundColor: 'rgb(180, 173, 255)',
     borderRadius: 3,
   },
   buttonContainer: {
@@ -112,52 +88,21 @@ export const styles = StyleSheet.create({
     marginHorizontal: 50,
     marginVertical: 5,
   },
-  roundButtonDesplazamiento: {
-    width: 80,
-    height: 80,
-    marginHorizontal: '2%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 10,
-    borderRadius: 100,
-    backgroundColor: 'white',
-  },
-  roundButtonDesplazamientoSelected: {
-    width: 85,
-    height: 85,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 10,
-    borderRadius: 100,
-    backgroundColor: 'white',
-    borderColor: primary,
-    borderWidth: 5,
-  },
-  roundButtonCatalogos: {
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    margin: 8,
-    height: 90,
-    width: 90,
-  },
   centeredView: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    // backgroundColor: 'white',
   },
   textBlack: {
     color: 'black',
     textAlign: 'center',
     fontSize: 18,
-    marginBottom: 5
   },
   text: {
     color: 'white',
     textAlign: 'center',
     fontSize: 18,
-    marginBottom: 5,
   },
   modalText: {
     color: 'black',
@@ -194,7 +139,6 @@ export const styles = StyleSheet.create({
     borderWidth: 3,
     margin:5
   },
-  modalItems: { flex: 2, justifyContent: 'center', alignContent: 'center' },
   iconos: {
     width: 80,
     height: 80,
@@ -218,7 +162,7 @@ export const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginVertical: 10,
+    marginBottom: 5,
     color: 'white',
   },
   titleBlack: {
@@ -230,13 +174,13 @@ export const styles = StyleSheet.create({
   },
   buttonPrimary: {
     backgroundColor: primary,
-    borderRadius: 5,
+    borderRadius: 15,
     marginHorizontal: 5,
     padding: 10,
   },
   buttonSecondary: {
     backgroundColor: secondary,
-    borderRadius: 5,
+    borderRadius: 15,
     marginHorizontal: 5,
     padding: 10,
   },
@@ -293,22 +237,6 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
     marginVertical: 10,
     color: 'white',
-    flexDirection: 'row',
-  },
-  chipDisabled: {
-    borderWidth: 2,
-    borderColor: 'white',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    backgroundColor: 'grey',
-    borderRadius: 25,
-    fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginVertical: 10,
-    color: 'white',
-    justifyContent: 'center',
-    alignItems: 'center',
     flexDirection: 'row',
   },
   card: {

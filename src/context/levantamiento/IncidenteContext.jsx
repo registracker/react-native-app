@@ -1,7 +1,7 @@
 import { useContext, useReducer } from 'react';
 import { createContext } from 'react';
 import { incidenteReducer } from './incidenteReducer';
-import { sincronizarIncidentesDatabase, storeReporteIncidente } from '../../database/TblIncidentes';
+import { enviarIncidenteDatabase, sincronizarIncidentesDatabase, storeReporteIncidente } from '../../database/TblIncidentes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { postIncidente } from '../../services/incidenteServices'
 import { getUbicacionActual } from '../../utils/functions';
@@ -52,8 +52,17 @@ export const IncidenteProvider = ({ children }) => {
     }
 
     const sincronizarIncidentes = async () => {
-        const data = await sincronizarIncidentesDatabase()
-        // console.log("🚀 ~ file: IncidenteContext.jsx:56 ~ sincronizarIncidentes ~ data:", data)
+        const incidente = await AsyncStorage.getItem('opcion-incidente');
+        if (incidente === 'activo') {
+            const data = await sincronizarIncidentesDatabase()
+            if (data.length > 0) {
+                for await (const item of data) {
+                    await postIncidente(item)
+                    await enviarIncidenteDatabase(item.id)
+                }
+                showToast('Incidentes sincronizados')
+            }
+        }
     }
 
     return (

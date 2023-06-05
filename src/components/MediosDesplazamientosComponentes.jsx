@@ -16,10 +16,10 @@ export const MediosDesplazamientosComponentes = ({ selected, cambiarMedio }) => 
     const renderItem = ({ item }) => {
         return (
             <View style={{
-                margin: 10,
+                margin: 5,
                 justifyContent: 'center',
                 alignItems: 'center',
-                width: 100
+                width: 100,
             }}>
                 <TouchableOpacity
                     onPress={() => cambiarMedio(item)}
@@ -35,7 +35,7 @@ export const MediosDesplazamientosComponentes = ({ selected, cambiarMedio }) => 
                     />
 
                 </TouchableOpacity>
-                <Text adjustsFontSizeToFit style={styles.text}>
+                <Text  style={{...styles.text, fontWeight:'bold' }}>
                     {item.nombre}
                 </Text>
             </View>

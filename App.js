@@ -3,7 +3,6 @@
 import 'react-native-gesture-handler';
 
 import React from 'react';
-import Toast from 'react-native-toast-message';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { PermissionsProvider } from './src/context/permissions/PermissionContext';
@@ -31,7 +30,6 @@ function App() {
                     <MarcadorProvider>
                       <ContadorProvider>
                         <Navigation />
-                        <Toast />
                       </ContadorProvider>
                     </MarcadorProvider>
                   </IncidenteProvider>

@@ -1,5 +1,5 @@
-import { Text, StyleSheet, View, TouchableOpacity, ImageBackground } from 'react-native'
-import React, { Component } from 'react'
+import { Text, StyleSheet, TouchableOpacity, ImageBackground, FlatList } from 'react-native'
+import React from 'react'
 import { primary, styles } from '../styles/style'
 import { Icon } from '@rneui/base'
 import { useNavigation } from '@react-navigation/native'
@@ -32,6 +32,22 @@ export const Registros = () => {
 
     const navigation = useNavigation();
 
+    const Item = ({ item }) => (
+        <TouchableOpacity
+            key={item.toGo}
+            style={stylesRegistros.card}
+            onPress={() => navigation.navigate(item.toGo)}
+        >
+
+            <Icon
+                name={item.icon}
+                type='material-community'
+                color='white'
+                size={40}
+            />
+            <Text style={styles.title}>{item.title}</Text>
+        </TouchableOpacity>
+    );
 
     return (
         <ImageBackground
@@ -43,28 +59,11 @@ export const Registros = () => {
                 tintColor: 'transparent'
             }}
         >
-            <View style={stylesRegistros.body}>
-
-                {
-                    menu.map(item => (
-                        <TouchableOpacity
-                            key={item.toGo}
-                            style={stylesRegistros.card}
-                            onPress={() => navigation.navigate(item.toGo)}
-                        >
-                            <Icon
-                                name={item.icon}
-                                type='material-community'
-                                color='white'
-                                size={26}
-                            />
-                                <Text style={styles.text}>{item.title}</Text>
-                        </TouchableOpacity>
-
-                    ))
-                }
-
-            </View>
+            <FlatList
+                data={menu}
+                renderItem={({ item }) => <Item item={item} />}
+                keyExtractor={item => item.toGo}
+            />
         </ImageBackground>
     )
 }
@@ -78,13 +77,11 @@ const stylesRegistros = StyleSheet.create({
         flexWrap: 'wrap',
     },
     card: {
-        borderRadius: 5,
+        borderRadius: 20,
         justifyContent: 'center',
         alignItems: 'center',
         padding: 5,
         margin: 10,
-        width: '90%',
-        height: '14%',
         backgroundColor: primary
     },
     cardText: {

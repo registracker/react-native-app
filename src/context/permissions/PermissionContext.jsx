@@ -1,5 +1,7 @@
-import React, { createContext, useEffect, useRef, useState } from "react";
+import React, { createContext, useContext, useEffect, useRef, useState } from "react";
 import { AppState, PermissionsAndroid } from "react-native";
+import { showToast } from "../../utils/toast";
+import { NavigationContext } from '@react-navigation/native';
 
 export const permissionsInitState = {
     locationStatus: 'unavailable',
@@ -15,38 +17,24 @@ export const PermissionsProvider = ({ children }) => {
     const [appStateVisible, setAppStateVisible] = useState(appState.current);
     const [permissions, setPermissions] = useState(permissionsInitState)
 
+    const navigation = useContext(NavigationContext)
+
     const askLocationPermissions = async () => {
-        // permissionsStatus = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
-        // if (permissionsStatus === 'blocked') openSettings();
 
         try {
             const granted = await PermissionsAndroid.request(
                 PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
             )
-            // const granted = await PermissionsAndroid.requestMultiple([
-            //     PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-            //     PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
-            //     PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION,
-            // ])
             if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                // const grantedBackground = await PermissionsAndroid.request(
-                //     PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION,
-                //     )
-                //     if (grantedBackground === PermissionsAndroid.RESULTS.GRANTED) {
-                //         setPermissions({
-                //             ...permissions,
-                //             locationStatus: 'granted',
-                //             locationBackground: 'granted',
-                //             intentos: 0,
-                //         })
-                //     }
-                    setPermissions({
-                        ...permissions,
-                        locationStatus: 'granted',
-                        intentos: 0,
-        
-                    })
 
+                setPermissions({
+                    ...permissions,
+                    locationStatus: 'granted',
+                    intentos: 0,
+
+                })
+                // navigation.navigate('PermisosBackground')
+                return true;
             } else if (PermissionsAndroid.RESULTS.DENIED === granted) {
                 setPermissions({
                     ...permissions,
@@ -54,48 +42,98 @@ export const PermissionsProvider = ({ children }) => {
                     intentos: permissions.intentos + 1,
 
                 })
+                return false;
             } else if (PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN === granted) {
-                if (permissions.intentos < 1){
+                if (permissions.intentos < 1) {
                     setPermissions({
                         ...permissions,
                         locationStatus: 'denied',
-                        intentos: permissions.intentos + 1, 
+                        intentos: permissions.intentos + 1,
                     })
-                }else {
+                    return false;
+                } else {
                     setPermissions({
                         ...permissions,
                         locationStatus: 'never_ask_again',
                         intentos: 0,
                     })
+                    return false;
                 }
-                
+
             }
         } catch (err) {
+            showToast('Ocurrió un error al conceder los permisos')
         }
 
 
+    }
+
+    const askBackgroundLocations = async () => {
+        try {
+            const grantedBackground = await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION,
+            )
+            if (grantedBackground === PermissionsAndroid.RESULTS.GRANTED) {
+                setPermissions({
+                    ...permissions,
+                    locationBackground: 'granted',
+                })
+            } if (PermissionsAndroid.RESULTS.DENIED === grantedBackground) {
+                setPermissions({
+                    ...permissions,
+                    locationBackground: 'denied',
+                    intentos: permissions.intentos + 1,
+
+                })
+            } else if (PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN === grantedBackground) {
+                if (permissions.intentos < 1) {
+                    setPermissions({
+                        ...permissions,
+                        locationBackground: 'denied',
+                        intentos: permissions.intentos + 1,
+                    })
+                } else {
+                    setPermissions({
+                        ...permissions,
+                        locationBackground: 'never_ask_again',
+                        intentos: 0,
+                    })
+                }
+
+            }
+        } catch (error) {
+            showToast('Ocurrió un error al conceder los permisos')
+        }
     }
 
     const checkLocationPermission = async () => {
         const granted = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
 
         if (granted) {
-            setPermissions({
-                ...permissions,
-                locationStatus: 'granted'
-            });
+            const grantedBackground = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION);
+            if (grantedBackground) {
+                setPermissions({
+                    ...permissions,
+                    locationStatus: 'granted',
+                    locationBackground: 'granted'
+                });
+
+            } else {
+
+                setPermissions({
+                    ...permissions,
+                    locationStatus: 'granted',
+                    locationBackground: 'denied'
+                });
+            }
         }
         else {
             setPermissions({
-                ...permissions, 
-                locationStatus: 'denied'
+                ...permissions,
+                locationStatus: 'denied',
+                locationBackground: 'denied'
             });
         }
-
-        // setPermissions({
-        //     ...permissions,
-        //     locationStatus: granted
-        // });
     }
 
     useEffect(() => {
@@ -111,12 +149,13 @@ export const PermissionsProvider = ({ children }) => {
         };
     }, []);
 
-    
+
 
     return (
         <PermissionContext.Provider value={{
             permissions,
             askLocationPermissions,
+            askBackgroundLocations,
             checkLocationPermission
         }}>
             {children}

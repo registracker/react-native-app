@@ -5,11 +5,12 @@ import { useFocusEffect } from '@react-navigation/native';
 
 import { Loading } from '../components/Loading'
 import { styles } from '../styles/style';
-import { deleteReporteIncidente, enviarIncidente, getReporteIncidentesDatabase } from '../database/TblIncidentes';
+import { deleteReporteIncidente, enviarIncidente, enviarIncidenteDatabase, getReporteIncidentesDatabase } from '../database/TblIncidentes';
 import { postIncidente } from '../services/incidenteServices'
 import { SearchBar } from '@rneui/themed';
 import { format } from 'date-fns';
 import { NetworkContext } from '../context/network/NetworkContext';
+import { showToast } from '../utils/toast';
 
 export const ListadoIncidentes = () => {
 
@@ -58,12 +59,11 @@ export const ListadoIncidentes = () => {
     }
 
     const deleteIncidentes = async (id, reset) => {
-        const mensaje = 'Incidente eliminado. ';
         try {
             await deleteReporteIncidente(id)
             items();
             reset()
-            mostrarNotificacion(mensaje)
+            showToast('Reporte de incidente eliminado exitosamente')
 
         } catch (error) {
             reset()
@@ -72,15 +72,14 @@ export const ListadoIncidentes = () => {
 
 
     const enviarReporteIncidente = async (item, reset) => {
-        const mensaje = 'Incidente enviado exitosamente.';
 
         try {
             setCargando(true)
             await postIncidente(item)
-            await enviarIncidente(item.id)
+            await enviarIncidenteDatabase(item.id)
             items();
             reset()
-            mostrarNotificacion(mensaje)
+            showToast('Reporte de incidente enviado exitosamente')
         } catch (error) {
             reset()
         } finally {
