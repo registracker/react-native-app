@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Icon, ListItem } from '@rneui/base';
 import { useContext } from 'react';
-import { ActivityIndicator, ImageBackground, Modal, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { ActivityIndicator, ImageBackground, Modal, ScrollView, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import { primary, styles } from '../styles/style';
 import { AuthContext } from '../context/authentication/AuthContext'
 import { CatalogosContext } from '../context/store/CatalogosContext';
@@ -11,6 +11,7 @@ import { Switch } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { format } from 'date-fns';
 import { NetworkContext } from '../context/network/NetworkContext';
+import { useCallback } from 'react';
 
 
 export const Ajustes = () => {
@@ -21,6 +22,7 @@ export const Ajustes = () => {
   const [loading, setLoading] = useState(false)
   const [sincronizarLoading, setSincronizarLoading] = useState(false)
   const [expanded, setExpanded] = useState(false);
+  const [expandedOptions, setExpandedOptions] = useState(false);
 
   const [checkOpcionDesplazamiento, setCheckOpcionDesplazamiento] = useState()
   const [checkOpcionIncidente, setCheckOpcionIncidente] = useState()
@@ -37,18 +39,12 @@ export const Ajustes = () => {
     logout();
   }
 
-  const sincronizarCatalogos = async () => {
-    try {
-      if (isConnected) {
-        setSincronizarLoading(true)
-
-      }
-    } catch (error) {
-    }
-    finally {
-      setSincronizarLoading(false)
-    }
-  }
+  const sincronizarCatalogos = () => {
+    setSincronizarLoading(true);
+    setTimeout(() => {
+      setSincronizarLoading(false);
+    }, 2000);
+  };
 
   const sincronizarDesplazamiento = async (value) => {
     const estado = value ? 'activo' : 'inactivo'
@@ -132,41 +128,55 @@ export const Ajustes = () => {
     )
   }
 
-  const OpcionDesplazamiento = () => {
-    return (
-      <ListItem>
-        <ListItem.Content>
-          <ListItem.Title>Envió automático de registros de desplazamientos</ListItem.Title>
-        </ListItem.Content>
-        <Switch
-          trackColor={{ false: '#d8d8db', true: '#d8d8db' }}
-          thumbColor={checkOpcionDesplazamiento ? primary : '#f4f3f4'}
-          value={checkOpcionDesplazamiento}
-          onValueChange={(value) => sincronizarDesplazamiento(value)}
-        />
 
-      </ListItem>
-    )
-  }
-  const OpcionIncidente = () => {
-    return (
-      <ListItem>
-        <ListItem.Content>
-          <ListItem.Title>Envió automático de registros de incidentes</ListItem.Title>
-        </ListItem.Content>
-        <Switch
-          trackColor={{ false: '#d8d8db', true: '#d8d8db' }}
-          thumbColor={checkOpcionIncidente ? primary : '#f4f3f4'}
-          value={checkOpcionIncidente}
-          onValueChange={(value) => sincronizarIncidente(value)}
-        />
+  const OpcionDesplazamiento = useCallback(
+    () => {
+      return (
+        <ListItem>
+          <Icon name='run' type='material-community' color='grey' />
+          <ListItem.Content>
+            <ListItem.Title>Envió automático de registros de desplazamientos</ListItem.Title>
+          </ListItem.Content>
+          <Switch
+            trackColor={{ false: '#d8d8db', true: '#d8d8db' }}
+            thumbColor={checkOpcionDesplazamiento ? primary : '#f4f3f4'}
+            value={checkOpcionDesplazamiento}
+            onValueChange={(value) => sincronizarDesplazamiento(value)}
+          />
 
-      </ListItem>
-    )
-  }
+        </ListItem>
+      )
+    },
+    [checkOpcionDesplazamiento],
+  )
+
+  const OpcionIncidente = useCallback(
+    () => {
+      return (
+        <ListItem>
+          <Icon name='car-cog' type='material-community' color='grey' />
+
+          <ListItem.Content>
+            <ListItem.Title>Envió automático de registros de incidentes</ListItem.Title>
+          </ListItem.Content>
+          <Switch
+            trackColor={{ false: '#d8d8db', true: '#d8d8db' }}
+            thumbColor={checkOpcionIncidente ? primary : '#f4f3f4'}
+            value={checkOpcionIncidente}
+            onValueChange={(value) => sincronizarIncidente(value)}
+          />
+
+        </ListItem>
+      )
+    },
+    [checkOpcionIncidente],
+  )
+
   const OpcionMarcador = () => {
     return (
       <ListItem>
+        <Icon name='traffic-light' type='material-community' color='grey' />
+
         <ListItem.Content>
           <ListItem.Title>Envió automático de registros de marcadores</ListItem.Title>
         </ListItem.Content>
@@ -183,6 +193,7 @@ export const Ajustes = () => {
   const OpcionContador = () => {
     return (
       <ListItem>
+        <Icon name='car-3-plus' type='material-community' color='grey' />
         <ListItem.Content>
           <ListItem.Title>Envió automático de registros de Contadores</ListItem.Title>
         </ListItem.Content>
@@ -196,71 +207,72 @@ export const Ajustes = () => {
       </ListItem>
     )
   }
-  
+
   return (
-    <View style={{ ...styles.container, backgroundColor: '#bdbdbd'}}>
-
-      <View style={{ flex: 10 }}>
-        <SincronizarList />
-        <OpcionDesplazamiento />
-        <OpcionIncidente />
-        <OpcionMarcador />
-        <OpcionContador/>
-      </View>
-      <View style={styles.foobar}>
-        <Button
-          title="Cerrar sesión"
-          type="clear"
-          onPress={() => { setModalVisible(true) }}
-          titleStyle={{ color: styles.primary, fontSize: 20, }}
-          icon={
-            <Icon
-              name="logout"
-              type="material-community"
-              size={15}
-              color={styles.primary}
-            />
-          }
-          iconRight
-        />
-        <View style={{ marginTop: 10, justifyContent: 'center', alignContent: 'center' }}>
-
-          <Text style={styles.text}>© {fecha} Universidad de El Salvador.</Text>
-          <Text style={styles.text}>Todos los derechos reservados</Text>
-        </View>
-
-      </View>
-      <Modal
-        animationType="fade"
-        visible={modalVisible}
-        transparent={true}
-        statusBarTranslucent={true}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <View style={stylesAjustes.centeredView}>
-          <View style={stylesAjustes.modalView}>
-            {/* <Text style={{ ...styles.titleText, color: primary, fontSize: 20 }}>Cerrar sesión</Text> */}
-            <Text style={{ ...styles.titleText, color: primary, fontSize: 20, fontWeight: 'bold' }}>¿Seguro de cerrar sesión?</Text>
-            <Text style={{ ...styles.titleText, color: 'gray', fontSize: 14, fontWeight: 'normal' }}>Cualquier registros no sincronizado se perderá</Text>
-            <View style={{
-              flexDirection: 'row'
-            }}>
-              {
-                loading ? (
-                  <ActivityIndicator size="large" color={primary} />
-                ) : (
-                  <>
-                    <Button title="Sí, seguro" type="clear" titleStyle={{ color: primary }} onPress={() => { cerrarSesion() }} />
-                    <Button title="Cancelar" type="clear" titleStyle={{ color: 'gray' }} onPress={() => { setModalVisible(!modalVisible) }} />
-                  </>
-                )
-              }
+    <View style={{ backgroundColor: 'white', flex: 1, width: '100%'}}>
+      <ScrollView >
+        <View >
+          <Modal
+            animationType="fade"
+            visible={modalVisible}
+            transparent={true}
+            statusBarTranslucent={true}
+            onRequestClose={() => {
+              setModalVisible(!modalVisible);
+            }}
+          >
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <Text style={{ ...styles.titleText, color: primary, fontSize: 20, fontWeight: 'bold' }}>¿Seguro de cerrar sesión?</Text>
+                <Text style={{ ...styles.titleText, color: 'gray', fontSize: 14, fontWeight: 'normal' }}>Cualquier registros no sincronizado se perderá</Text>
+                <View style={{
+                  flexDirection: 'row'
+                }}>
+                  {
+                    loading ? (
+                      <ActivityIndicator size="large" color={primary} />
+                    ) : (
+                      <>
+                        <Button title="Sí, seguro" type="clear" titleStyle={{ color: primary }} onPress={() => { cerrarSesion() }} />
+                        <Button title="Cancelar" type="clear" titleStyle={{ color: 'gray' }} onPress={() => { setModalVisible(!modalVisible) }} />
+                      </>
+                    )
+                  }
+                </View>
+              </View>
             </View>
-          </View>
+          </Modal>
+          <SincronizarList />
+          <OpcionDesplazamiento />
+          <OpcionIncidente />
+          <OpcionMarcador />
+          <OpcionContador />
         </View>
-      </Modal>
+      </ScrollView>
+        <View style={styles.foobar}>
+          <Button
+            title="Cerrar sesión"
+            type="clear"
+            onPress={() => { setModalVisible(true) }}
+            titleStyle={{fontSize: 20, color: primary}}
+            icon={
+              <Icon
+                name="logout"
+                type="material-community"
+                size={20}
+                color={primary}
+              />
+            }
+            iconRight
+          />
+          <View style={{ marginTop: 10, justifyContent: 'center', alignContent: 'center' }}>
+
+            <Text style={{...styles.text, color:'grey'}}>© {fecha} Universidad de El Salvador.</Text>
+            <Text style={{...styles.text, color:'grey'}}>Todos los derechos reservados</Text>
+          </View>
+
+        </View>
+
 
     </View>
   )
