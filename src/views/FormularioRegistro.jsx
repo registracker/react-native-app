@@ -17,6 +17,7 @@ import { primary, styles } from '../styles/style';
 import { Button, CheckBox, Icon } from '@rneui/base';
 import { Input } from '@rneui/themed';
 import { getRoles, register } from '../services/aurtenticacionServices';
+import { getTerminosCondiciones } from '../services/terminosCondicionesServices';
 
 export const FormularioRegistro = ({ route, navigation }) => {
   const [email, setEmail] = useState('');
@@ -37,6 +38,9 @@ export const FormularioRegistro = ({ route, navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const [loader, setLoader] = useState(true)
+  
+  const [loaderTerminos, setLoaderTerminos] = useState(true)
+  const [terminos, setTerminos] = useState()
 
   const inputPassword = createRef();
   const inputPasswordConfirm = createRef();
@@ -161,7 +165,8 @@ export const FormularioRegistro = ({ route, navigation }) => {
       email &&
       passwordConfirm &&
       isEmail() &&
-      selectionRol
+      selectionRol &&
+      checked
     ) {
       setPasswordErrorMessage();
       setPasswordConfirmErrorMessage();
@@ -178,9 +183,15 @@ export const FormularioRegistro = ({ route, navigation }) => {
     const obtenerRoles = async () => {
       const roles = await getRoles();
       setRoles(roles);
-      if(roles) setLoader(false);
+      if (roles) setLoader(false);
+    }
+    const obtenerTerminosCondiciones = async () => {
+      const data = await getTerminosCondiciones();
+      setTerminos(data[0].descripcion);
+      if (data) setLoaderTerminos(false);
     }
     obtenerRoles()
+    obtenerTerminosCondiciones()
   }, [])
 
   const Item = ({ data }) => (
@@ -299,10 +310,10 @@ export const FormularioRegistro = ({ route, navigation }) => {
                 onBlur={matchPassword}
               />
               {/* TODO: Mostrar el texto de términos y condiciones */}
-              {/* <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                 <CheckBox
                   checked={checked}
-                  onPress={viewTerminosCondiciones}
+                  onPress={() => setChecked(true)}
                   onIconPress={toggleCheckbox}
                   iconType="material-community"
                   checkedIcon="checkbox-marked"
@@ -326,7 +337,7 @@ export const FormularioRegistro = ({ route, navigation }) => {
                   He leído, acepto los
                   términos y condiciones
                 </Text>
-              </View> */}
+              </View>
             </View>
           </View>
 
@@ -350,27 +361,33 @@ export const FormularioRegistro = ({ route, navigation }) => {
             onRequestClose={() => {
               setModalVisible(!modalVisible);
             }}>
-            <View style={styles.centeredView}>
+            <View style={{ ...styles.centeredView, backgroundColor: 'white' }}>
               <View style={{
                 flex: 1
               }}>
                 <View style={{
                   flex: 7
                 }}>
-                  <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Términos y Condiciones</Text>
-                  <Text style={{
-                    fontSize: 11,
-                    textAlign: 'center',
-                  }}>LOREM</Text>
+                  <Text style={{ fontSize: 16, fontWeight: 'bold', textAlign: 'center', }}>Términos y Condiciones</Text>
+                  <ScrollView >
+                    {
+                      loaderTerminos ?
+                        <ActivityIndicator size={'large'} color={'white'} />
+                        :
+                        <Text style={{
+                          fontSize: 11,
+                          textAlign: 'center',
+                        }}>{terminos}.</Text>
+
+                    }
+                  </ScrollView>
                 </View>
                 <View style={{
-                  flex: 0.5
+                  flex: 0.5,
+                  justifyContent: 'center',
+                  alignContent: 'center',
                 }}>
-                  <Pressable
-                    style={[styles.button, styles.buttonClose]}
-                    onPress={() => setModalVisible(!modalVisible)}>
-                    <Text style={styles.textStyle}>Cerrar</Text>
-                  </Pressable>
+                  <Button title="Cerrar" type="clear" titleStyle={{ color: primary }} onPress={() => setModalVisible(!modalVisible)} />
                 </View>
               </View>
             </View>
