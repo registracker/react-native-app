@@ -39,7 +39,7 @@ export const FormularioRegistro = ({ route, navigation }) => {
 
   const [loader, setLoader] = useState(true)
   
-  const [loaderTerminos, setLoaderTerminos] = useState(false)
+  const [loaderTerminos, setLoaderTerminos] = useState(true)
   const [terminos, setTerminos] = useState()
 
   const inputPassword = createRef();
@@ -187,7 +187,7 @@ export const FormularioRegistro = ({ route, navigation }) => {
     }
     const obtenerTerminosCondiciones = async () => {
       const data = await getTerminosCondiciones();
-      setTerminos(data[0].descripcion);
+      setTerminos(data.descripcion);
       setLoaderTerminos(false);
     }
     obtenerRoles()
