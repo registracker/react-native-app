@@ -16,9 +16,14 @@ import { ContadorProvider } from './src/context/levantamiento/ContadorContext';
 import { IncidenteProvider } from './src/context/levantamiento/IncidenteContext';
 import { BitacoraProvider } from './src/context/bitacora/BitacoraContext';
 
+const linking = {
+  prefixes: ['registracker://']
+};
+
+
 function App() {
   return (
-    <NavigationContainer>
+    <NavigationContainer linking={linking}>
       <PermissionsProvider>
         <NetworkProvider>
 
