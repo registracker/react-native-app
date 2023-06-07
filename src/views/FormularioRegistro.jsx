@@ -186,9 +186,10 @@ export const FormularioRegistro = ({ route, navigation }) => {
       if (roles) setLoader(false);
     }
     const obtenerTerminosCondiciones = async () => {
-      const data = await getTerminosCondiciones();
+      const {data} = await getTerminosCondiciones();
       setTerminos(data[0].descripcion);
-      if (data) setLoaderTerminos(false);
+      setLoaderTerminos(false);
+      // if (true) setLoaderTerminos(false);
     }
     obtenerRoles()
     obtenerTerminosCondiciones()
@@ -372,11 +373,14 @@ export const FormularioRegistro = ({ route, navigation }) => {
                   <ScrollView >
                     {
                       loaderTerminos ?
-                        <ActivityIndicator size={'large'} color={'white'} />
+                        <ActivityIndicator size={'large'} color={primary} />
                         :
                         <Text style={{
-                          fontSize: 11,
-                          textAlign: 'center',
+                          fontSize: 12,
+                          textAlign: 'justify',
+                          // textDecorationLine: 'line-through',
+                          color: 'black',
+                          textTransform:'uppercase'
                         }}>{terminos}.</Text>
 
                     }
