@@ -22,8 +22,8 @@ import NetInfo from "@react-native-community/netinfo";
 import { NetworkContext } from '../context/network/NetworkContext';
 import ListadoVehiculo from '../views/ListadoVehiculo';
 import ListadoContador from '../views/ListadoContador';
-import TestView from '../components/TestComponent';
 import { PermisosBackground } from '../views/PermisosBackground';
+import { Proximamente } from '../views/Proximamente';
 
 
 
@@ -124,7 +124,7 @@ export const Navigation = () => {
                                         titleListadoVehiculo: 'Conteo vehicular',
                                         ...optionsView
                                     }} />
-                                    <Stack.Screen name='TestView' component={TestView} options={{
+                                    <Stack.Screen name='Proximamente' component={Proximamente} options={{
                                         titleListadoVehiculo: 'Próximamente',
                                         ...optionsView
                                     }} />

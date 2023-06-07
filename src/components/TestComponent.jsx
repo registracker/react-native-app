@@ -3,7 +3,7 @@ import React from 'react'
 import { styles } from '../styles/style'
 import { Image } from '@rneui/base'
 
-const TestView = () => {
+const Proximamente = () => {
     return (
         <View>
             <View style={styles.body}>
@@ -16,4 +16,4 @@ const TestView = () => {
     )
 }
 
-export default TestView
+export default Proximamente
