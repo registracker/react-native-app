@@ -2,6 +2,7 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '@env';
+import { showToast } from '../utils/toast';
 
 export const http_axios = async (url, params, method = 'get', data) => {
   const baseURL = API_URL || 'http://45.33.119.69:8100';
@@ -110,22 +111,22 @@ export const instance = async (url, params = {}, method = 'get', data = {}) => {
   } catch (error) {
     switch (error.response?.status) {
       case 400:
-        console.log('BAD REQUEST');
+        showToast('BAD REQUEST. STATUS: 400')
         break;
       case 401:
-        console.log('UNAUTHORIZED');
+        showToast('UNAUTHORIZED. STATUS: 401')
         break;
       case 403:
-        console.log('FORBIDDEN');
+        showToast('FORBIDDEN. STATUS: 403')
         break;
       case 404:
-        console.log('NOT FOUND');
+        showToast('NOT FOUND. STATUS: 404')
         break;
       case 500:
-        console.log('SERVER ERROR');
+        showToast('SERVER ERROR. STATUS: 500')
         break;
       case 503:
-        console.log('SERVICE UNAVAILABLE');
+        showToast('SERVICE UNAVAILABLE. STATUS: 503')
         break;
       default:
         console.log(error);
