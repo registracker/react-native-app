@@ -24,6 +24,7 @@ import ListadoVehiculo from '../views/ListadoVehiculo';
 import ListadoContador from '../views/ListadoContador';
 import { PermisosBackground } from '../views/PermisosBackground';
 import { Proximamente } from '../views/Proximamente';
+import { TerminosCondiciones } from '../views/TerminosCondiciones';
 
 
 
@@ -85,73 +86,76 @@ export const Navigation = () => {
         <Stack.Navigator
             screenOptions={options}
         >
-            {
-                (permissions.locationStatus === 'granted' && permissions.locationBackground === 'granted') ?
-                    <Stack.Group >
-                        {
-                            (autenticado === 'autenticado') ?
-                                <Stack.Group >
-                                    <Stack.Screen name='TabNavegacion' component={TabNavegacion} />
-                                    <Stack.Screen name='ListadoDesplazamiento' component={ListadoDesplazamiento} options={{
-                                        title: 'Listado de desplazamientos',
-                                        ...optionsView
-                                    }} />
-                                    <Stack.Screen name='ListadoIncidentes' component={ListadoIncidentes} options={{
-                                        title: 'Listado de incidentes',
-                                        ...optionsView
-                                    }} />
-                                    <Stack.Screen name='ListadoMarcadores' component={ListadoMarcadores} options={{
-                                        title: 'Listado de marcadores',
-                                        ...optionsView
-                                    }} />
-                                    <Stack.Screen name='CostosDesplazamiento' component={CostoDesplazamientos} options={{
-                                        title: 'Costos',
-                                        ...optionsView
-                                    }} />
-                                    <Stack.Screen name='ListadoRutaTransporte' component={ListadoRutaTransporte} options={{
-                                        title: 'Listado de ruta de transporte',
-                                        ...optionsView
-                                    }} />
-                                    <Stack.Screen name='Marcador' component={Marcador} options={{
-                                        title: 'Registrar marcador',
-                                        ...optionsView
-                                    }} />
-                                    <Stack.Screen name='ListadoVehiculo' component={ListadoVehiculo} options={{
-                                        titleListadoVehiculo: 'Listado de vehículos',
-                                        ...optionsView
-                                    }} />
-                                    <Stack.Screen name='ListadoContador' component={ListadoContador} options={{
-                                        titleListadoVehiculo: 'Conteo vehicular',
-                                        ...optionsView
-                                    }} />
-                                    <Stack.Screen name='Proximamente' component={Proximamente} options={{
-                                        titleListadoVehiculo: 'Próximamente',
-                                        ...optionsView
-                                    }} />
-                                </Stack.Group>
-                                :
-                                <Stack.Group >
+            <Stack.Group >
 
-                                    <Stack.Screen name='Home' component={Home} />
-                                    <Stack.Screen name='Login' component={Login} />
-                                    <Stack.Screen name='FormularioRegistro' component={FormularioRegistro} />
-                                </Stack.Group>
+                {
+                    (permissions.locationStatus === 'granted' && permissions.locationBackground === 'granted') ?
+                        <Stack.Group >
+                            {
+                                (autenticado === 'autenticado') ?
+                                    <Stack.Group >
+                                        <Stack.Screen name='TabNavegacion' component={TabNavegacion} />
+                                        <Stack.Screen name='ListadoDesplazamiento' component={ListadoDesplazamiento} options={{
+                                            title: 'Listado de desplazamientos',
+                                            ...optionsView
+                                        }} />
+                                        <Stack.Screen name='ListadoIncidentes' component={ListadoIncidentes} options={{
+                                            title: 'Listado de incidentes',
+                                            ...optionsView
+                                        }} />
+                                        <Stack.Screen name='ListadoMarcadores' component={ListadoMarcadores} options={{
+                                            title: 'Listado de marcadores',
+                                            ...optionsView
+                                        }} />
+                                        <Stack.Screen name='CostosDesplazamiento' component={CostoDesplazamientos} options={{
+                                            title: 'Costos',
+                                            ...optionsView
+                                        }} />
+                                        <Stack.Screen name='ListadoRutaTransporte' component={ListadoRutaTransporte} options={{
+                                            title: 'Listado de ruta de transporte',
+                                            ...optionsView
+                                        }} />
+                                        <Stack.Screen name='Marcador' component={Marcador} options={{
+                                            title: 'Registrar marcador',
+                                            ...optionsView
+                                        }} />
+                                        <Stack.Screen name='ListadoVehiculo' component={ListadoVehiculo} options={{
+                                            titleListadoVehiculo: 'Listado de vehículos',
+                                            ...optionsView
+                                        }} />
+                                        <Stack.Screen name='ListadoContador' component={ListadoContador} options={{
+                                            titleListadoVehiculo: 'Conteo vehicular',
+                                            ...optionsView
+                                        }} />
+                                        <Stack.Screen name='Proximamente' component={Proximamente} options={{
+                                            titleListadoVehiculo: 'Próximamente',
+                                            ...optionsView
+                                        }} />
+                                    </Stack.Group>
+                                    :
+                                    <Stack.Group >
+
+                                        <Stack.Screen name='Home' component={Home} />
+                                        <Stack.Screen name='Login' component={Login} />
+                                        <Stack.Screen name='FormularioRegistro' component={FormularioRegistro} />
+                                    </Stack.Group>
 
 
-                        }
-                    </Stack.Group>
-                    :
-                    <Stack.Group >
-                        {
-                            (permissions.locationStatus === 'granted') ?
-                                <Stack.Screen name='PermisosBackground' component={PermisosBackground} />
-                                :
-                                <Stack.Screen name="Permission" component={Permisos} />
-                        }
+                            }
+                        </Stack.Group>
+                        :
+                        <Stack.Group >
+                            {
+                                (permissions.locationStatus === 'granted') ?
+                                    <Stack.Screen name='PermisosBackground' component={PermisosBackground} />
+                                    :
+                                    <Stack.Screen name="Permission" component={Permisos} />
+                            }
+                        </Stack.Group>
+                }
+                <Stack.Screen name="TerminosCondiciones" component={TerminosCondiciones} />
 
-                    </Stack.Group>
-            }
-
+            </Stack.Group>
         </Stack.Navigator >
     )
 }

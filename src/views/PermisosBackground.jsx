@@ -4,7 +4,7 @@ import { styles } from '../styles/style'
 import { Button } from '@rneui/base'
 import { PermissionContext } from '../context/permissions/PermissionContext'
 
-export const PermisosBackground = () => {
+export const PermisosBackground = ({navigation}) => {
 
     const { permissions, askBackgroundLocations } = useContext(PermissionContext)
 
@@ -42,6 +42,18 @@ export const PermisosBackground = () => {
                     </Text>
                     <Text style={styles.text}>
                         Selecciona permitir todo el tiempo
+                    </Text>
+                    <Text
+                        style={{
+                            textAlign: 'center',
+                            color: 'white',
+                            fontSize: 12,
+                            textDecorationLine: 'underline',
+                            marginTop: 10
+                        }}
+                        onPress={() => navigation.navigate('TerminosCondiciones')}
+                    >
+                        Términos y condiciones
                     </Text>
                 </View>
                 <View style={styles.foobar} >

@@ -16,11 +16,17 @@ import { ContadorProvider } from './src/context/levantamiento/ContadorContext';
 import { IncidenteProvider } from './src/context/levantamiento/IncidenteContext';
 import { BitacoraProvider } from './src/context/bitacora/BitacoraContext';
 
+
+const config = {
+  screens:{
+    TerminosCondiciones: 'terminos-condiciones'
+  }
+}
+
 const linking = {
-  prefixes: ['registracker://']
+  prefixes: ['registracker://'],
+  config
 };
-
-
 function App() {
   return (
     <NavigationContainer linking={linking}>

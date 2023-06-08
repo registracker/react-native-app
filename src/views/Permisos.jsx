@@ -50,6 +50,18 @@ export const Permisos = () => {
           <Text style={styles.text}>
             Permitiendo la geolocalización podrás registrar tu recorrido, seleccionar tu medio de desplazamiento y otras funcionalidades.
           </Text>
+          <Text
+            style={{
+              textAlign: 'center',
+              color: 'white',
+              fontSize: 12,
+              textDecorationLine: 'underline',
+              marginTop:10
+            }}
+            onPress={() => navigation.navigate('TerminosCondiciones')}
+          >
+            Términos y condiciones
+          </Text>
         </View>
         <View style={styles.foobar} >
           {
