@@ -16,42 +16,49 @@ import { ContadorProvider } from './src/context/levantamiento/ContadorContext';
 import { IncidenteProvider } from './src/context/levantamiento/IncidenteContext';
 import { BitacoraProvider } from './src/context/bitacora/BitacoraContext';
 
+import { enableScreens } from 'react-native-screens';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+
+enableScreens();
 
 const config = {
-  screens:{
+  screens: {
     TerminosCondiciones: 'terminos-condiciones'
   }
 }
 
 const linking = {
-  prefixes: ['registracker://'],
+  prefixes: ['registracker://', 'https://app.registracker.me/'],
   config
 };
 function App() {
   return (
-    <NavigationContainer linking={linking}>
-      <PermissionsProvider>
-        <NetworkProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
 
-          <AuthProvider>
-            <BitacoraProvider>
-              <CatalogosProvider>
-                <DesplazamientoProvider>
-                  <IncidenteProvider>
-                    <MarcadorProvider>
-                      <ContadorProvider>
-                        <Navigation />
-                      </ContadorProvider>
-                    </MarcadorProvider>
-                  </IncidenteProvider>
-                </DesplazamientoProvider>
-              </CatalogosProvider>
-            </BitacoraProvider>
-          </AuthProvider>
-        </NetworkProvider>
+      <NavigationContainer linking={linking}>
+        <PermissionsProvider>
+          <NetworkProvider>
 
-      </PermissionsProvider>
-    </NavigationContainer>
+            <AuthProvider>
+              <BitacoraProvider>
+                <CatalogosProvider>
+                  <DesplazamientoProvider>
+                    <IncidenteProvider>
+                      <MarcadorProvider>
+                        <ContadorProvider>
+                          <Navigation />
+                        </ContadorProvider>
+                      </MarcadorProvider>
+                    </IncidenteProvider>
+                  </DesplazamientoProvider>
+                </CatalogosProvider>
+              </BitacoraProvider>
+            </AuthProvider>
+          </NetworkProvider>
+
+        </PermissionsProvider>
+      </NavigationContainer>
+    </GestureHandlerRootView>
   );
 }
 
