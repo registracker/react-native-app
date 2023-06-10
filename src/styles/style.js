@@ -252,4 +252,15 @@ export const styles = StyleSheet.create({
     marginVertical: 10,
     color: 'white',
   },
+  item: {
+    backgroundColor: '#fff',
+    padding: 15,
+    marginVertical: 2,
+    borderRadius: 15,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexDirection: 'row',
+    borderWidth: 2,
+    borderColor: primary
+  },
 });

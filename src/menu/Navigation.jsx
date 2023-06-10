@@ -120,7 +120,7 @@ export const Navigation = () => {
                                             ...optionsView
                                         }} />
                                         <Stack.Screen name='ListadoVehiculo' component={ListadoVehiculo} options={{
-                                            titleListadoVehiculo: 'Listado de vehículos',
+                                            title: 'Listado de vehículos',
                                             ...optionsView
                                         }} />
                                         <Stack.Screen name='ListadoContador' component={ListadoContador} options={{

@@ -13,7 +13,7 @@ import { showToast } from '../utils/toast'
 
 const Contador = ({ navigation }) => {
 
-    const [levantamiento, setLevantamiento] = useState()
+    const [levantamiento, setLevantamiento] = useState('f833-60f4-3336')
     const [levantamientoErrors, setLevantamientoErrors] = useState()
     const [cargando, setCargando] = useState(false)
     const [cantidad, setCantidad] = useState(0)

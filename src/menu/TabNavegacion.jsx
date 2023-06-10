@@ -86,8 +86,8 @@ export const TabNavegacion = () => {
             />
             <Tab.Screen
                 name="Contador"
-                component={Proximamente}
-                // component={Contador}
+                // component={Proximamente}
+                component={Contador}
                 options={{
                     title: 'Contador vehicular',
                     tabBarIcon: ({ color, size }) => (
