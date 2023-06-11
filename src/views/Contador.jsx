@@ -18,6 +18,7 @@ const Contador = ({ navigation }) => {
     const [cargando, setCargando] = useState(false)
     const [cantidad, setCantidad] = useState(0)
 
+    const { isConnected } = useContext(NetworkContext)
     const {
         listado,
         guardar,
@@ -31,31 +32,12 @@ const Contador = ({ navigation }) => {
         actualizarConteo
     } = useContext(ContadorContext)
 
-    const { isConnected } = useContext(NetworkContext)
 
 
     const [vehiculos, setVehiculos] = useState([])
     const [contadorVehicular, setContadorVehicular] = useState([])
     const [modalVisible, setModalVisible] = useState(false)
     const [loading, setLoading] = useState(false)
-
-
-    const unirseLevantamiento = async () => {
-        setCargando(true)
-        if (levantamiento) {
-            const response = await guardar(levantamiento);
-            if (response) {
-                response.forEach(element => {
-                    element.contador = 0
-                });
-                setVehiculos(response)
-                showToast('Levantamiento ingresado exitosamente');
-            }
-        } else {
-            setLevantamientoErrors('Debe ingresar un código de levantamiento')
-        }
-        setCargando(false)
-    }
 
 
     const borrarVehiculo = (id) => {
@@ -130,20 +112,95 @@ const Contador = ({ navigation }) => {
         });
         setVehiculos(listado)
         setModalVisible(false)
+        navigation.navigate('MisContadores')
         showToast('Contador vehicular restablecido');
     }
 
+    useEffect(() => {
+        verificar()
+    }, [])
 
-    const SaveIcon = useCallback(
-        () => {
 
-            return (
-                <View style={{ position: 'absolute', top: 10, left: 10, backgroundColor: primary, borderRadius: 5 }}>
-                    <Icon onPress={guardarRegistros} type='material-community' name='content-save' color={'white'} size={40} />
-                </View>
+    useEffect(() => {
+        if (listado?.length > 3) {
+            navigation.navigate('ListadoVehiculo')
+        } else {
+            setVehiculos(listado)
+        }
+    }, [listado])
+
+    useEffect(() => {
+        setContadorVehicular(contador);
+    }, [contador])
+
+    useEffect(() => {
+        setCantidad(contadorVehicular.length)
+    }, [contadorVehicular])
+
+    useEffect(() => {
+
+        navigation.setOptions({
+            headerRight: () => (
+                <>
+                    {
+                        activo &&
+                        <TouchableOpacity onPress={() => { setModalVisible(true) }} style={{ width: 100, alignItems: 'center', flexDirection: 'row', marginRight: 0 }}>
+                            <Text style={styles.text}> Ajustes </Text>
+                            <Icon
+                                name='cog-outline'
+                                type='material-community'
+                                color='white'
+                                suppressHighlighting={true}
+                            />
+                        </TouchableOpacity>
+                    }
+                </>
+            ),
+            headerLeft: () => (
+                <Icon
+                    onPress={() => { navigation.navigate('TabNavegacion'); }}
+                    type="ionicons"
+                    color='white'
+                    name='arrow-back'
+                    style={{ marginRight: 5 }}
+                />
             )
-        },
-        [contadorVehicular],
+        });
+    }, [activo])
+
+
+    const Item = ({ data, index }) => (
+        <View style={{ width: '100%', marginBottom: 20, backgroundColor: 'white', borderRadius: 15, justifyContent: 'center', borderWidth: 2, borderColor: primary, height:100 }} >
+            <View style={{ flexDirection: 'row', width: '100%', padding: 5, height: 80, justifyContent: 'center', alignItems: 'center' }}>
+                <TouchableOpacity
+                    style={{ width: '35%', height: '100%', justifyContent: 'center', alignItems: 'center' }}
+                    onPress={() => restar(index)}
+                    activeOpacity={0}
+                >
+                    <Icon type='material-community' name='minus-thick' color={primary} />
+                </TouchableOpacity>
+                <View
+                    style={{ width: '30%', height: '100%', justifyContent: 'center', alignItems: 'center' }}
+                >
+                    <Text style={styles.textBlack}>{data.nombre}</Text>
+                    <Text style={[styles.textBlack, { fontWeight: 'bold' }]}>{data.contador}</Text>
+                </View>
+                <TouchableOpacity
+                    style={{ width: '35%', height: '100%', justifyContent: 'center', alignItems: 'center' }}
+                    onPress={() => sumar(index)}
+                    delayPressIn={0}
+                    activeOpacity={0}
+                >
+                    <Icon type='ionicons' name='add' color={primary} />
+                </TouchableOpacity>
+            </View>
+
+        </View>
+
+    );
+
+    const EmptyList = () => (
+        <Text color='black' style={styles.textBlack}>NO HAY DATOS</Text>
     )
 
     const FlatListVehiculos = useCallback(() => {
@@ -158,91 +215,6 @@ const Contador = ({ navigation }) => {
         )
     }, [vehiculos])
 
-    useEffect(() => {
-        verificar()
-    }, [])
-
-
-    useEffect(() => {
-        if (listado?.length > 3) {
-            navigation.navigate('ListadoVehiculo')
-        }
-        setVehiculos(listado)
-    }, [listado])
-
-    useEffect(() => {
-        setContadorVehicular(contador);
-
-    }, [contador])
-
-    useEffect(() => {
-        setCantidad(contadorVehicular.length)
-    }, [contadorVehicular])
-    
-
-    useFocusEffect(
-        React.useCallback(() => {
-            return () => guardarRegistros()
-        }, [])
-    );
-
-
-    useEffect(() => {
-
-        navigation.setOptions({
-            headerRight: () => (
-                <>
-                    {
-                        activo &&
-                        <TouchableOpacity onPress={() => { setModalVisible(true) }} style={{ width: 100, alignItems: 'center', flexDirection: 'row', marginRight: 10 }}>
-                            <Text style={styles.text}> Ajustes </Text>
-                            <Icon
-                                name='car-cog'
-                                type='material-community'
-                                color='white'
-                                suppressHighlighting={true}
-                            />
-                        </TouchableOpacity>
-                    }
-                </>
-            ),
-        });
-    }, [activo])
-
-
-    const Item = ({ data, index }) => (
-        <View style={{ width: '100%', marginBottom: 20 }} >
-            <Text style={{ ...styles.text, borderWidth: 2, borderColor: 'white', padding: 5, backgroundColor: '#474747', borderRadius: 5 }}>{data.nombre}</Text>
-            <View style={{ flexDirection: 'row', width: '100%', padding: 5, height: 80, justifyContent: 'center', alignItems: 'center' }}>
-                <TouchableOpacity
-                    style={{ width: '40%', height: '100%', margin: 5, borderRadius: 5, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center' }}
-                    onPress={() => restar(index)}
-                    activeOpacity={0}
-                >
-                    <Icon type='material-community' name='minus-thick' color={primary} />
-                </TouchableOpacity>
-                <View
-                    style={{ width: '20%', height: '100%', margin: 5, borderRadius: 5, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center' }}
-                >
-                    <Text style={styles.textBlack}>{data.contador}</Text>
-                </View>
-                <TouchableOpacity
-                    style={{ width: '40%', height: '100%', margin: 5, borderRadius: 5, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center' }}
-                    onPress={() => sumar(index)}
-                    delayPressIn={0}
-                    activeOpacity={0}
-                >
-                    <Icon type='ionicons' name='add' color={primary} />
-                </TouchableOpacity>
-            </View>
-        </View>
-
-    );
-
-    const EmptyList = () => (
-        <Text color='black' style={styles.textBlack}>NO HAY DATOS</Text>
-    )
-
 
     return (
         <View style={styles.container}>
@@ -256,54 +228,16 @@ const Contador = ({ navigation }) => {
                 }}
             >
                 <View style={styles.body}>
-                    {
-                        activo ?
-                            <View style={{ width: '100%', borderRadius: 5, justifyContent: 'center', alignItems: 'center', }}>
-                                <Text style={styles.chip}>Código: {levantamientoActivo.codigo}</Text>
-                                <FlatListVehiculos />
-                            </View> :
-                            <View style={styles.modalView}>
-                                {
-                                    loading ?
-                                        <ActivityIndicator size="large" color={primary} />
-                                        : <>
-                                            <Text style={styles.titleBlack}>Contador</Text>
-                                            <Text style={styles.textBlack}>Código de levantamiento</Text>
-                                            <Input
-                                                onChangeText={setLevantamiento}
-                                                value={levantamiento}
-                                                autoCapitalize='none'
-                                                placeholder={levantamientoErrors ? levantamientoErrors : "XXXX-XXXX-XXXX"}
-                                                inputMode="text"
-                                                textAlign='center'
-                                                style={{ ...styles.input, color: 'black' }}
-                                                errorMessage={levantamientoErrors}
-                                                leftIcon={levantamientoErrors ? <Icon name="information-outline" type='material-community' size={20} color='white' /> : ''}
-                                                errorStyle={levantamientoErrors ? styles.errorStyle : null}
-                                                inputContainerStyle={setLevantamientoErrors ? styles.inputContainerError : styles.inputContainer}
-                                                onFocus={() => { setLevantamientoErrors("") }}
-                                            />
-                                            <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
-                                                <Button
-                                                    title={isConnected ? 'Unirse' : 'Sin conexión'}
-                                                    onPress={unirseLevantamiento}
-                                                    loading={cargando}
-                                                    disabled={!isConnected}
-                                                    type="clear"
-                                                    titleStyle={{ color: primary }}
-                                                />
-                                            </View>
-                                        </>
 
-                                }
-                            </View>
-                    }
+                    <View style={{ width: '100%', borderRadius: 5, justifyContent: 'center', alignItems: 'center', }}>
+                        <FlatListVehiculos />
+                    </View>
                     {
                         activo &&
                         <FAB
                             icon={{ name: 'content-save', color: 'white', type: 'material-community' }}
                             size="large"
-                            disabled={cantidad === 0 ? true: false}
+                            disabled={cantidad === 0 ? true : false}
                             placement='right'
                             upperCase
                             onPress={guardarRegistros}
@@ -325,17 +259,22 @@ const Contador = ({ navigation }) => {
                     <View style={styles.centeredView}>
                         <View style={styles.modalView}>
                             <Text style={styles.titleBlack}>Ajustes</Text>
-                            <TouchableOpacity onPress={() => { setModalVisible(!modalVisible); navigation.navigate('ListadoVehiculo') }} style={{ width: '100%', height: 35, justifyContent: 'center', alignItems: 'center' }}>
+                            <TouchableOpacity onPress={() => { setModalVisible(!modalVisible); navigation.navigate('ListadoVehiculo') }} style={{ width: '100%', height: 35, justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'row' }}>
+                                <Icon name='car-select' type='material-community' />
                                 <Text style={styles.textBlack}>
                                     Configurar Catálogos de vehiculos
                                 </Text>
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={restablecerContador} style={{ width: '100%', height: 35, justifyContent: 'center', alignItems: 'center' }}>
+                            <TouchableOpacity onPress={restablecerContador} style={{ width: '100%', height: 35, justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'row' }}>
+                                <Icon name='cog-counterclockwise' type='material-community' />
+
                                 <Text style={styles.textBlack}>
                                     Restablecer contador
                                 </Text>
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={cerrarConteo} style={{ width: '100%', height: 35, justifyContent: 'center', alignItems: 'center' }}>
+                            <TouchableOpacity onPress={cerrarConteo} style={{ width: '100%', height: 35, justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'row' }}>
+                                <Icon name='car-arrow-left' type='material-community' />
+
                                 <Text style={styles.textBlack}>
                                     Cerrar conteo vehicular
                                 </Text>

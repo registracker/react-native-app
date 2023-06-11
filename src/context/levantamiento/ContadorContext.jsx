@@ -21,6 +21,7 @@ const contadorInicial = {
     fecha_vencimiento: undefined,
     activo: undefined,
     contador: [],
+    ultimo: undefined,
 }
 
 export const ContadorProvider = ({ children }) => {
@@ -102,10 +103,10 @@ export const ContadorProvider = ({ children }) => {
         }
     }
 
-
     const restablecer = async () => {
         await AsyncStorage.removeItem('levantamiento-contador')
         await AsyncStorage.removeItem('listado-vehiculos')
+        await AsyncStorage.removeItem('contador')
         dispatch({ type: 'restablecer' })
     }
 
@@ -114,10 +115,10 @@ export const ContadorProvider = ({ children }) => {
         if (isConnected && contador === 'activo') {
             const response = await enviarReporte(data);
 
-            showToast('Registros de conteo vehicular registrados');            
-            
+            showToast('Registros de conteo vehicular registrados');
+
         } else {
-            showToast('Registros de conteo vehicular registrados temporalmente');            
+            showToast('Registros de conteo vehicular registrados temporalmente');
             await storeReporteContadorDatabase(data)
         }
 
@@ -143,6 +144,14 @@ export const ContadorProvider = ({ children }) => {
         const vehiculos = ctl_vehiculos.data.filter((obj) => items.some((element) => element === obj.id));
         dispatch({ type: 'actualizar-listado', payload: { vehiculos } });
     }
+
+    const getUltimoContador = async () => {
+        const c = await AsyncStorage.getItem('levantamiento-contador')
+        const contador = c != null ? JSON.parse(c) : null
+
+        dispatch({ type: 'get-ultimo-contador', payload: { ultimo: contador } });
+        return contador
+    }
     return (
         <ContadorContext.Provider value={{
             ...contadorState,
@@ -153,6 +162,7 @@ export const ContadorProvider = ({ children }) => {
             agregarRegistro,
             actualizarConteo,
             actualizarListado,
+            getUltimoContador,
         }} >
             {children}
         </ContadorContext.Provider>

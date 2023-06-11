@@ -17,7 +17,6 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     flex: 10,
     padding: 10,
-    paddingTop: StatusBar.currentHeight,
   },
   foobar: {
     flex: 2,

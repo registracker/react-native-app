@@ -25,6 +25,7 @@ import ListadoContador from '../views/ListadoContador';
 import { PermisosBackground } from '../views/PermisosBackground';
 import { Proximamente } from '../views/Proximamente';
 import { TerminosCondiciones } from '../views/TerminosCondiciones';
+import Contador from '../views/Contador';
 
 
 
@@ -121,6 +122,10 @@ export const Navigation = () => {
                                         }} />
                                         <Stack.Screen name='ListadoVehiculo' component={ListadoVehiculo} options={{
                                             title: 'Listado de vehículos',
+                                            ...optionsView
+                                        }} />
+                                        <Stack.Screen name='Contador' component={Contador} options={{
+                                            title: 'Contador vehicular',
                                             ...optionsView
                                         }} />
                                         <Stack.Screen name='ListadoContador' component={ListadoContador} options={{

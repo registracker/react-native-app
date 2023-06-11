@@ -99,3 +99,10 @@ export const clearLocalStorage = async () => {
     showToast('Ocurrió un error al limpiar el almacenamiento local.');
   }
 };
+
+export const truncateText = (text, maxLength = 150) => {
+  if (text.length <= maxLength) {
+    return text;
+  }
+  return text.substring(0, maxLength) + '...';
+};

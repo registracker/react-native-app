@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 export const contadorReducer = (state, action) => {
   switch (action.type) {
     case 'guardar':
@@ -37,6 +38,11 @@ export const contadorReducer = (state, action) => {
       return {
         ...state,
         listado: action.payload.vehiculos,
+      };
+    case 'get-ultimo-contador':
+      return {
+        ...state,
+        ultimo: action.payload.contador,
       };
     default:
       return state;

@@ -16,6 +16,8 @@ import { MarcadorContext } from '../context/levantamiento/MarcadorContext';
 import { IncidenteContext } from '../context/levantamiento/IncidenteContext';
 import { getOptionEnvioAutomatico } from '../utils/functions';
 import { Proximamente } from '../views/Proximamente';
+import ListadoVehiculo from '../views/ListadoVehiculo';
+import { MisContadores } from '../views/Contador/MisContadores';
 
 const Tab = createBottomTabNavigator();
 
@@ -85,9 +87,9 @@ export const TabNavegacion = () => {
                 }}
             />
             <Tab.Screen
-                name="Contador"
+                name="MisContadores"
                 // component={Proximamente}
-                component={Contador}
+                component={MisContadores}
                 options={{
                     title: 'Contador vehicular',
                     tabBarIcon: ({ color, size }) => (
