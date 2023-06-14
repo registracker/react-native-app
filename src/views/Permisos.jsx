@@ -1,14 +1,14 @@
 import React, { useContext } from 'react'
 import { Image, ImageBackground, Linking, Text, View } from 'react-native'
 import { PermissionContext } from '../context/permissions/PermissionContext';
-import { Button } from '@rneui/base'
+import { Badge, Button } from '@rneui/base'
 import { Loading } from '../components/Loading';
 import { styles } from '../styles/style';
 import { useCallback } from 'react';
 import { NavigationContext } from '@react-navigation/native';
 
 export const Permisos = () => {
-  const { permissions, askLocationPermissions } = useContext(PermissionContext)
+  const { permissions, askLocationPermissions, denyLocationPermissions } = useContext(PermissionContext)
   const navigation = useContext(NavigationContext)
 
 
@@ -28,7 +28,7 @@ export const Permisos = () => {
     />;
   };
 
-  const respuestaPermiso = async ()  => {
+  const respuestaPermiso = async () => {
     const respuesta = await askLocationPermissions()
     if (respuesta) navigation.navigate('PermisosBackground')
   }
@@ -45,12 +45,12 @@ export const Permisos = () => {
             style={{ ...styles.image, width: '50%', height: '50%' }}
           />
           <Text style={styles.titleText}>
-            Habilitar Geolocalización
+            Habilitar ubicación
           </Text>
           <Text style={styles.text}>
-            Permitiendo la geolocalización podrás registrar tu recorrido, seleccionar tu medio de desplazamiento y otras funcionalidades.
+            Registracker captura la ubicación del dispositivo con el objetivo de registrar los desplazamientos realizados por el usuario mientras la app no esté en uso.
           </Text>
-          <Text
+          {/* <Text
             style={{
               textAlign: 'center',
               color: 'white',
@@ -61,16 +61,26 @@ export const Permisos = () => {
             onPress={() => navigation.navigate('TerminosCondiciones')}
           >
             Términos y condiciones
-          </Text>
+          </Text> */}
         </View>
-        <View style={styles.foobar} >
+        <View style={[styles.foobar, styles.row, { justifyContent: 'space-around' }]} >
+          <Button
+            // onPress={() => navigation.navigate('')}
+            onPress={() => denyLocationPermissions('locationStatus')}
+            buttonStyle={styles.buttonSecondary}
+            title='No, Gracias'
+          />
+          <View style={styles.row}>
+            <Badge badgeStyle={{ marginHorizontal: 3 }} value="" status="success" />
+            <Badge badgeStyle={{ marginHorizontal: 3 }} value="" status="gray" />
+          </View>
           {
             permissions.locationStatus !== 'never_ask_again'
               ? <Button
-                title='Permitir geolocalización'
+                title='Activar'
                 onPress={respuestaPermiso}
                 buttonStyle={styles.buttonPrimary}
-                containerStyle={styles.buttonContainer}
+                // containerStyle={styles.buttonContainer}
                 radius="lg"
               />
               : <OpenSettingsButton>Habilitar permisos</OpenSettingsButton>

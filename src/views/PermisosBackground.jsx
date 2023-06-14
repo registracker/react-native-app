@@ -1,7 +1,7 @@
 import { View, Text, ImageBackground, Image, Linking } from 'react-native'
 import React, { useCallback, useContext } from 'react'
 import { styles } from '../styles/style'
-import { Button } from '@rneui/base'
+import { Badge, Button } from '@rneui/base'
 import { PermissionContext } from '../context/permissions/PermissionContext'
 
 export const PermisosBackground = ({navigation}) => {
@@ -35,15 +35,12 @@ export const PermisosBackground = ({navigation}) => {
                         style={{ ...styles.image, width: '50%', height: '50%' }}
                     />
                     <Text style={styles.titleText}>
-                        Habilitar registro de desplazamiento en segundo plano
-                    </Text>
-                    <Text style={styles.subtitleText}>
-                        Respetamos tu privacidad. Tus datos se recolectaran con precisión y confidencialidad para mejorar tu experiencia.
+                        Habilitar ubicación en segundo plano.
                     </Text>
                     <Text style={styles.text}>
-                        Selecciona permitir todo el tiempo
+                        Registracker utilizara los permisos de ubicación en segundo plano cuando la app esté cerrada con el objetivo de registrar la ubicación del usuario aun cuando la app no está en uso.
                     </Text>
-                    <Text
+                    {/* <Text
                         style={{
                             textAlign: 'center',
                             color: 'white',
@@ -54,17 +51,26 @@ export const PermisosBackground = ({navigation}) => {
                         onPress={() => navigation.navigate('TerminosCondiciones')}
                     >
                         Términos y condiciones
-                    </Text>
+                    </Text> */}
                 </View>
-                <View style={styles.foobar} >
-                    
+                <View style={[styles.foobar, styles.row, { justifyContent: 'space-around' }]} >
+                    <Button
+                        // onPress={() => navigation.navigate('')}
+                        onPress={() => denyLocationPermissions('locationBackground')}
+                        buttonStyle={styles.buttonSecondary}
+                        title='No, Gracias'
+                    />
+                    <View style={styles.row}>
+                        <Badge badgeStyle={{ marginHorizontal: 3 }} value="" status="gray" />
+                        <Badge badgeStyle={{ marginHorizontal: 3 }} value="" status="success" />
+                    </View>
                     {
                         permissions.locationBackground !== 'never_ask_again'
                             ? <Button
-                                title='Permitir en segundo plano'
+                                title='Activar'
                                 onPress={askBackgroundLocations}
                                 buttonStyle={styles.buttonPrimary}
-                                containerStyle={styles.buttonContainer}
+                                // containerStyle={styles.buttonContainer}
                                 radius="lg"
                             />
                             : <OpenSettingsButton>Habilitar permisos</OpenSettingsButton>

@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useRef, useState } from "r
 import { AppState, PermissionsAndroid } from "react-native";
 import { showToast } from "../../utils/toast";
 import { NavigationContext } from '@react-navigation/native';
+import { BackHandler } from "react-native";
 
 export const permissionsInitState = {
     locationStatus: 'unavailable',
@@ -136,6 +137,26 @@ export const PermissionsProvider = ({ children }) => {
         }
     }
 
+    const denyLocationPermissions = ( permission ) => {
+        if (permission === 'locationStatus') {
+            setPermissions({
+                ...permissions,
+                locationStatus: 'denied',
+                intentos: permissions.intentos + 1,
+            })
+        }
+        if(permission === 'locationBackground') {
+            setPermissions({
+                ...permissions,
+                locationBackground: 'denied',
+                intentos: permissions.intentos + 1,
+            })
+        }
+        showToast('Permiso de localización denegado')
+        BackHandler.exitApp();
+
+    }
+
     useEffect(() => {
         const subscription = AppState.addEventListener("change", state => {
             appState.current = state;
@@ -156,7 +177,8 @@ export const PermissionsProvider = ({ children }) => {
             permissions,
             askLocationPermissions,
             askBackgroundLocations,
-            checkLocationPermission
+            checkLocationPermission,
+            denyLocationPermissions
         }}>
             {children}
         </PermissionContext.Provider>
