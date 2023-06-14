@@ -28,6 +28,7 @@ const postBuscarRutasTransporteInstance = async (dato, page) => {
     limit: 1000,
   };
   const body = {
+
     search: {
       value: dato,
       case_insensitive: false,
