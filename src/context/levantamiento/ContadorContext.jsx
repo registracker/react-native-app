@@ -4,9 +4,9 @@ import { contadorReducer } from "./contadorReducer";
 
 import { getLevantamientoContador } from '../../services/levantamientoServices'
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { compareAsc, format } from "date-fns";
+import { format } from "date-fns";
 
-import { getVehiculos, enviarReporte } from '../../services/vehiculos';
+import { enviarReporte } from '../../services/vehiculos';
 import { useContext } from "react";
 import { CatalogosContext } from "../store/CatalogosContext";
 import { NetworkContext } from "../network/NetworkContext";

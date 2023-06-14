@@ -1,33 +1,31 @@
-import { View, Text } from 'react-native'
+import { View, Text, ImageBackground } from 'react-native'
 import React, { useState } from 'react'
-import { getMisContadores } from '../../services/contadorServices'
+import { getMisMarcadores } from '../../services/marcadorServices'
 import { useEffect } from 'react'
 import { useContext } from 'react'
-import { ContadorContext } from '../../context/levantamiento/ContadorContext'
 import { primary, styles } from '../../styles/style'
 import { FlatList } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { Icon } from '@rneui/base'
-import { format, parseISO } from 'date-fns'
-import { truncateText } from '../../utils/functions'
+import { format } from 'date-fns'
 import { ActivityIndicator } from 'react-native'
 import { showToast } from '../../utils/toast'
-import { ImageBackground } from 'react-native'
+import { MarcadorContext } from '../../context/levantamiento/MarcadorContext'
 
-export const MisContadores = ({ navigation }) => {
+export const MisMarcadores = ({ navigation }) => {
 
-    const { getUltimoContador, guardar } = useContext(ContadorContext)
+    const { getUltimoMarcador, guardar } = useContext(MarcadorContext)
 
     const [misContadores, setMisContadores] = useState([])
     const [loading, setLoading] = useState(false)
 
-    const obtenerContadores = async () => {
+    const obtenerMarcadores = async () => {
         setLoading(true)
-        const contador = await getUltimoContador()
-        const { data } = await getMisContadores()
+        const marcador = await getUltimoMarcador()
+        const { data } = await getMisMarcadores()
         setMisContadores(data)
-        if (contador) {
-            navigation.navigate('Contador')
+        if (marcador) {
+            navigation.navigate('Marcador')
         }
         setLoading(false)
     }
@@ -37,14 +35,7 @@ export const MisContadores = ({ navigation }) => {
         if (levantamiento) {
             const response = await guardar(levantamiento);
             if (response) {
-                response.forEach(element => {
-                    element.contador = 0
-                });
-                if (response?.length > 3) {
-                    navigation.navigate('ListadoVehiculo')
-                } else {
-                    navigation.navigate('Contador')
-                }
+                navigation.navigate('Marcador')
             }
         } else {
             setLevantamientoErrors('Debe ingresar un código de levantamiento')
@@ -53,26 +44,24 @@ export const MisContadores = ({ navigation }) => {
     }
 
     useEffect(() => {
-        obtenerContadores()
+        obtenerMarcadores()
     }, [])
 
     const Item = ({ data }) => (
         <TouchableOpacity
-            style={[styles.item, { justifyContent: 'flex-start', padding: 8, height: 120 }]}
+            style={[styles.item, { justifyContent: 'flex-start', padding: 8, height: 80 }]}
             activeOpacity={0.4}
             onPress={() => unirseLevantamiento(data.codigo)}
         >
             <View style={{ width: '10%' }}>
-                <Icon name='car-3-plus' type='material-community' />
+                <Icon name='traffic-light' type='material-community' />
             </View>
             <View style={{ alignItems: 'flex-start', width: '60%' }}>
-                <Text style={[styles.textBlack, { textAlign: 'left' }]}>{truncateText(data.nombre_via, 50)}</Text>
-                <Text style={[styles.textBlack, { textAlign: 'left', fontSize: 16 }]}>Identificación: {data.identificacion_via}</Text>
-                <Text style={[styles.textBlack, { textAlign: 'left', fontSize: 16 }]}>Categoría: {data.categoria_via}</Text>
+                <Text style={[styles.textBlack, { textAlign: 'left' }]}>Código: {data.codigo}</Text>
+                <Text style={[styles.textBlack, { textAlign: 'left', fontSize: 14 }]}>Creado: {format(new Date(data.fecha_creado), "yyyy-MM-dd hh:mm:ss aaaa")}</Text>
             </View>
             <View style={{ width: '30%' }}>
-                <Text style={[styles.textBlack, { textAlign: 'right', fontSize: 14, }]}>Finaliza: {data.periodo_fin}</Text>
-                <Text style={[styles.textBlack, { textAlign: 'right', fontSize: 14, }]}>Código: {data.codigo}</Text>
+                <Text style={[styles.textBlack, { textAlign: 'right', fontSize: 14, }]}>Finaliza: {data.fecha_vencimiento}</Text>
             </View>
         </TouchableOpacity>
     );

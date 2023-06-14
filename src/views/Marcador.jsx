@@ -21,7 +21,7 @@ const Marcador = ({ navigation }) => {
     const [selected, setSelected] = useState()
     const [descripcion, setDescripcion] = useState()
     const [enviar, setEnviar] = useState(true)
-    const { restablecer } = useContext(MarcadorContext)
+    const { levantamiento, restablecer } = useContext(MarcadorContext)
 
     const { clt_marcadores } = useContext(CatalogosContext)
 
@@ -47,8 +47,7 @@ const Marcador = ({ navigation }) => {
             longitud: ubicacion.coords.longitude,
             altitud: ubicacion.coords.altitude,
             comentario: descripcion ? descripcion : '',
-            // fecha_reporte: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
-            fecha_reporte: '2023-01-01 10:00:00',
+            fecha_reporte: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
             enviado: 0
         }
         await postReporteMarcador(datos)
@@ -129,7 +128,9 @@ const Marcador = ({ navigation }) => {
                 }}
             >
                 <View style={styles.body}>
-                    <Text style={styles.chip}>Seleccione un marcador</Text>
+                    <Text style={styles.chip}>Código: {levantamiento.codigo}</Text>
+                    <Text style={styles.title}>Seleccione un marcador</Text>
+
                     <FlatList
                         data={clt_marcadores.data}
                         renderItem={renderItem}
@@ -140,7 +141,7 @@ const Marcador = ({ navigation }) => {
                     <TextInput
                         multiline={true}
                         numberOfLines={6}
-                        style={{ borderWidth: 2, borderRadius: 10, width: '90%', backgroundColor: 'white', borderColor: primary, color: 'black' }}
+                        style={{ borderWidth: 2, borderRadius: 15, width: '90%', backgroundColor: 'white', borderColor: primary, color: 'black' }}
                         onChangeText={setDescripcion}
                         value={descripcion}
                     />

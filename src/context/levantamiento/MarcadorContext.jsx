@@ -74,6 +74,13 @@ export const MarcadorProvider = ({ children }) => {
         }
     }
 
+    const getUltimoMarcador = async () => {
+        const m = await AsyncStorage.getItem('levantamiento')
+        const marcador = m != null ? JSON.parse(m) : null
+        dispatch({ type: 'get-ultimo-marcador', payload: { ultimo: marcador } });
+        return marcador
+    }
+
     return (
         <MarcadorContext.Provider
             value={{
@@ -81,7 +88,8 @@ export const MarcadorProvider = ({ children }) => {
                 guardar,
                 verificar,
                 restablecer,
-                sincronizarMarcadores
+                sincronizarMarcadores,
+                getUltimoMarcador
             }}
         >
             {children}

@@ -26,6 +26,7 @@ import { PermisosBackground } from '../views/PermisosBackground';
 import { Proximamente } from '../views/Proximamente';
 import { TerminosCondiciones } from '../views/TerminosCondiciones';
 import Contador from '../views/Contador';
+import { MisMarcadores } from '../views/Marcador/MisMarcadores';
 
 
 
@@ -42,8 +43,6 @@ const options = {
     headerBackAccessibilityLabel: 'Atrás',
     headerBackTitle: 'Atrás',
     headerBackTitleVisible: false,
-
-    //   cardOverlayEnabled: true
 }
 
 const optionsView = {
@@ -56,7 +55,6 @@ const optionsView = {
     headerBackAccessibilityLabel: 'Atrás',
     headerBackTitle: 'Atrás',
     headerBackTitleVisible: false,
-    //   cardOverlayEnabled: true
     headerShown: true,
     headerTitleStyle: {
         fontSize: 22
@@ -129,11 +127,15 @@ export const Navigation = () => {
                                             ...optionsView
                                         }} />
                                         <Stack.Screen name='ListadoContador' component={ListadoContador} options={{
-                                            titleListadoVehiculo: 'Conteo vehicular',
+                                            title: 'Conteo vehicular',
+                                            ...optionsView
+                                        }} />
+                                        <Stack.Screen name='MisMarcadores' component={MisMarcadores} options={{
+                                            title: 'Levantamientos',
                                             ...optionsView
                                         }} />
                                         <Stack.Screen name='Proximamente' component={Proximamente} options={{
-                                            titleListadoVehiculo: 'Próximamente',
+                                            title: 'Próximamente',
                                             ...optionsView
                                         }} />
                                     </Stack.Group>
@@ -144,8 +146,6 @@ export const Navigation = () => {
                                         <Stack.Screen name='Login' component={Login} />
                                         <Stack.Screen name='FormularioRegistro' component={FormularioRegistro} />
                                     </Stack.Group>
-
-
                             }
                         </Stack.Group>
                         :

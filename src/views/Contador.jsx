@@ -170,7 +170,7 @@ const Contador = ({ navigation }) => {
 
 
     const Item = ({ data, index }) => (
-        <View style={{ width: '100%', marginBottom: 20, backgroundColor: 'white', borderRadius: 15, justifyContent: 'center', borderWidth: 2, borderColor: primary, height:100 }} >
+        <View style={{ width: '100%', marginBottom: 20, backgroundColor: 'white', borderRadius: 15, justifyContent: 'center', borderWidth: 2, borderColor: primary, height: 100 }} >
             <View style={{ flexDirection: 'row', width: '100%', padding: 5, height: 80, justifyContent: 'center', alignItems: 'center' }}>
                 <TouchableOpacity
                     style={{ width: '35%', height: '100%', justifyContent: 'center', alignItems: 'center' }}
@@ -228,8 +228,8 @@ const Contador = ({ navigation }) => {
                 }}
             >
                 <View style={styles.body}>
-
                     <View style={{ width: '100%', borderRadius: 5, justifyContent: 'center', alignItems: 'center', }}>
+                        <Text style={styles.chip}>Código: {levantamientoActivo.codigo}</Text>
                         <FlatListVehiculos />
                     </View>
                     {

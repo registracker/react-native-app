@@ -50,18 +50,6 @@ export const Permisos = () => {
           <Text style={styles.text}>
             Registracker captura la ubicación del dispositivo con el objetivo de registrar los desplazamientos realizados por el usuario mientras la app no esté en uso.
           </Text>
-          {/* <Text
-            style={{
-              textAlign: 'center',
-              color: 'white',
-              fontSize: 12,
-              textDecorationLine: 'underline',
-              marginTop:10
-            }}
-            onPress={() => navigation.navigate('TerminosCondiciones')}
-          >
-            Términos y condiciones
-          </Text> */}
         </View>
         <View style={[styles.foobar, styles.row, { justifyContent: 'space-around' }]} >
           <Button
@@ -80,7 +68,6 @@ export const Permisos = () => {
                 title='Activar'
                 onPress={respuestaPermiso}
                 buttonStyle={styles.buttonPrimary}
-                // containerStyle={styles.buttonContainer}
                 radius="lg"
               />
               : <OpenSettingsButton>Habilitar permisos</OpenSettingsButton>

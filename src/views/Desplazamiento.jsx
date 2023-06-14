@@ -24,7 +24,7 @@ import { showToast } from '../utils/toast';
 
 const LOCATION_TASK_NAME = 'locationTask';
 
-export const Desplazamiento = () => {
+export const Desplazamiento = ({navigation}) => {
   const [position, setPosition] = useState();
   const [viajeIniciado, setViajeIniciado] = useState(false);
   const [open, setOpen] = useState(false);
@@ -48,6 +48,7 @@ export const Desplazamiento = () => {
         name: 'ic_launcher',
         type: 'mipmap',
       },
+      linkingURI: 'registracker://', // See Deep Linking for more info
       parameters: {
         delay: 5000, // Intervalo de tiempo en milisegundos (5 segundos)
       },
@@ -111,15 +112,6 @@ export const Desplazamiento = () => {
     setModalIncidentes(true);
     setOpen(false);
   };
-
-  /**
-   * Abrir Modal de ingreso de marcadores y levantamientos
-   */
-  const openModalMarcadores = () => {
-    setModalMarcador(true);
-    setOpen(false);
-  };
-
 
   useEffect(() => {
     if (viajeIniciado) registrarDesplazamiento(position, medio);
@@ -222,7 +214,7 @@ export const Desplazamiento = () => {
             title="Marcador"
             icon={stylesDesplazamiento.iconoMarcador}
             color={styles.primary}
-            onPress={openModalMarcadores}
+            onPress={() => {navigation.navigate('MisMarcadores'); setOpen(!open)}}
             titleStyle={{...styles.textBlack, borderRadius:15}}
           />
           <SpeedDial.Action

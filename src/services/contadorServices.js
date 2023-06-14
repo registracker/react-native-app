@@ -2,7 +2,10 @@ import {instance} from '../config/axios';
 
 export const getMisContadores = async () => {
   try {
-    const {data, status} = await instance('/api/conteo-vehicular');
+    const params = {
+      personal: 'yes',
+    };
+    const {data, status} = await instance('/api/conteo-vehicular', params);
     return {
       data: data.data,
       status,
