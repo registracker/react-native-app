@@ -59,7 +59,9 @@ const postReporteMarcador = async (datos, automatico = true) => {
 const getMisMarcadores = async () => {
   try {
     const params = {
-      personal: 'yes'
+      params: {
+        personal: 'yes'
+      }
     }
     const { data, status } = await instance('/api/levantamientos', params);
     return {

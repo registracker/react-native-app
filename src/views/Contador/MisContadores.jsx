@@ -7,7 +7,7 @@ import { ContadorContext } from '../../context/levantamiento/ContadorContext'
 import { primary, styles } from '../../styles/style'
 import { FlatList } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-import { Icon } from '@rneui/base'
+import { Button, Icon, Image } from '@rneui/base'
 import { format, parseISO } from 'date-fns'
 import { truncateText } from '../../utils/functions'
 import { ActivityIndicator } from 'react-native'
@@ -20,6 +20,7 @@ export const MisContadores = ({ navigation }) => {
 
     const [misContadores, setMisContadores] = useState([])
     const [loading, setLoading] = useState(false)
+    const [contador, setContador] = useState()
 
     const obtenerContadores = async () => {
         setLoading(true)
@@ -27,10 +28,19 @@ export const MisContadores = ({ navigation }) => {
         const { data } = await getMisContadores()
         setMisContadores(data)
         if (contador) {
+            setContador(contador)
             navigation.navigate('Contador')
+        } else {
+
         }
         setLoading(false)
     }
+
+    const actualizarMisContadores = async () => {
+        const { data } = await getMisContadores()
+        setMisContadores(data)
+    }
+
 
     const unirseLevantamiento = async (levantamiento) => {
         setLoading(true)
@@ -94,6 +104,32 @@ export const MisContadores = ({ navigation }) => {
                                 data={misContadores}
                                 renderItem={({ item, index }) => <Item data={item} index={index} />}
                                 keyExtractor={item => item.id}
+                                ListEmptyComponent={
+                                    <View style={{ width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center' }}>
+                                        <Text style={styles.title}>
+                                            Sin datos o registros encontrados...
+                                        </Text>
+                                        <Image
+                                            style={[styles.image, { width: 200, height: 200 }]}
+                                            source={require('../../img/pin.png')}
+                                        />
+                                        {
+                                            contador &&
+                                            <View style={{ marginTop: 10 }}>
+                                                <Text
+                                                    style={styles.chip}
+                                                    onPress={() => navigation.navigate('Contador')}
+                                                >
+                                                    Continuar con código {contador.codigo}
+                                                </Text>
+                                                
+                                            </View>
+                                        }
+
+                                    </View>
+                                }
+                                onRefresh={actualizarMisContadores}
+                                refreshing={loading}
                             />
                     }
 

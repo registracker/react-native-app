@@ -229,7 +229,7 @@ const Contador = ({ navigation }) => {
             >
                 <View style={styles.body}>
                     <View style={{ width: '100%', borderRadius: 5, justifyContent: 'center', alignItems: 'center', }}>
-                        <Text style={styles.chip}>Código: {levantamientoActivo.codigo}</Text>
+                        <Text style={styles.chip}>Código: {levantamientoActivo?.codigo}</Text>
                         <FlatListVehiculos />
                     </View>
                     {
