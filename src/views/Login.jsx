@@ -5,7 +5,7 @@ import { Button, Icon } from '@rneui/base'
 import { AuthContext } from '../context/authentication/AuthContext'
 import { Input } from '@rneui/themed'
 
-export const Login = () => {
+export const Login = ({navigation}) => {
 
   const [email, setEmail] = useState()
   const [password, setPassword] = useState();
@@ -25,7 +25,7 @@ export const Login = () => {
       setvalidLogin(false)
 
       const response = await signIn({ email, password });
-      if(!response){
+      if (!response) {
         setCargando(false)
 
         iniciarSesion()
@@ -37,7 +37,7 @@ export const Login = () => {
         ToastAndroid.SHORT,
         ToastAndroid.CENTER,
       );
-    }finally {
+    } finally {
       setCargando(false)
     }
   }
@@ -48,7 +48,7 @@ export const Login = () => {
 
   const isEmail = () => {
     const validRegex = /^[a-zA-Z0-9_.]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-    if(email){
+    if (email) {
 
       if (!email.match(validRegex)) {
         setEmailErrorMessage('Correo electrónico invalido');
@@ -78,17 +78,17 @@ export const Login = () => {
       ]
     )
   }, [mensajeError])
-  
+
   useEffect(() => {
-    if(!emailErrorMessage && password){
+    if (!emailErrorMessage && password) {
       setvalidLogin(true)
-    }else {
+    } else {
       setvalidLogin(false)
     }
-  
+
 
   }, [email, password])
-  
+
   return (
     <View style={styles.container}>
       <ImageBackground source={require('../img/loginBackground.jpg')} resizeMode="cover" style={styles.imageBackground}>
@@ -98,7 +98,7 @@ export const Login = () => {
             onChangeText={setEmail}
             value={email}
             autoCapitalize='none'
-            placeholder={emailErrorMessage ? emailErrorMessage: "Correo electrónico"}
+            placeholder={emailErrorMessage ? emailErrorMessage : "Correo electrónico"}
             keyboardType="email-address"
             inputMode="email"
             textAlign='center'
@@ -110,7 +110,7 @@ export const Login = () => {
             label="Correo electrónico"
             labelStyle={{ color: 'white' }}
             inputContainerStyle={emailErrorMessage ? styles.inputContainerError : styles.inputContainer}
-            onFocus={() => { setEmailErrorMessage("")}}
+            onFocus={() => { setEmailErrorMessage("") }}
 
           />
           <Input
@@ -129,6 +129,7 @@ export const Login = () => {
             inputContainerStyle={styles.inputContainer}
 
           />
+          
           <Button
             title="Continuar"
             onPress={iniciarSesion}
@@ -140,7 +141,14 @@ export const Login = () => {
             containerStyle={styles.buttonContainer}
           />
         </View>
-
+        <View style={styles.foobar}>
+          <Button
+            title='¿Olvidaste tu contraseña?'
+            type='clear'
+            onPress={() => navigation.navigate('ForgotPassword')}
+            titleStyle={{ color: 'white' }}
+          />
+        </View>
       </ImageBackground>
     </View>
   )
@@ -153,6 +161,6 @@ const stylesRegistro = StyleSheet.create({
     borderRadius: 2,
     justifyContent: 'center',
     alignItems: 'center',
-    fontSize:14,
+    fontSize: 14,
   },
 });

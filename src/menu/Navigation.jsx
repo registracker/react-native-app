@@ -27,6 +27,7 @@ import { Proximamente } from '../views/Proximamente';
 import { TerminosCondiciones } from '../views/TerminosCondiciones';
 import Contador from '../views/Contador';
 import { MisMarcadores } from '../views/Marcador/MisMarcadores';
+import { ForgotPassword } from '../views/Auth/ForgotPassword';
 
 
 
@@ -145,6 +146,7 @@ export const Navigation = () => {
                                         <Stack.Screen name='Home' component={Home} />
                                         <Stack.Screen name='Login' component={Login} />
                                         <Stack.Screen name='FormularioRegistro' component={FormularioRegistro} />
+                                        <Stack.Screen name='ForgotPassword' component={ForgotPassword} />
                                     </Stack.Group>
                             }
                         </Stack.Group>
