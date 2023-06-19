@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Icon, ListItem } from '@rneui/base';
 import { useContext } from 'react';
-import { ActivityIndicator, ImageBackground, Modal, ScrollView, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { ActivityIndicator, Modal, ScrollView, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import { primary, styles } from '../styles/style';
 import { AuthContext } from '../context/authentication/AuthContext'
-import { CatalogosContext } from '../context/store/CatalogosContext';
-import { dropMediosDesplazamientos } from '../database/TblMediosDesplazamientos';
-import { dropIncidentes } from '../database/TblIncidentes';
 import { Switch } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { format } from 'date-fns';
@@ -29,7 +26,6 @@ export const Ajustes = () => {
   const [checkOpcionMarcador, setCheckOpcionMarcador] = useState()
   const [checkOpcionContador, setCheckOpcionContador] = useState()
 
-  const { obtenerMediosDesplazamientos, obtenerIncidentes } = useContext(CatalogosContext)
   const [fecha] = useState(format(new Date(), 'yyyy'))
 
   const { isConnected } = useContext(NetworkContext)

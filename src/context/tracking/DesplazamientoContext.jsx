@@ -53,6 +53,12 @@ export const DesplazamientoProvider = ({ children }) => {
      */
     const enviarDesplazamiento = async (manual = false) => {
 
+        if (desplazamientoState.tracking.length === 0) {
+            showToast('Viaje demasiado corto')
+            dispatch({ type: 'detener' })
+            return;
+        }
+
         const data = {
             uuid: desplazamientoState.uuid,
             desplazamiento: desplazamientoState.tracking,

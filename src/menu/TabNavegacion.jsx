@@ -2,21 +2,17 @@ import React, { useContext } from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Desplazamiento } from '../views/Desplazamiento';
 import { Ajustes } from '../views/Ajustes';
-import { Icon, Image } from '@rneui/base';
+import { Icon } from '@rneui/base';
 import { styles } from '../styles/style';
 import { Registros } from '../views/Registros';
 import { useEffect } from 'react';
-import { useNetInfo } from '@react-native-community/netinfo';
 import { NetworkContext } from '../context/network/NetworkContext';
 import { DesplazamientoContext } from '../context/tracking/DesplazamientoContext';
-import Contador from '../views/Contador';
 import { CatalogosContext } from '../context/store/CatalogosContext';
 import { BitacoraContext } from '../context/bitacora/BitacoraContext';
 import { MarcadorContext } from '../context/levantamiento/MarcadorContext';
 import { IncidenteContext } from '../context/levantamiento/IncidenteContext';
 import { getOptionEnvioAutomatico } from '../utils/functions';
-import { Proximamente } from '../views/Proximamente';
-import ListadoVehiculo from '../views/ListadoVehiculo';
 import { MisContadores } from '../views/Contador/MisContadores';
 
 const Tab = createBottomTabNavigator();
@@ -31,7 +27,6 @@ const options = {
     headerBackAccessibilityLabel: 'Atrás',
     headerBackTitle: 'Atrás',
     headerBackTitleVisible: false,
-    //   cardOverlayEnabled: true
     tabBarStyle: {
         backgroundColor: 'white',
     }
@@ -53,18 +48,14 @@ export const TabNavegacion = () => {
             sincronizarReporteDesplazamiento(),
             sincronizarMarcadores(),
             sincronizarIncidentes(),
-            // envioAutomaticoDesplazamientos(),
-            // getOptionEnvioAutomatico()
+            getOptionEnvioAutomatico()
 
         ])
 
     }
 
     useEffect(() => {
-        // console.log("🚀 ~ file: TabNavegacion.jsx:63 ~ useEffect ~ netInfo:", netInfo)
         if (isConnected === true) {
-            // envioAutomaticoDesplazamientos()
-            // sincronizar()
             sincronizar()
         }
         obtenerBitacora()
@@ -82,13 +73,11 @@ export const TabNavegacion = () => {
                         <Icon name="map-marker-account" type='material-community' color={color} size={size} />
                     ),
                     tabBarLabelPosition: 'below-icon',
-                    // tabBarBadge: ''
                     tabBarActiveTintColor: styles.primary
                 }}
             />
             <Tab.Screen
                 name="MisContadores"
-                // component={Proximamente}
                 component={MisContadores}
                 options={{
                     title: 'Contador vehicular',
@@ -110,7 +99,6 @@ export const TabNavegacion = () => {
                     ),
                     tabBarLabelPosition: 'below-icon',
                     tabBarActiveTintColor: styles.primary
-                    // tabBarBadge: ''
                 }}
             />
             <Tab.Screen
@@ -123,8 +111,6 @@ export const TabNavegacion = () => {
                     ),
                     tabBarLabelPosition: 'below-icon',
                     tabBarActiveTintColor: styles.primary
-
-
                 }}
             />
         </Tab.Navigator>
