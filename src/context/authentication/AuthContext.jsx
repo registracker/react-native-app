@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer } from 'react'
 import { createContext } from 'react';
-import { http_axios } from '../../config/axios';
+import { instance } from '../../config/axios';
 import { authReducer } from './authReducer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ToastAndroid } from 'react-native';
@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }) => {
     const signIn = async (params) => {
 
         try {
-            const response = await http_axios('/api/sanctum/token', params, 'post');
+            const response = await instance('/api/sanctum/token', params, 'post');
             const token = response.data?.token;
             
             if (token){
@@ -60,7 +60,7 @@ export const AuthProvider = ({ children }) => {
 
     const logout = async() => {
         try {
-            await http_axios('/api/token', null, 'delete', null)
+            await instance('/api/token', null, 'delete', null)
             await deleteReporteIncidentes();
             await removeReporteMarcador();
             await removeDesplazamientos();
