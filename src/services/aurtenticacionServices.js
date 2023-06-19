@@ -1,4 +1,4 @@
-import {http_axios, instance} from '../config/axios';
+import {instance} from '../config/axios';
 
 export const register = async data =>
   await instance('/api/usuario', {}, 'post', data);

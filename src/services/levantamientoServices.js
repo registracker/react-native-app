@@ -1,9 +1,9 @@
 /* eslint-disable prettier/prettier */
-import { http_axios } from '../config/axios';
+import { instance } from '../config/axios';
 
 const getLevantamientoMarcador = async codigo => {
   try {
-    const { data, status } = await http_axios(`/api/levantamientos/${codigo}`);
+    const { data, status } = await instance(`/api/levantamientos/${codigo}`);
     return {
       data: data.data,
       status,
@@ -18,7 +18,7 @@ const getLevantamientoMarcador = async codigo => {
 
 const getLevantamientoContador = async codigo => {
   try {
-    const { data, status } = await http_axios(`/api/conteo-vehicular/${codigo}`);
+    const { data, status } = await instance(`/api/conteo-vehicular/${codigo}`);
     return {
       data: data.data,
       status,

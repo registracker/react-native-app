@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
-import {http_axios} from '../config/axios';
+import {instance} from '../config/axios';
 
 const getMediosDesplazamientos = async () => {
-  const response = await http_axios('/api/medios-desplazamiento');
+  const response = await instance('/api/medios-desplazamiento');
   const {data} = response.data;
   return data;
 };

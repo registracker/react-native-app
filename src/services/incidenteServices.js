@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { http_axios, instance } from '../config/axios';
+import { instance } from '../config/axios';
 
 const getIncidentes = async() => {
   const response = await instance('/api/incidentes');

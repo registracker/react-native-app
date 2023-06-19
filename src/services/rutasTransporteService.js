@@ -1,7 +1,7 @@
-import {http_axios, instance} from '../config/axios';
+import {instance} from '../config/axios';
 
 const getRutasTransporte = async () => {
-  const response = await http_axios('/api/rutas-transporte');
+  const response = await instance('/api/rutas-transporte');
   const {data} = response.data;
   return data;
 };
@@ -9,7 +9,7 @@ const getRutasTransporte = async () => {
 const postBuscarRutasTransporte = async (dato = {}, page) => {
 
   try {
-    const response = await http_axios(
+    const response = await instance(
       `/api/rutas-transporte/search${page ? `?${page}` : ''}`,
       null,
       'post',
