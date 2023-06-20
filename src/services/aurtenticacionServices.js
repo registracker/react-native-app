@@ -10,5 +10,18 @@ export const getRoles = async () => {
   const response = await instance('/api/roles');
   const {data} = response.data;
   data.shift();
-  return data
-}
+  return data;
+};
+
+export const forgotPassword = async email => {
+  const params = {
+    email,
+  };
+  const response = await instance('/api/forgot-password', params, 'post');
+  console.log(
+    '🚀 ~ file: aurtenticacionServices.js:23 ~ forgotPassword ~ response:',
+    response,
+  );
+  const {data, status} = response;
+  return {data, status};
+};
