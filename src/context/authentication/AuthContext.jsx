@@ -68,7 +68,7 @@ export const AuthProvider = ({ children }) => {
             await clearLocalStorage()
         } catch (error) {
             ToastAndroid.showWithGravity(
-                'Lo sentimos, algo salio mal.',
+                'Token expirado',
                 ToastAndroid.LONG,
                 ToastAndroid.CENTER,
             );
@@ -92,7 +92,7 @@ export const AuthProvider = ({ children }) => {
 
         } catch (error) {
             ToastAndroid.showWithGravity(
-                'Sin autenticacion',
+                'Sin autenticación',
                 ToastAndroid.SHORT,
                 ToastAndroid.CENTER,
             );
