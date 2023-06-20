@@ -4,7 +4,6 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Home } from '../views/Home';
 import { PermissionContext } from '../context/permissions/PermissionContext';
 import { Permisos } from '../views/Permisos';
-import { Login } from '../views/Login';
 import { FormularioRegistro } from '../views/FormularioRegistro';
 import { TabNavegacion } from './TabNavegacion';
 import { AuthContext } from '../context/authentication/AuthContext';
@@ -28,6 +27,7 @@ import { TerminosCondiciones } from '../views/TerminosCondiciones';
 import Contador from '../views/Contador';
 import { MisMarcadores } from '../views/Marcador/MisMarcadores';
 import { ForgotPassword } from '../views/Auth/ForgotPassword';
+import { Login } from '../views/Auth/Login';
 
 
 

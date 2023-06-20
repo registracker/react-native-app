@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Alert, ImageBackground, StyleSheet, Text, ToastAndroid, View } from 'react-native'
-import { primary, styles } from '../styles/style'
+import { primary, styles } from '../../styles/style'
 import { Button, Icon } from '@rneui/base'
-import { AuthContext } from '../context/authentication/AuthContext'
+import { AuthContext } from '../../context/authentication/AuthContext'
 import { Input } from '@rneui/themed'
 
 export const Login = ({navigation}) => {
@@ -91,7 +91,7 @@ export const Login = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <ImageBackground source={require('../img/loginBackground.jpg')} resizeMode="cover" style={styles.imageBackground}>
+      <ImageBackground source={require('../../img/loginBackground.jpg')} resizeMode="cover" style={styles.imageBackground}>
         <View style={styles.body} >
           <Text style={styles.titleText}>Iniciar sesión</Text>
           <Input
