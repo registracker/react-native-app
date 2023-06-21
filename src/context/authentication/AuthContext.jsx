@@ -26,6 +26,7 @@ export const AuthProvider = ({ children }) => {
 
 
     const signIn = async (params) => {
+    console.log("🚀 ~ file: AuthContext.jsx:29 ~ signIn ~ params:", params)
 
         try {
             const response = await instance('/api/sanctum/token', params, 'post');

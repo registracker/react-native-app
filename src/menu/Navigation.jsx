@@ -3,8 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { Home } from '../views/Home';
 import { PermissionContext } from '../context/permissions/PermissionContext';
-import { Permisos } from '../views/Permisos';
-import { FormularioRegistro } from '../views/FormularioRegistro';
+import { Permisos } from '../views/Ubicacion/Permisos';
 import { TabNavegacion } from './TabNavegacion';
 import { AuthContext } from '../context/authentication/AuthContext';
 import { ListadoDesplazamiento } from '../views/ListadoDesplazamiento';
@@ -21,13 +20,14 @@ import NetInfo from "@react-native-community/netinfo";
 import { NetworkContext } from '../context/network/NetworkContext';
 import ListadoVehiculo from '../views/ListadoVehiculo';
 import ListadoContador from '../views/ListadoContador';
-import { PermisosBackground } from '../views/PermisosBackground';
+import { PermisosBackground } from '../views/Ubicacion/PermisosBackground';
 import { Proximamente } from '../views/Proximamente';
 import { TerminosCondiciones } from '../views/TerminosCondiciones';
-import Contador from '../views/Contador';
+import Contador from '../views/Contador/Contador';
 import { MisMarcadores } from '../views/Marcador/MisMarcadores';
 import { ForgotPassword } from '../views/Auth/ForgotPassword';
 import { Login } from '../views/Auth/Login';
+import { FormularioRegistro } from '../views/Auth/FormularioRegistro';
 
 
 

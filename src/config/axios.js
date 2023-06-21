@@ -49,10 +49,9 @@ export const instance = async (url, params = {}, method = 'get', data = {}) => {
         showToast('SERVICE UNAVAILABLE. STATUS: 503')
         break;
       default:
-        console.log(error);
         break;
     }
-    console.log('🚀 ~ file: axios.js:117 ~ instance ~ error.response.:', JSON.stringify(error));
+    console.log('🚀 ~ file: axios.js:117 ~ instance ~ error.response.:', JSON.stringify(error, null,2 ));
 
   }
 };

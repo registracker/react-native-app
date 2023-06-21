@@ -4,20 +4,18 @@ import {
   FlatList,
   ImageBackground,
   Modal,
-  Pressable,
   ScrollView,
   StyleSheet,
   Text,
   ToastAndroid,
-  TouchableHighlight,
   TouchableOpacity,
   View,
 } from 'react-native';
-import { primary, styles } from '../styles/style';
+import { primary, styles } from '../../styles/style';
 import { Button, CheckBox, Icon } from '@rneui/base';
 import { Input } from '@rneui/themed';
-import { getRoles, register } from '../services/aurtenticacionServices';
-import { getTerminosCondiciones } from '../services/terminosCondicionesServices';
+import { getRoles, register } from '../../services/aurtenticacionServices';
+import { getTerminosCondiciones } from '../../services/terminosCondicionesServices';
 
 export const FormularioRegistro = ({ route, navigation }) => {
   const [email, setEmail] = useState('');
@@ -215,7 +213,7 @@ export const FormularioRegistro = ({ route, navigation }) => {
     <View style={styles.container}>
 
       <ImageBackground
-        source={require('../img/loginBackground.jpg')}
+        source={require('../../img/loginBackground.jpg')}
         resizeMode="cover"
         style={{
           flex: 1,

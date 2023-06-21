@@ -1,9 +1,9 @@
 import React, { useContext } from 'react'
 import { Image, ImageBackground, Linking, Text, View } from 'react-native'
-import { PermissionContext } from '../context/permissions/PermissionContext';
+import { PermissionContext } from '../../context/permissions/PermissionContext';
 import { Badge, Button } from '@rneui/base'
-import { Loading } from '../components/Loading';
-import { styles } from '../styles/style';
+import { Loading } from '../../components/Loading';
+import { styles } from '../../styles/style';
 import { useCallback } from 'react';
 import { NavigationContext } from '@react-navigation/native';
 
@@ -35,13 +35,13 @@ export const Permisos = () => {
 
   return (
     <View style={styles.container}>
-      <ImageBackground source={require('../img/loginBackground.jpg')} resizeMode="cover" style={{
+      <ImageBackground source={require('../../img/loginBackground.jpg')} resizeMode="cover" style={{
         flex: 1,
         justifyContent: 'center',
       }}>
         <View style={styles.body}>
           <Image
-            source={require('../img/permiso/map-pointer.png')}
+            source={require('../../img/permiso/map-pointer.png')}
             style={{ ...styles.image, width: '50%', height: '50%' }}
           />
           <Text style={styles.titleText}>

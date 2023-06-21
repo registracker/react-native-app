@@ -1,8 +1,8 @@
 import { View, Text, ImageBackground, Image, Linking } from 'react-native'
 import React, { useCallback, useContext } from 'react'
-import { styles } from '../styles/style'
+import { styles } from '../../styles/style'
 import { Badge, Button } from '@rneui/base'
-import { PermissionContext } from '../context/permissions/PermissionContext'
+import { PermissionContext } from '../../context/permissions/PermissionContext'
 
 export const PermisosBackground = ({navigation}) => {
 
@@ -25,13 +25,13 @@ export const PermisosBackground = ({navigation}) => {
 
     return (
         <View style={styles.container}>
-            <ImageBackground source={require('../img/background.jpg')} resizeMode="cover" style={{
+            <ImageBackground source={require('../../img/background.jpg')} resizeMode="cover" style={{
                 flex: 1,
                 justifyContent: 'center',
             }}>
                 <View style={styles.body}>
                     <Image
-                        source={require('../img/permiso/settings.png')}
+                        source={require('../../img/permiso/settings.png')}
                         style={{ ...styles.image, width: '50%', height: '50%' }}
                     />
                     <Text style={styles.titleText}>
@@ -40,18 +40,6 @@ export const PermisosBackground = ({navigation}) => {
                     <Text style={styles.text}>
                         Registracker utilizara los permisos de ubicación en segundo plano cuando la app esté cerrada con el objetivo de registrar la ubicación del usuario aun cuando la app no está en uso.
                     </Text>
-                    {/* <Text
-                        style={{
-                            textAlign: 'center',
-                            color: 'white',
-                            fontSize: 12,
-                            textDecorationLine: 'underline',
-                            marginTop: 10
-                        }}
-                        onPress={() => navigation.navigate('TerminosCondiciones')}
-                    >
-                        Términos y condiciones
-                    </Text> */}
                 </View>
                 <View style={[styles.foobar, styles.row, { justifyContent: 'space-around' }]} >
                     <Button
@@ -70,7 +58,6 @@ export const PermisosBackground = ({navigation}) => {
                                 title='Activar'
                                 onPress={askBackgroundLocations}
                                 buttonStyle={styles.buttonPrimary}
-                                // containerStyle={styles.buttonContainer}
                                 radius="lg"
                             />
                             : <OpenSettingsButton>Habilitar permisos</OpenSettingsButton>

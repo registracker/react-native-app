@@ -1,21 +1,18 @@
 import { ActivityIndicator, ImageBackground, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useCallback, useContext, useEffect, useState } from 'react'
-import { primary, styles } from '../styles/style'
+import { primary, styles } from '../../styles/style'
 import { Badge, Button, FAB, Icon, Input } from '@rneui/base'
-import { ContadorContext } from '../context/levantamiento/ContadorContext'
+import { ContadorContext } from '../../context/levantamiento/ContadorContext'
 import { FlatList, ScrollView } from 'react-native-gesture-handler'
-import { CatalogosContext } from '../context/store/CatalogosContext'
+import { CatalogosContext } from '../../context/store/CatalogosContext'
 import { compareAsc, format } from 'date-fns'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useFocusEffect } from '@react-navigation/native'
-import { NetworkContext } from '../context/network/NetworkContext'
-import { showToast } from '../utils/toast'
+import { NetworkContext } from '../../context/network/NetworkContext'
+import { showToast } from '../../utils/toast'
 
 const Contador = ({ navigation }) => {
 
-    const [levantamiento, setLevantamiento] = useState('f833-60f4-3336')
-    const [levantamientoErrors, setLevantamientoErrors] = useState()
-    const [cargando, setCargando] = useState(false)
     const [cantidad, setCantidad] = useState(0)
 
     const { isConnected } = useContext(NetworkContext)
@@ -219,7 +216,7 @@ const Contador = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <ImageBackground
-                source={require('../img/fondo.png')}
+                source={require('../../img/fondo.png')}
                 resizeMode="cover"
                 style={{
                     flex: 1,
