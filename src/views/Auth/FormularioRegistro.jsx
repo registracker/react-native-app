@@ -15,7 +15,10 @@ import { primary, styles } from '../../styles/style';
 import { Button, CheckBox, Icon } from '@rneui/base';
 import { Input } from '@rneui/themed';
 import { getRoles, register } from '../../services/aurtenticacionServices';
-import { getTerminosCondiciones } from '../../services/terminosCondicionesServices';
+import { Linking } from 'react-native';
+import { API_URL } from '@env';
+import { showToast } from '../../utils/toast';
+
 
 export const FormularioRegistro = ({ route, navigation }) => {
   const [email, setEmail] = useState('');
@@ -152,6 +155,12 @@ export const FormularioRegistro = ({ route, navigation }) => {
     }
   }
 
+  const redirectPolicy = () => {
+    const url = `${API_URL}/privacy`;
+    Linking.openURL(url)
+      .catch((err) => showToast('Ocurrió un error al mostrar términos y condiciones'));
+  }
+
   useEffect(() => {
 
     if (!email && password && passwordConfirm) {
@@ -183,13 +192,7 @@ export const FormularioRegistro = ({ route, navigation }) => {
       setRoles(roles);
       if (roles) setLoader(false);
     }
-    const obtenerTerminosCondiciones = async () => {
-      const data = await getTerminosCondiciones();
-      setTerminos(data.descripcion);
-      setLoaderTerminos(false);
-    }
     obtenerRoles()
-    obtenerTerminosCondiciones()
   }, [])
 
   const Item = ({ data }) => (
@@ -330,7 +333,7 @@ export const FormularioRegistro = ({ route, navigation }) => {
                     fontSize: 14,
                     textDecorationLine: 'underline'
                   }}
-                  onPress={() => setModalVisible(true)}
+                  onPress={() => redirectPolicy()}
                 >
                   He leído, acepto los
                   términos y condiciones
