@@ -16,6 +16,8 @@ import { getVehiculos } from '../../services/vehiculos';
 import { storeCatalogoMediosDesplazamientos } from '../../database/TblMediosDesplazamientos';
 import { dropVehiculosDatabase, storeVehiculosDatabase } from '../../database/TblVehiculos';
 import { dropMediosDesplazamientos } from '../../database/TblMediosDesplazamientos';
+import { showToast } from '../../utils/toast';
+import { CatalogosContext } from '../store/CatalogosContext';
 
 export const BitacoraContext = createContext();
 
@@ -28,10 +30,9 @@ const bitacoraInicial = {
 
 
 export const BitacoraProvider = ({ children }) => {
-
-
     const [bitacoraState, dispatch] = useReducer(bitacoraRecuder, bitacoraInicial)
     const { isConnected } = useContext(NetworkContext)
+    const {updateCatalogos} = useContext(CatalogosContext)
 
     obtenerBitacora = async () => {
         const data = await getBitacotaDatabase()
@@ -42,7 +43,7 @@ export const BitacoraProvider = ({ children }) => {
                 await storeBitacoraDatabase(bitacora)
                 dispatch({ type: 'obtener', bitacora })
             } catch (e) {
-                // console.log(e);
+                showToast('Verifica tu conexión a internet')
             }
         } else if (isConnected) {
             const newBitacora = await getBitacota()
@@ -74,24 +75,28 @@ export const BitacoraProvider = ({ children }) => {
                 case 'incidentes':
                     await dropIncidentes()
                     const incidentes = await getIncidentes()
+                    updateCatalogos('ctl_incidentes', incidentes)
                     await storeCatalogoIncidentes(incidentes)
                     await actualizarBitacora('incidentes', elemento.actualizado)
                     break;
                 case 'marcadores':
                     await dropMarcadoresDatabase()
                     const marcadores = await getMarcadores()
+                    updateCatalogos('clt_marcadores', marcadores)
                     await storeCatalogoMarcadores(marcadores)
                     await actualizarBitacora('marcadores', elemento.actualizado)
                     break;
                 case 'medios_desplazamiento':
                     await dropMediosDesplazamientos()
                     const medios = await getMediosDesplazamientos()
+                    updateCatalogos('medios_desplazamientos', medios)
                     await storeCatalogoMediosDesplazamientos(medios)
                     await actualizarBitacora('medios_desplazamiento', elemento.actualizado)
                     break;
                 case 'vehiculos':
                     await dropVehiculosDatabase()
                     const vehiculos = await getVehiculos()
+                    updateCatalogos('ctl_vehiculos', vehiculos)
                     vehiculos.forEach(element => {
                         element.contador = 0
                     });

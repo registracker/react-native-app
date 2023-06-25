@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Desplazamiento } from '../views/Desplazamiento';
 import { Ajustes } from '../views/Ajustes';
 import { Icon } from '@rneui/base';
-import { styles } from '../styles/style';
+import { primary, styles } from '../styles/style';
 import { Registros } from '../views/Registros';
 import { useEffect } from 'react';
 import { NetworkContext } from '../context/network/NetworkContext';
@@ -14,6 +14,8 @@ import { MarcadorContext } from '../context/levantamiento/MarcadorContext';
 import { IncidenteContext } from '../context/levantamiento/IncidenteContext';
 import { getOptionEnvioAutomatico } from '../utils/functions';
 import { MisContadores } from '../views/Contador/MisContadores';
+import { ActivityIndicator } from 'react-native';
+import { Loading } from '../components/Loading';
 
 const Tab = createBottomTabNavigator();
 
@@ -34,7 +36,7 @@ const options = {
 
 export const TabNavegacion = () => {
 
-    const { getCatalogos } = useContext(CatalogosContext)
+    const { getCatalogos, complete } = useContext(CatalogosContext)
     const { obtenerBitacora } = useContext(BitacoraContext)
 
     const { sincronizarMarcadores } = useContext(MarcadorContext)
@@ -61,6 +63,8 @@ export const TabNavegacion = () => {
         obtenerBitacora()
         getCatalogos()
     }, [])
+
+    if(!complete) return <Loading/>    
 
     return (
         <Tab.Navigator screenOptions={options}>

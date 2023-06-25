@@ -40,6 +40,11 @@ export const catalogosReducer = (state, action) => {
             : state.ctl_medios_desplazamientos.lastUpdated,
         },
       };
+    case 'complete':
+      return {
+        ...state,
+        complete: true
+      };
     default:
       return state;
   }

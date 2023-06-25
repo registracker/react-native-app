@@ -23,6 +23,7 @@ const catalogosInicial = {
     ctl_incidentes: {},
     clt_marcadores: {},
     ctl_vehiculos: {},
+    complete: undefined
 }
 
 export const CatalogosProvider = ({ children }) => {
@@ -131,12 +132,17 @@ export const CatalogosProvider = ({ children }) => {
                 obtenerVehiculos
             ])
             if (await medios() && await incidente() && await marcador() && await vehiculo() ){
-                // console.log("Catalogo Listo");
+                dispatch({type: 'complete'})
             }
         } catch (error) {
             showToast('No se puede sincronizar los catálogos')
         }
     }
+
+    const updateCatalogos = async (type, data) => {
+        dispatch({ type, payload: { data } })
+    }
+
     return (
         <CatalogosContext.Provider
             value={{
@@ -145,6 +151,7 @@ export const CatalogosProvider = ({ children }) => {
                 obtenerIncidentes,
                 obtenerVehiculos,
                 getCatalogos,
+                updateCatalogos,
             }}
         >
             {children}
