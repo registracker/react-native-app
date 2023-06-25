@@ -7,6 +7,7 @@ import { useState } from 'react'
 import { ScrollView } from 'react-native'
 import { forgotPassword } from '../../services/aurtenticacionServices'
 import { showToast } from '../../utils/toast'
+import { useEffect } from 'react'
 
 export const ForgotPassword = ({ navigation }) => {
 
@@ -39,6 +40,15 @@ export const ForgotPassword = ({ navigation }) => {
         }
         setLoading(false);
     }
+
+    useEffect(() => {
+      if(isEmail()){
+        setValidEmail(true)
+    }else {
+          setValidEmail(false)
+      }
+    }, [email])
+    
 
 
     return (
