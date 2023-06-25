@@ -20,7 +20,7 @@ export default ListadoVehiculo = ({ navigation }) => {
     const { actualizarListado, listado } = useContext(ContadorContext)
 
     const [selectedItems, setSelectedItems] = useState([]);
-    const [cantidad] = useState(CANT_VEHICULOS)
+    const [cantidad] = useState(CANT_VEHICULOS || 3)
 
     const onSelectedItemsChange = (item) => {
 
@@ -52,7 +52,6 @@ export default ListadoVehiculo = ({ navigation }) => {
         await AsyncStorage.removeItem('levantamiento-contador')
         setSelectedItems([])
         navigation.navigate('MisContadores');
-
     }
 
     useEffect(() => {

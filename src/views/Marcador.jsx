@@ -35,7 +35,10 @@ const Marcador = ({navigation}) => {
 
     await Geolocation.getCurrentPosition(
       async ubicacion => {
-        console.log("🚀 ~ file: Marcador.jsx:38 ~ enviarMarcador ~ ubicacion:", ubicacion)
+        console.log(
+          '🚀 ~ file: Marcador.jsx:38 ~ enviarMarcador ~ ubicacion:',
+          ubicacion,
+        );
         const levantamiento = await AsyncStorage.getItem('levantamiento');
         const {codigo} = JSON.parse(levantamiento);
         const datos = {
@@ -101,7 +104,7 @@ const Marcador = ({navigation}) => {
     await AsyncStorage.removeItem('levantamiento');
     restablecer();
     showToast('Levantamiento cerrado');
-    navigation.navigate('TabNavegacion');
+    navigation.navigate('MisMarcadores');
   };
 
   useEffect(() => {
@@ -125,6 +128,18 @@ const Marcador = ({navigation}) => {
           />
         </TouchableOpacity>
       ),
+      headerLeft: () => (
+        <Icon
+          onPress={() => {
+            navigation.navigate('TabNavegacion');
+          }}
+          type="ionicons"
+          color="white"
+          name="arrow-back"
+          size={30}
+          style={{marginRight: 5}}
+        />
+      ),
     });
   }, [navigation]);
 
@@ -139,9 +154,41 @@ const Marcador = ({navigation}) => {
           tintColor: 'transparent',
         }}>
         <View style={styles.body}>
-          <Text style={styles.chip}>Código: {levantamiento.codigo}</Text>
+          <View
+            style={[
+              styles.item,
+              {
+                justifyContent: 'flex-start',
+                padding: 8,
+                height: 80,
+              },
+            ]}
+            activeOpacity={0.4}
+            >
+            <View style={{width: '10%'}}>
+              <Icon name="traffic-light" type="material-community" />
+            </View>
+            <View style={{alignItems: 'flex-start', width: '60%'}}>
+              <Text style={[styles.textBlack, {textAlign: 'left'}]}>
+                Código: {levantamiento?.codigo}
+              </Text>
+              <Text
+                style={[styles.textBlack, {textAlign: 'left', fontSize: 14}]}>
+                Creado:{' '}
+                {format(
+                  new Date(levantamiento.fecha_creado),
+                  'yyyy-MM-dd hh:mm:ss aaaa',
+                )}
+              </Text>
+            </View>
+            <View style={{width: '30%'}}>
+              <Text
+                style={[styles.textBlack, {textAlign: 'right', fontSize: 14}]}>
+                Finaliza: {levantamiento.fecha_vencimiento}
+              </Text>
+            </View>
+          </View>
           <Text style={styles.title}>Seleccione un marcador</Text>
-
           <FlatList
             data={clt_marcadores.data}
             renderItem={renderItem}
