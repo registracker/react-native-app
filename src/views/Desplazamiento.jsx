@@ -204,6 +204,7 @@ export const Desplazamiento = ({navigation}) => {
           </>
         </View>
         <SpeedDial
+          labelPressable
           isOpen={open}
           icon={stylesDesplazamiento.iconoFAB}
           openIcon={stylesDesplazamiento.iconoFABClose}
