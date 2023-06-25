@@ -111,7 +111,7 @@ export const storeReporteIncidente = data => {
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
-        'INSERT INTO tbl_reporte_incidente (desplazamiento_id, id_incidente, nombre, icono, longitud, latitud, altitud, fecha_reporte) VALUES (?, ?, ?, ?, ?, ?, ?, ?);',
+        'INSERT INTO tbl_reporte_incidente (desplazamiento_id, id_incidente, nombre, icono, longitud, latitud, altitud, fecha_reporte, enviado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);',
         [
           data.desplazamiento_id,
           data.id_incidente,
@@ -121,6 +121,7 @@ export const storeReporteIncidente = data => {
           data.latitud,
           data.altitud,
           data.fecha_reporte,
+          data.enviado || 0,
         ],
         (sqlTxn, result) => {
           resolve(result);

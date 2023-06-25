@@ -7,8 +7,9 @@ const getIncidentes = async() => {
   return data
 }
 
-const postIncidente = async data => {
-  await instance('/api/reporte-incidente', null, 'post', data);
+const postIncidente = async datos => {
+  const {data, status}  = await instance('/api/reporte-incidente', null, 'post', datos);
+  return { data, status}
 };
 
 module.exports = {

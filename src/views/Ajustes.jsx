@@ -9,6 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { format } from 'date-fns';
 import { NetworkContext } from '../context/network/NetworkContext';
 import { useCallback } from 'react';
+import { BitacoraContext } from '../context/bitacora/BitacoraContext';
 
 
 export const Ajustes = () => {
@@ -29,17 +30,17 @@ export const Ajustes = () => {
   const [fecha] = useState(format(new Date(), 'yyyy'))
 
   const { isConnected } = useContext(NetworkContext)
+  const { obtenerBitacora } = useContext(BitacoraContext)
 
   const cerrarSesion = () => {
     setLoading(true);
     logout();
   }
 
-  const sincronizarCatalogos = () => {
+  const sincronizarCatalogos = async() => {
     setSincronizarLoading(true);
-    setTimeout(() => {
-      setSincronizarLoading(false);
-    }, 2000);
+    await obtenerBitacora()
+    setSincronizarLoading(false);
   };
 
   const sincronizarDesplazamiento = async (value) => {

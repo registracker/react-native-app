@@ -37,16 +37,21 @@ export const IncidenteProvider = ({ children }) => {
             altitud: position.coords.altitude,
             fecha_reporte: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
         };
-        const response = await storeReporteIncidente(data);
-        if (response.rowsAffected === 1) {
-
-            const optionIncidente = await AsyncStorage.getItem('opcion-incidente');
-            if (optionIncidente === 'activo' && isConnected) {
-                await postIncidente(data)
-                showToast('Incidente registrado');
-            } else {
+        
+        const optionIncidente = await AsyncStorage.getItem('opcion-incidente');
+        if (optionIncidente === 'activo' && isConnected) {
+            const {status} = await postIncidente(data)
+            if (status === 201) {
+                data.enviado = 1
+                const response = await storeReporteIncidente(data);
+                if (response.rowsAffected === 1) {
+                    showToast('Incidente registrado');
+                }
+            }
+        } else {
+            const response = await storeReporteIncidente(data);
+            if (response.rowsAffected === 1) {
                 showToast('Incidente registrado temporalmente');
-
             }
         }
     }
