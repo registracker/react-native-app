@@ -1,13 +1,12 @@
 
 
-import { View, Text } from 'react-native'
 import React from 'react'
 import { createContext } from 'react'
 import { useReducer } from 'react'
 import { marcadorReducer } from './marcadoreReducer'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { getLevantamientoMarcador } from '../../services/levantamientoServices'
-import { compareAsc } from 'date-fns'
+import { isAfter, isEqual } from 'date-fns'
 import { sincronizarMarcadoresDatabase } from '../../database/TblReporteMarcador'
 import { postReporteMarcador } from '../../services/marcadorServices';
 import { showToast } from '../../utils/toast'
@@ -43,12 +42,12 @@ export const MarcadorProvider = ({ children }) => {
     const verificar = async () => {
         const previo = await AsyncStorage.getItem('levantamiento')
         if (previo) {
+            const fechaActual = new Date();
             const levantamiento = JSON.parse(previo);
             const { fecha_vencimiento } = levantamiento
             const [day, month, year] = fecha_vencimiento.split('-');
             const fecha = new Date(year, month - 1, day);
-            const valido = compareAsc(fecha, new Date())
-            if (valido === 1) {
+            if (isAfter(fecha, fechaActual) || isEqual(fecha, fechaActual) ) {
                 dispatch({ type: 'guardar', payload: { levantamiento, fecha_vencimiento } })
             } else {
                 await restablecer()

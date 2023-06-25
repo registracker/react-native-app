@@ -5,7 +5,7 @@ import { Badge, Button, FAB, Icon, Input } from '@rneui/base'
 import { ContadorContext } from '../../context/levantamiento/ContadorContext'
 import { FlatList, ScrollView } from 'react-native-gesture-handler'
 import { CatalogosContext } from '../../context/store/CatalogosContext'
-import { compareAsc, format } from 'date-fns'
+import { compareAsc, format, isAfter, isEqual } from 'date-fns'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useFocusEffect } from '@react-navigation/native'
 import { NetworkContext } from '../../context/network/NetworkContext'
@@ -59,12 +59,12 @@ const Contador = ({ navigation }) => {
         setLoading(true)
         const previo = await AsyncStorage.getItem('levantamiento-contador')
         if (previo) {
+            const fechaActual = new Date();
             const levantamiento = JSON.parse(previo);
             const { periodo_fin } = levantamiento
             const [year, month, day] = periodo_fin?.split('-');
             const fecha = new Date(year, month - 1, day);
-            const valido = compareAsc(fecha, new Date())
-            if (valido === 1) {
+            if (isAfter(fecha, fechaActual) || isEqual(fecha, fechaActual)) {
                 if (isConnected) {
                     await guardar(levantamiento.codigo);
                 } else {
