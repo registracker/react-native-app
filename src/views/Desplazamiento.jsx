@@ -19,7 +19,6 @@ import { DesplazamientoContext } from '../context/tracking/DesplazamientoContext
 import { NetworkContext } from '../context/network/NetworkContext';
 
 //FUNCIONES
-import { getUbicacionActual } from '../utils/functions';
 import { showToast } from '../utils/toast';
 
 const LOCATION_TASK_NAME = 'locationTask';
@@ -142,7 +141,6 @@ export const Desplazamiento = ({navigation}) => {
         <MarcadorModalComponent
           open={modalMarcador}
           setOpen={setModalMarcador}
-          getUbicacion={getUbicacionActual}
         />
         <ModalComponent
           modalVisible={modalIncidentes}

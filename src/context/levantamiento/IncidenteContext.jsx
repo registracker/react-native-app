@@ -56,7 +56,7 @@ export const IncidenteProvider = ({ children }) => {
                 }
             },
             (error) => {
-              showToast('Habilitar ubicación')
+                showToast('Activa la ubicación del dispositivo')
             },
             { enableHighAccuracy: true, timeout: 15000, maximumAge: 1000 }
         );
