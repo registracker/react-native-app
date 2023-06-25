@@ -101,8 +101,8 @@ export const clearLocalStorage = async () => {
 };
 
 export const truncateText = (text, maxLength = 150) => {
-  if (text.length <= maxLength) {
+  if (text?.length <= maxLength) {
     return text;
   }
-  return text.substring(0, maxLength) + '...';
+  return text?.substring(0, maxLength) + '...';
 };
