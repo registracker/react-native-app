@@ -20,7 +20,6 @@ export const Login = ({navigation}) => {
   }
 
   const iniciarSesion = async () => {
-    try {
       setCargando(true)
       setvalidLogin(false)
 
@@ -31,15 +30,7 @@ export const Login = ({navigation}) => {
         iniciarSesion()
       }
 
-    } catch (error) {
-      ToastAndroid.showWithGravity(
-        'Ha ocurrido un error interno',
-        ToastAndroid.SHORT,
-        ToastAndroid.CENTER,
-      );
-    } finally {
       setCargando(false)
-    }
   }
 
   const cleanForm = () => {

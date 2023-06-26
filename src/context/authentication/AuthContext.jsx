@@ -41,7 +41,7 @@ export const AuthProvider = ({children}) => {
       }
       return false;
     } catch (error) {
-      if (error.response.status === 422) {
+      if (error?.response?.status === 422) {
         dispatch({
           type: 'error',
           payload: {
