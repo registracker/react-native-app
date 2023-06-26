@@ -90,16 +90,18 @@ export const AuthProvider = ({children}) => {
     const token = await AsyncStorage.getItem('token');
     if (!token) return dispatch({type: 'logout'});
     if (isConnected) {
-      headers.Authorization = `Bearer ${token}`;
-      const intance = await axios.create({
-        baseURL,
-        headers,
-      });
-      const {data, status} = await intance.get('/api/user');
-      if (status === 200) {
-        const {usuario} = data;
-        dispatch({type: 'signIn', payload: {token, usuario}});
-      } else {
+      try {
+        headers.Authorization = `Bearer ${token}`;
+        const intance = await axios.create({
+          baseURL,
+          headers,
+        });
+        const {data, status} = await intance.get('/api/user');
+        if (status === 200) {
+          const {usuario} = data;
+          dispatch({type: 'signIn', payload: {token, usuario}});
+        }
+      } catch (error) {
         await logout();
       }
     }
