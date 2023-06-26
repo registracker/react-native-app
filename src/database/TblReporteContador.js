@@ -150,6 +150,53 @@ export const deleteReporteContadorCodigoDatabase = codigo => {
   });
 };
 
+export const sincronizarContadorDatabase = () => {
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'SELECT * FROM tbl_reporte_contador WHERE enviado != 1;',
+        [],
+        (sqlTxn, res) => {
+          let len = res.rows.length;
+          let result = [];
+
+          if (len > 0) {
+            result = res.rows.raw();
+          }
+          resolve(result);
+        },
+        error => {
+          reject(error);
+        },
+      );
+    });
+  });
+};
+
+
+export const updateAllContadorDatabase = () => {
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'UPDATE tbl_reporte_contador SET enviado = 1;',
+        [],
+        (sqlTxn, res) => {
+          let len = res.rows.length;
+          let result = [];
+
+          if (len > 0) {
+            result = res.rows.raw();
+          }
+          resolve(result);
+        },
+        error => {
+          reject(error);
+        },
+      );
+    });
+  });
+};
+
 const createValues = data => {
   const inserting_incidentes = data.map(item => {
     return `('${item.codigo}', '${JSON.stringify(item)}', 0),`;

@@ -11,6 +11,7 @@ const enviarReporte = async datos => {
   const body = {
     resources: datos
   }
+  console.log("🚀 ~ file: vehiculos.js:14 ~ enviarReporte ~ body:", body)
   // console.log("🚀 ~ file: vehiculos.js:14 ~ enviarReporte ~ body:", body)
 
   const response = await instance(

@@ -205,7 +205,7 @@ const Contador = ({navigation}) => {
           }}
           onPress={() => restar(index)}
           activeOpacity={0}>
-          <Icon type="material-community" name="minus-thick" color={primary} />
+          <Icon type="material-community" name="minus-thick" color={primary} size={40} />
         </TouchableOpacity>
         <View
           style={{
@@ -229,7 +229,7 @@ const Contador = ({navigation}) => {
           onPress={() => sumar(index)}
           delayPressIn={0}
           activeOpacity={0}>
-          <Icon type="ionicons" name="add" color={primary} />
+          <Icon type="ionicons" name="add" color={primary} size={40}  />
         </TouchableOpacity>
       </View>
     </View>

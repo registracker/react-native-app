@@ -171,7 +171,7 @@ export const Desplazamiento = ({navigation}) => {
           setOpen={setCostoDesplazamientoModal}
         />
         <View style={[styles.row, styles.center]}>
-          <View style={[styles.chip, styles.row, {height: 80, width: 400}]}>
+          <View style={[styles.chip, styles.row, {height: 80, width: '80%'}]}>
           <Icon name='cellphone-marker' type='material-community' color={'white'} style={{ marginRight: 5 }} />
 
             <Text style={{...styles.text, fontWeight: 'bold'}}>

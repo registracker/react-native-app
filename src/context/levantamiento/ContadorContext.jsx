@@ -10,7 +10,7 @@ import { enviarReporte } from '../../services/vehiculos';
 import { useContext } from "react";
 import { CatalogosContext } from "../store/CatalogosContext";
 import { NetworkContext } from "../network/NetworkContext";
-import { storeReporteContadorDatabase } from "../../database/TblReporteContador";
+import { sincronizarContadorDatabase, storeReporteContadorDatabase, updateAllContadorDatabase } from "../../database/TblReporteContador";
 import { showToast } from "../../utils/toast";
 
 export const ContadorContext = createContext()
@@ -152,6 +152,22 @@ export const ContadorProvider = ({ children }) => {
         dispatch({ type: 'get-ultimo-contador', payload: { ultimo: contador } });
         return contador
     }
+
+    const sincronizarContadores = async() => {
+        const contador = await AsyncStorage.getItem('opcion-contador');
+        if (contador !== 'activo') {
+            const datos = await sincronizarContadorDatabase()
+            if(datos.length > 0){
+                const database = datos.map(item =>JSON.parse(item.contador))         
+                const {status} = await enviarReporte(database);
+                if(status === 200){
+                    updateAllContadorDatabase()
+                    showToast('Contador sincronizados')
+                }
+            }
+        }
+    }
+
     return (
         <ContadorContext.Provider value={{
             ...contadorState,
@@ -163,6 +179,7 @@ export const ContadorProvider = ({ children }) => {
             actualizarConteo,
             actualizarListado,
             getUltimoContador,
+            sincronizarContadores,
         }} >
             {children}
         </ContadorContext.Provider>

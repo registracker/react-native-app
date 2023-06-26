@@ -17,6 +17,7 @@ import { MisContadores } from '../views/Contador/MisContadores';
 import { ActivityIndicator } from 'react-native';
 import { Loading } from '../components/Loading';
 import { AuthContext } from '../context/authentication/AuthContext';
+import { ContadorContext } from '../context/levantamiento/ContadorContext';
 
 const Tab = createBottomTabNavigator();
 
@@ -42,6 +43,8 @@ export const TabNavegacion = () => {
 
     const { sincronizarMarcadores } = useContext(MarcadorContext)
     const { sincronizarIncidentes } = useContext(IncidenteContext)
+    const { sincronizarContadores } = useContext(ContadorContext)
+
     const { isConnected } = useContext(NetworkContext)
     const { verificarToken } = useContext(AuthContext)
 
@@ -52,6 +55,7 @@ export const TabNavegacion = () => {
             sincronizarReporteDesplazamiento(),
             sincronizarMarcadores(),
             sincronizarIncidentes(),
+            sincronizarContadores(),
             getOptionEnvioAutomatico()
 
         ])
