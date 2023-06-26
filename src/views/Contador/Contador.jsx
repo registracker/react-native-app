@@ -58,6 +58,7 @@ const Contador = ({navigation}) => {
     setModalVisible(!modalVisible);
     showToast('Conteo vehicular finalizado');
     restablecerContador();
+    navigation.navigate('MisContadores')
   };
 
   const verificar = async () => {

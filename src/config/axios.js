@@ -13,9 +13,10 @@ export const headers = {
 };
 
 export const instance = async (url, params = {}, method = 'get', data = {}) => {
-  console.log('🚀 ** file: axios.js:89 ~ instance ~ baseURL:', baseURL + url);
+  console.log('🚀 file: axios.js:89 ~ instance ~ baseURL:', baseURL + url);
   // Set token in axios instance.
   const token = await AsyncStorage.getItem('token');
+  console.log("🚀 ~ file: axios.js:19 ~ instance ~ token:", token)
   if (token !== null) {
     headers.Authorization = `Bearer ${token}`;
   }

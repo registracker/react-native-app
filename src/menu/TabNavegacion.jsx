@@ -62,16 +62,24 @@ export const TabNavegacion = () => {
 
     }
 
-    useEffect(() => {
-        verificarToken()
-        if (isConnected === true) {
-            sincronizar()
+    const validToken = async () => { 
+        const valid = await verificarToken()
+        if (valid) {
+            console.log("🚀 ~ file: TabNavegacion.jsx:68 ~ validToken ~ valid:", valid)
+            if (isConnected === true) {
+                await sincronizar()
+            }
+            await obtenerBitacora()
+            await getCatalogos()
         }
-        obtenerBitacora()
-        getCatalogos()
+    }
+
+    useEffect(() => {
+        validToken()
+
     }, [])
 
-    if(!complete) return <Loading/>    
+    if (!complete) return <Loading />
 
     return (
         <Tab.Navigator screenOptions={options}>
