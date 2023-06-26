@@ -1,25 +1,31 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ImageBackground, ToastAndroid } from 'react-native';
-import { FAB, Icon, SpeedDial } from '@rneui/base';
+import React, {useContext, useEffect, useState} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ImageBackground,
+  ToastAndroid,
+} from 'react-native';
+import {FAB, Icon, Image, SpeedDial} from '@rneui/base';
 import Geolocation from 'react-native-geolocation-service';
 
 import BackgroundActions from 'react-native-background-actions';
 import KeepAwake from '@sayem314/react-native-keep-awake';
 
 //Componentes
-import { primary, styles } from '../styles/style';
-import { MediosDesplazamientosComponentes } from '../components/MediosDesplazamientosComponentes';
-import { ModalComponent } from '../components/ModalComponent';
-import { MarcadorModalComponent } from '../components/MarcadorModalComponent';
+import {primary, styles} from '../styles/style';
+import {MediosDesplazamientosComponentes} from '../components/MediosDesplazamientosComponentes';
+import {ModalComponent} from '../components/ModalComponent';
+import {MarcadorModalComponent} from '../components/MarcadorModalComponent';
 import RutaTransporteModalComponent from '../components/RutaTransporteModalComponent';
 import CostoDesplazamientoModalComponent from '../components/CostoDesplazamientoModalComponent';
 
 //Context
-import { DesplazamientoContext } from '../context/tracking/DesplazamientoContext';
-import { NetworkContext } from '../context/network/NetworkContext';
+import {DesplazamientoContext} from '../context/tracking/DesplazamientoContext';
+import {NetworkContext} from '../context/network/NetworkContext';
 
 //FUNCIONES
-import { showToast } from '../utils/toast';
+import {showToast} from '../utils/toast';
 
 const LOCATION_TASK_NAME = 'locationTask';
 
@@ -27,16 +33,26 @@ export const Desplazamiento = ({navigation}) => {
   const [position, setPosition] = useState();
   const [viajeIniciado, setViajeIniciado] = useState(false);
   const [open, setOpen] = useState(false);
-  const [medio, setMedio] = useState({ id: 1, nombre: 'Caminando', icono: 'walk' });
+  const [medio, setMedio] = useState({
+    id: 1,
+    nombre: 'Caminando',
+    icono: 'walk',
+  });
   const [modalIncidentes, setModalIncidentes] = useState(false);
   const [modalMarcador, setModalMarcador] = useState(false);
-  const [medioTransporteModal, setMedioTransporteModal] = useState(false)
-  const [costoDesplazamientoModal, setCostoDesplazamientoModal] = useState(false)
+  const [medioTransporteModal, setMedioTransporteModal] = useState(false);
+  const [costoDesplazamientoModal, setCostoDesplazamientoModal] =
+    useState(false);
 
-  const { agregarMedioDesplazamiento, iniciarDesplazamiento, registrarDesplazamiento } = useContext(DesplazamientoContext)
-  const { isConnected } = useContext(NetworkContext)
+  const {
+    agregarMedioDesplazamiento,
+    iniciarDesplazamiento,
+    registrarDesplazamiento,
+  } = useContext(DesplazamientoContext);
+  const {isConnected} = useContext(NetworkContext);
 
-  const sleep = (time) => new Promise((resolve) => setTimeout(() => resolve(), time));
+  const sleep = time =>
+    new Promise(resolve => setTimeout(() => resolve(), time));
 
   const configureBackgroundActions = async () => {
     const taskOptions = {
@@ -53,9 +69,9 @@ export const Desplazamiento = ({navigation}) => {
       },
     };
 
-    const locationTask = async (taskData) => {
+    const locationTask = async taskData => {
       try {
-        const { delay } = taskData;
+        const {delay} = taskData;
 
         const watch = Geolocation.watchPosition(
           position => {
@@ -68,11 +84,10 @@ export const Desplazamiento = ({navigation}) => {
             enableHighAccuracy: true,
             interval: 5000,
             distanceFilter: 0,
-          }
+          },
         );
         do {
           await sleep(delay);
-
         } while (BackgroundActions.isRunning());
         Geolocation.clearWatch(watch);
         return taskData;
@@ -84,10 +99,12 @@ export const Desplazamiento = ({navigation}) => {
     try {
       await BackgroundActions.start(locationTask, taskOptions);
     } catch (error) {
-      showToast('Error al iniciar la tarea en segundo plano', ToastAndroid.LONG);
+      showToast(
+        'Error al iniciar la tarea en segundo plano',
+        ToastAndroid.LONG,
+      );
     }
   };
-
 
   const getLocationObservation = () => {
     setViajeIniciado(true);
@@ -98,15 +115,15 @@ export const Desplazamiento = ({navigation}) => {
     if (viajeIniciado) {
       setViajeIniciado(false);
       BackgroundActions.stop(LOCATION_TASK_NAME);
-      setPosition()
-      setCostoDesplazamientoModal(true);  //Modal for displaying costo de desplazamiento
+      setPosition();
+      setCostoDesplazamientoModal(true); //Modal for displaying costo de desplazamiento
       showToast('Viaje finalizado', ToastAndroid.LONG);
     }
   };
 
   /**
-  * Abrir Modal de ingreso de incidentes
-  */
+   * Abrir Modal de ingreso de incidentes
+   */
   const openModalIncidentes = () => {
     setModalIncidentes(true);
     setOpen(false);
@@ -114,29 +131,28 @@ export const Desplazamiento = ({navigation}) => {
 
   useEffect(() => {
     if (viajeIniciado) registrarDesplazamiento(position, medio);
-  }, [position])
-
+  }, [position]);
 
   useEffect(() => {
-    if (medio.nombre === 'Autobús' && viajeIniciado && isConnected) setMedioTransporteModal(true)
+    if (medio.nombre === 'Autobús' && viajeIniciado && isConnected)
+      setMedioTransporteModal(true);
   }, [medio]);
 
   useEffect(() => {
     if (viajeIniciado) {
-      iniciarDesplazamiento()
-      agregarMedioDesplazamiento(medio)
-      if (medio.nombre === 'Autobús' && isConnected) setMedioTransporteModal(true)
+      iniciarDesplazamiento();
+      agregarMedioDesplazamiento(medio);
+      if (medio.nombre === 'Autobús' && isConnected)
+        setMedioTransporteModal(true);
     }
-  }, [viajeIniciado])
-
+  }, [viajeIniciado]);
 
   return (
     <View style={styles.container}>
       <ImageBackground
         source={require('../img/fondo.png')}
         resizeMode="cover"
-        style={styles.imageBackground}
-      >
+        style={styles.imageBackground}>
         <KeepAwake />
         <MarcadorModalComponent
           open={modalMarcador}
@@ -154,23 +170,28 @@ export const Desplazamiento = ({navigation}) => {
           open={costoDesplazamientoModal}
           setOpen={setCostoDesplazamientoModal}
         />
-        <View style={styles.row}>
-          <View style={styles.chip}>
-            <Icon name='cellphone-marker' type='material-community' color={'white'} style={{ marginRight: 5 }} />
-            {
-              isConnected && viajeIniciado ?
-                <Text style={styles.text}>Registrando</Text>
-                : !isConnected && viajeIniciado ?
-                  <Text style={styles.text}>Registrando sin conexión</Text>
-                  :
-                  <Text style={{ ...styles.textBlack, color: 'white', fontWeight: 'bold' }}>REGISTRACKER</Text>
+        <View style={[styles.row, styles.center]}>
+          <View style={[styles.chip, styles.row, {height: 80, width: 400}]}>
+          <Icon name='cellphone-marker' type='material-community' color={'white'} style={{ marginRight: 5 }} />
+
+            <Text style={{...styles.text, fontWeight: 'bold'}}>
+                REGISTRACKER
+              </Text>
+            {viajeIniciado ? 
+                <Image
+                  style={{width: 60, height: 60}}
+                  source={require('../img/travel/location-maps.gif')}
+                />
+              :
+              <Image
+                  style={{width: 60, height: 60}}
+                  source={require('../img/travel/location.png')}
+                />
             }
           </View>
         </View>
         <View style={styles.body}>
-          <Text style={styles.title}>
-            Elige tu modo de desplazamiento
-          </Text>
+          <Text style={styles.title}>Elige tu modo de desplazamiento</Text>
           <MediosDesplazamientosComponentes
             selected={medio}
             cambiarMedio={setMedio}
@@ -184,7 +205,7 @@ export const Desplazamiento = ({navigation}) => {
                 placement="left"
                 upperCase
                 icon={stylesDesplazamiento.iconoTerminarViaje}
-                style={{ marginBottom: 20 }}
+                style={{marginBottom: 20}}
                 color={styles.primary}
               />
             ) : (
@@ -195,7 +216,7 @@ export const Desplazamiento = ({navigation}) => {
                 placement="left"
                 upperCase
                 icon={stylesDesplazamiento.iconoComenzarViaje}
-                style={{ marginBottom: 20 }}
+                style={{marginBottom: 20}}
                 color="green"
               />
             )}
@@ -213,15 +234,18 @@ export const Desplazamiento = ({navigation}) => {
             title="Marcador"
             icon={stylesDesplazamiento.iconoMarcador}
             color={styles.primary}
-            onPress={() => {navigation.navigate('MisMarcadores'); setOpen(!open)}}
-            titleStyle={{...styles.textBlack, borderRadius:15}}
+            onPress={() => {
+              navigation.navigate('MisMarcadores');
+              setOpen(!open);
+            }}
+            titleStyle={{...styles.textBlack, borderRadius: 15}}
           />
           <SpeedDial.Action
             title="Incidente"
             icon={stylesDesplazamiento.iconoIncidente}
             color={styles.primary}
             onPress={openModalIncidentes}
-            titleStyle={{ ...styles.textBlack, borderRadius: 15 }}
+            titleStyle={{...styles.textBlack, borderRadius: 15}}
           />
         </SpeedDial>
       </ImageBackground>
@@ -251,9 +275,10 @@ const stylesDesplazamiento = StyleSheet.create({
     margin: 10,
     padding: 10,
   },
-  textPanel: { color: 'white', fontSize: 14 },
+  textPanel: {color: 'white', fontSize: 14},
   textPanelOff: {
-    color: 'black', fontSize: 14
+    color: 'black',
+    fontSize: 14,
   },
   backgroundImage: {
     backgroundColor: 'white',
@@ -262,7 +287,7 @@ const stylesDesplazamiento = StyleSheet.create({
     padding: 0,
     borderRadius: 5,
   },
-  textTitlePanel: { color: 'white', fontSize: 20 },
+  textTitlePanel: {color: 'white', fontSize: 20},
   iconoFAB: {
     name: 'map-marker-radius',
     color: 'white',
@@ -278,7 +303,7 @@ const stylesDesplazamiento = StyleSheet.create({
     color: 'white',
     type: 'material-community',
   },
-  iconoFABClose: { name: 'close', color: 'white' },
+  iconoFABClose: {name: 'close', color: 'white'},
   iconoComenzarViaje: {
     name: 'map-marker-distance',
     color: 'white',
@@ -289,5 +314,4 @@ const stylesDesplazamiento = StyleSheet.create({
     color: 'white',
     type: 'material-community',
   },
-
 });
