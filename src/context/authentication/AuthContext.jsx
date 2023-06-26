@@ -99,9 +99,9 @@ export const AuthProvider = ({children}) => {
       if (status === 200) {
         const {usuario} = data;
         dispatch({type: 'signIn', payload: {token, usuario}});
+      } else {
+        await logout();
       }
-    } else {
-      await logout();
     }
   };
 
