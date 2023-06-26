@@ -12,8 +12,8 @@ import {account} from '../../services/aurtenticacionServices';
 import axios from 'axios';
 
 import {headers, baseURL} from '../../config/axios';
-import { useContext } from 'react';
-import { NetworkContext } from '../network/NetworkContext';
+import {useContext} from 'react';
+import {NetworkContext} from '../network/NetworkContext';
 
 export const authInitialState = {
   autenticado: 'verificar',
@@ -27,7 +27,7 @@ export const AuthContext = createContext({});
 export const AuthProvider = ({children}) => {
   const [authState, dispatch] = useReducer(authReducer, authInitialState);
 
-  const {isConnected} = useContext(NetworkContext)
+  const {isConnected} = useContext(NetworkContext);
 
   const signIn = async params => {
     try {
@@ -86,25 +86,32 @@ export const AuthProvider = ({children}) => {
     dispatch({type: 'cleanError'});
   };
 
+  const verificarToken = async () => {
+    const token = await AsyncStorage.getItem('token');
+    if (!token) return dispatch({type: 'logout'});
+    if (isConnected) {
+      headers.Authorization = `Bearer ${token}`;
+      const intance = await axios.create({
+        baseURL,
+        headers,
+      });
+      const {data, status} = await intance.get('/api/user');
+      if (status === 200) {
+        const {usuario} = data;
+        dispatch({type: 'signIn', payload: {token, usuario}});
+      }
+    } else {
+      await logout();
+    }
+  };
+
   const getToken = async () => {
     try {
       const token = await AsyncStorage.getItem('token');
       if (!token) return dispatch({type: 'logout'});
 
       if (isConnected) {
-        headers.Authorization = `Bearer ${token}`;
-        const intance = await axios.create({
-          baseURL,
-          headers,
-        });
-        const {data, status} = await intance.get('/api/user');
-
-        if (status === 200) {
-          const {usuario} = data;
-          dispatch({type: 'signIn', payload: {token, usuario}});
-        } else {
-            await logout();
-        }
+        await verificarToken();
       } else {
         dispatch({type: 'signIn', payload: {token}});
       }
@@ -128,6 +135,7 @@ export const AuthProvider = ({children}) => {
         signIn,
         logout,
         cleanError,
+        verificarToken,
       }}>
       {children}
     </AuthContext.Provider>

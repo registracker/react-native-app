@@ -16,6 +16,7 @@ import { getOptionEnvioAutomatico } from '../utils/functions';
 import { MisContadores } from '../views/Contador/MisContadores';
 import { ActivityIndicator } from 'react-native';
 import { Loading } from '../components/Loading';
+import { AuthContext } from '../context/authentication/AuthContext';
 
 const Tab = createBottomTabNavigator();
 
@@ -42,6 +43,7 @@ export const TabNavegacion = () => {
     const { sincronizarMarcadores } = useContext(MarcadorContext)
     const { sincronizarIncidentes } = useContext(IncidenteContext)
     const { isConnected } = useContext(NetworkContext)
+    const { verificarToken } = useContext(AuthContext)
 
     const { sincronizarReporteDesplazamiento } = useContext(DesplazamientoContext)
 
@@ -57,6 +59,7 @@ export const TabNavegacion = () => {
     }
 
     useEffect(() => {
+        verificarToken()
         if (isConnected === true) {
             sincronizar()
         }

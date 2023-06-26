@@ -209,7 +209,12 @@ export const Ajustes = () => {
   };
 
   return (
-    <View style={{backgroundColor: 'white', flex: 1, width: '100%', paddingTop: 20}}>
+    <View
+      style={{
+        backgroundColor: 'white',
+        flex: 1,
+        width: '100%',
+      }}>
       <ScrollView>
         <View>
           <Modal
@@ -270,7 +275,11 @@ export const Ajustes = () => {
               </View>
             </View>
           </Modal>
-          <Text style={styles.textBlack}>{usuario.email}</Text>
+          {usuario && (
+            <Text style={[styles.textBlack, {paddingTop: 20}]}>
+              {usuario?.email}
+            </Text>
+          )}
           <SincronizarList />
           <OpcionDesplazamiento />
           <OpcionIncidente />
