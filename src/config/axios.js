@@ -4,29 +4,29 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '@env';
 import { showToast } from '../utils/toast';
 
+export const baseURL = API_URL || 'http://localhost:8100';
+
+export const headers = {
+  Accept: 'application/json',
+  'Content-Type': 'application/json',
+  timeout: 5000,
+};
+
 export const instance = async (url, params = {}, method = 'get', data = {}) => {
-  const baseURL = API_URL || 'http://localhost:8100';
   console.log('🚀 ** file: axios.js:89 ~ instance ~ baseURL:', baseURL + url);
-
-  const headers = {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-    timeout: 1000,
-  };
-
   // Set token in axios instance.
   const token = await AsyncStorage.getItem('token');
   if (token !== null) {
     headers.Authorization = `Bearer ${token}`;
   }
 
-  const instance = await axios.create({
+  const request = await axios.create({
     baseURL,
     headers,
   });
 
   try {
-    const response = await instance[method](url, { ...params, ...data });
+    const response = await request[method](url, { ...params, ...data });
     return { data: response.data, status: response.status };
   } catch (error) {
     switch (error.response?.status) {

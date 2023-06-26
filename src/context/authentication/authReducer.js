@@ -6,6 +6,7 @@ export const authReducer = (state, action) => {
         ...state,
         autenticado: 'autenticado',
         token: action.payload.token,
+        usuario: action.payload?.usuario,
         mensajeError: '',
       };
 
