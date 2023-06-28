@@ -33,6 +33,9 @@ const postReporteMarcador = async (datos, manual = false) => {
         showToast('Marcador registrado');
       }
       return data;
+    } else {
+      await storeReporteMarcador({ ...datos, enviado: 0 });
+      showToast('Reporte de marcador almacenado temporalmente en el dispositivo')
     }
 };
 
