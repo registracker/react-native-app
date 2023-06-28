@@ -72,7 +72,6 @@ export const ListadoIncidentes = () => {
 
 
     const enviarReporteIncidente = async (item, reset) => {
-
         try {
             setCargando(true)
             await postIncidente(item)

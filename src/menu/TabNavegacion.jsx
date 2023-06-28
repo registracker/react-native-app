@@ -65,7 +65,6 @@ export const TabNavegacion = () => {
     const validToken = async () => { 
         const valid = await verificarToken()
         if (valid) {
-            console.log("🚀 ~ file: TabNavegacion.jsx:68 ~ validToken ~ valid:", valid)
             if (isConnected === true) {
                 await sincronizar()
             }

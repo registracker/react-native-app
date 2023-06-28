@@ -73,7 +73,6 @@ export const AuthProvider = ({children}) => {
       await limpiarCatalogos();
       await clearLocalStorage();
     } catch (error) {
-      console.log("🚀 ~ file: AuthContext.jsx:75 ~ logout ~ error:", error)
       ToastAndroid.showWithGravity(
         'Token expirado',
         ToastAndroid.LONG,

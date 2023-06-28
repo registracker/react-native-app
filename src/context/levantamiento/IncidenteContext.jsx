@@ -37,7 +37,6 @@ export const IncidenteProvider = ({ children }) => {
                     altitud: position.coords.altitude,
                     fecha_reporte: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
                 };
-              console.log("🚀 ~ file: IncidenteContext.jsx:40 ~ data:", data)
 
                 const optionIncidente = await AsyncStorage.getItem('opcion-incidente');
                 if (optionIncidente === 'activo' && isConnected) {
@@ -52,7 +51,7 @@ export const IncidenteProvider = ({ children }) => {
                 } else {
                     const response = await storeReporteIncidente(data);
                     if (response.rowsAffected === 1) {
-                        showToast('Incidente registrado temporalmente');
+                        showToast('Incidente registrado temporalmente en el dispositivo');
                     }
                 }
             },

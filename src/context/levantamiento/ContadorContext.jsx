@@ -163,7 +163,6 @@ export const ContadorProvider = ({ children }) => {
             if (datos.length > 0) {
                 const database = datos.map(item => JSON.parse(item.contador))
                 const { status } = await enviarReporte(database);
-                console.log("🚀 ~ file: ContadorContext.jsx:166 ~ sincronizarContadores ~ status:", status)
                 if (status === 200) {
                     updateAllContadorDatabase()
                     showToast('Contador sincronizados')
