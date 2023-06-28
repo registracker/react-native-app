@@ -104,7 +104,7 @@ const Contador = ({navigation}) => {
 
   const guardarRegistros = async () => {
     if (contadorVehicular.length > 0) {
-      await enviar(contadorVehicular);
+      await enviar();
     }
   };
 

@@ -1,4 +1,4 @@
-import { useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import { createContext } from "react";
 import { contadorReducer } from "./contadorReducer";
 
@@ -110,19 +110,22 @@ export const ContadorProvider = ({ children }) => {
         dispatch({ type: 'restablecer' })
     }
 
-    const enviar = async (data) => {
-        const contador = await AsyncStorage.getItem('opcion-contador');
-        if (isConnected && contador === 'activo') {
-            const response = await enviarReporte(data);
+    const enviar = async () => {
+        if (contadorState.contador.length > 0) {
+            const contador = await AsyncStorage.getItem('opcion-contador');
+            if (isConnected && contador === 'activo') {
 
-            showToast('Registros de conteo vehicular registrados');
+                const { status } = await enviarReporte(contadorState.contador);
+                if (status === 200) {
+                    showToast('Registros de conteo vehicular registrados');
+                }
+            } else {
+                showToast('Registros de conteo vehicular registrados temporalmente');
+                await storeReporteContadorDatabase(contadorState.contador)
+            }
 
-        } else {
-            showToast('Registros de conteo vehicular registrados temporalmente');
-            await storeReporteContadorDatabase(data)
+            dispatch({ type: 'restablecer-contador' })
         }
-
-        dispatch({ type: 'restablecer-contador' })
     }
 
     const agregarRegistro = (id) => {
@@ -153,14 +156,14 @@ export const ContadorProvider = ({ children }) => {
         return contador
     }
 
-    const sincronizarContadores = async() => {
+    const sincronizarContadores = async () => {
         const contador = await AsyncStorage.getItem('opcion-contador');
         if (contador !== 'activo') {
             const datos = await sincronizarContadorDatabase()
-            if(datos.length > 0){
-                const database = datos.map(item =>JSON.parse(item.contador))         
-                const {status} = await enviarReporte(database);
-                if(status === 200){
+            if (datos.length > 0) {
+                const database = datos.map(item => JSON.parse(item.contador))
+                const { status } = await enviarReporte(database);
+                if (status === 200) {
                     updateAllContadorDatabase()
                     showToast('Contador sincronizados')
                 }
