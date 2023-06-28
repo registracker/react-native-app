@@ -2,6 +2,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { instance } from '../config/axios';
 import { actualizarMarcador, storeReporteMarcador } from '../database/TblReporteMarcador';
+import { showToast } from '../utils/toast';
 
 const getMarcadores = async () => {
   try {
@@ -15,45 +16,25 @@ const getMarcadores = async () => {
 
 };
 
-const postReporteMarcador = async (datos, automatico = true) => {
-  try {
-    if (automatico) {
-      const opcionMarcador = await AsyncStorage.getItem('opcion-marcador');
-      if (opcionMarcador === 'activo') {
-        const { data, status } = await instance(
-          '/api/reporte-marcadores',
-          null,
-          'post',
-          datos,
-        );
-        if (status === 201) {
-          if (datos?.id) {
-            await actualizarMarcador(datos.id);
-          } else {
-            await storeReporteMarcador({ ...datos, enviado: 1 });
-          }
-          return;
-        }
-      } else {
-        await storeReporteMarcador(datos);
-      }
-    } else {
+const postReporteMarcador = async (datos, manual = false) => {
+    const opcionMarcador = await AsyncStorage.getItem('opcion-marcador');
+    if (manual || opcionMarcador === 'activo') {
       const { data, status } = await instance(
         '/api/reporte-marcadores',
         null,
         'post',
         datos,
       );
-
-      if (status === 201) {
-        await actualizarMarcador(datos.id);
+      if (manual) {
+          await actualizarMarcador(datos.id);
+          showToast('Marcador sincronizado');
       }
+      if (status === 201 && !manual){
+        await storeReporteMarcador({ ...datos, enviado: 1 });
+        showToast('Marcador registrado');
+      }
+      return data;
     }
-
-    return;
-  } catch (error) {
-    return false;
-  }
 };
 
 const getMisMarcadores = async () => {

@@ -13,6 +13,8 @@ import {MarcadorContext} from '../context/levantamiento/MarcadorContext';
 import {CatalogosContext} from '../context/store/CatalogosContext';
 import {showToast} from '../utils/toast';
 import Geolocation from 'react-native-geolocation-service';
+import { NetworkContext } from '../context/network/NetworkContext';
+import { storeReporteMarcador } from '../database/TblReporteMarcador';
 
 const Marcador = ({navigation}) => {
   const [cargando, setCargando] = useState(false);
@@ -23,6 +25,8 @@ const Marcador = ({navigation}) => {
   const {levantamiento, restablecer} = useContext(MarcadorContext);
 
   const {clt_marcadores} = useContext(CatalogosContext);
+
+  const {isConnected} = useContext(NetworkContext)
 
   useEffect(() => {
     if (selected) {
@@ -35,10 +39,6 @@ const Marcador = ({navigation}) => {
 
     await Geolocation.getCurrentPosition(
       async ubicacion => {
-        console.log(
-          '🚀 ~ file: Marcador.jsx:38 ~ enviarMarcador ~ ubicacion:',
-          ubicacion,
-        );
         const levantamiento = await AsyncStorage.getItem('levantamiento');
         const {codigo} = JSON.parse(levantamiento);
         const datos = {
@@ -53,8 +53,12 @@ const Marcador = ({navigation}) => {
           fecha_reporte: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
           enviado: 0,
         };
-        await postReporteMarcador(datos);
-        showToast('Marcador registrado');
+        if(isConnected) {
+          await postReporteMarcador(datos);
+        }else {
+          await storeReporteMarcador(datos);
+          showToast('Marcador registrado temporalmente en el dispositivo');
+        }
       },
       error => {
         showToast('Activa la ubicación del dispositivo');
@@ -176,7 +180,7 @@ const Marcador = ({navigation}) => {
                 style={[styles.textBlack, {textAlign: 'left', fontSize: 14}]}>
                 Creado:{' '}
                 {format(
-                  new Date(levantamiento.fecha_creado),
+                  new Date(levantamiento?.fecha_creado),
                   'yyyy-MM-dd hh:mm:ss aaaa',
                 )}
               </Text>

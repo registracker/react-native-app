@@ -79,7 +79,7 @@ export const ListadoMarcadores = () => {
     const enviarReporteMarcador = async (item, reset) => {
         try {
             setCargando(true)
-            await postReporteMarcador(item, false)
+            await postReporteMarcador(item, true)
             showToast('Reporte de marcador enviado exitosamente')
             items();
         } catch (error) {
