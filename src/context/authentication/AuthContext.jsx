@@ -14,6 +14,7 @@ import axios from 'axios';
 import {headers, baseURL} from '../../config/axios';
 import {useContext} from 'react';
 import {NetworkContext} from '../network/NetworkContext';
+import { deleteAllContadorDatabase } from '../../database/TblReporteContador';
 
 export const authInitialState = {
   autenticado: 'verificar',
@@ -68,9 +69,11 @@ export const AuthProvider = ({children}) => {
       await deleteReporteIncidentes();
       await removeReporteMarcador();
       await removeDesplazamientos();
+      await deleteAllContadorDatabase()
       await limpiarCatalogos();
       await clearLocalStorage();
     } catch (error) {
+      console.log("🚀 ~ file: AuthContext.jsx:75 ~ logout ~ error:", error)
       ToastAndroid.showWithGravity(
         'Token expirado',
         ToastAndroid.LONG,

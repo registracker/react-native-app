@@ -173,7 +173,6 @@ export const sincronizarContadorDatabase = () => {
   });
 };
 
-
 export const updateAllContadorDatabase = () => {
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
@@ -191,6 +190,34 @@ export const updateAllContadorDatabase = () => {
         },
         error => {
           reject(error);
+        },
+      );
+    });
+  });
+};
+
+export const deleteAllContadorDatabase = () => {
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'DELETE FROM tbl_reporte_contador',
+        [],
+        (transaction, res) => {
+          let len = res.rows.length;
+          let result = [];
+
+          if (len > 0) {
+            result = res.rows.raw();
+          }
+          // console.log(
+          //   '🚀 ~ file: TblReporteContador.js:111 ~ returnnewPromise ~ result:',
+          //   result,
+          // );
+          resolve(result);
+        },
+        err => {
+          // console.log(err);
+          reject(false);
         },
       );
     });
