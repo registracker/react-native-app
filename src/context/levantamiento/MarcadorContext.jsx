@@ -66,7 +66,7 @@ export const MarcadorProvider = ({ children }) => {
             const data = await sincronizarMarcadoresDatabase()
             if (data.length > 0) {
                 for await (const item of data) {
-                    await postReporteMarcador(item, false)
+                    await postReporteMarcador(item, true)
                 }
                 showToast('Marcadores sincronizados')
             }

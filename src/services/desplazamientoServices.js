@@ -2,6 +2,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { instance } from '../config/axios';
 import { addItemDesplazamiento, sendDesplazamiento } from '../database/TblDesplazamientos';
+import { showToast } from '../utils/toast';
 
 const postDesplazamiento = async (datos, manual = false) => {
   const optionDesplazamiento = await AsyncStorage.getItem(
@@ -16,13 +17,12 @@ const postDesplazamiento = async (datos, manual = false) => {
     );
     if (manual) {
       sendDesplazamiento(datos.uuid);
-    }
-    if (status === 201 && !manual) {
+    } else if (status === 201 ) {
       await addItemDesplazamiento({ ...datos, enviado: 1 });
+      showToast('Desplazamiento sincronizado')
+
+      return data;
     }
-    return data;
-  } else {
-    await addItemDesplazamiento(datos);
   }
 };
 

@@ -1,11 +1,12 @@
-import React, { useReducer, createContext } from 'react';
+import React, { useReducer, createContext, useContext } from 'react';
 import uuid from 'react-native-uuid';
 import { desplazamientoReducer } from './desplazamientoReducer';
 
 import { postDesplazamiento } from '../../services/desplazamientoServices.js';
-import { limpiarDesplazamientoDatatable, obtenerSinSincronzarDesplazamientos } from '../../database/TblDesplazamientos';
+import { addItemDesplazamiento, limpiarDesplazamientoDatatable, obtenerSinSincronzarDesplazamientos } from '../../database/TblDesplazamientos';
 import { showToast } from '../../utils/toast';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { NetworkContext } from '../network/NetworkContext';
 
 export const DesplazamientoContext = createContext();
 
@@ -22,6 +23,8 @@ const desplazamientoInicial = {
 export const DesplazamientoProvider = ({ children }) => {
 
     const [desplazamientoState, dispatch] = useReducer(desplazamientoReducer, desplazamientoInicial)
+
+    const {isConnected} = useContext(NetworkContext)
 
     /**
      * FUNCIONALIDAD PARA INICIAR DESPLAZAMIENTO
@@ -64,7 +67,12 @@ export const DesplazamientoProvider = ({ children }) => {
             desplazamiento: desplazamientoState.tracking,
             costos: desplazamientoState.listMedios
         }
-        await postDesplazamiento(data, manual)
+        if (isConnected) {
+            await postDesplazamiento(data, manual)
+        } else {
+            await addItemDesplazamiento(data);
+            showToast('Desplazamiento almacenado temporalmente en el dispositivo')
+        }
         dispatch({ type: 'detener' })
     }
     /**
