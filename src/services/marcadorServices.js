@@ -28,8 +28,7 @@ const postReporteMarcador = async (datos, manual = false) => {
       if (manual) {
           await actualizarMarcador(datos.id);
           showToast('Marcador sincronizado');
-      }
-      if (status === 201 && !manual){
+      } else if (status === 201 ){
         await storeReporteMarcador({ ...datos, enviado: 1 });
         showToast('Marcador registrado');
       }
