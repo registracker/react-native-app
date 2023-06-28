@@ -23,6 +23,9 @@ const postDesplazamiento = async (datos, manual = false) => {
 
       return data;
     }
+  } else {
+    await addItemDesplazamiento(datos);
+    showToast('Desplazamiento almacenado temporalmente en el dispositivo')
   }
 };
 
